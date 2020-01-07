@@ -1,8 +1,18 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿
+@{
+    ViewData["Title"] = "Index";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+
+
+<h2>Home/Index</h2>
+<h2>Dobro došli</h2>
+
+
+
+<br />
+@Html.ActionLink("Ajax text", "Index", "AjaxTest")
+<br />
+@Html.ActionLink("DB text", "Index", "Home")
+<br />
+@Html.ActionLink("Neki kontroler", "Index", "Nekikontroler")

@@ -21,7 +21,7 @@ namespace StomatoloskaOrdinacija.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<MyContext>(x =>
-                x.UseSqlServer(Configuration.GetConnectionString("PleskConnectionString")));
+                x.UseSqlServer(Configuration.GetConnectionString("SinanConnectionString")));
 
             services.AddControllersWithViews();
         }

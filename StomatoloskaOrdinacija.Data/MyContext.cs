@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using StomatoloskaOrdinacija.Data.EntityModels;
 
 namespace StomatoloskaOrdinacija.Data
 {
@@ -8,5 +9,10 @@ namespace StomatoloskaOrdinacija.Data
         {
 
         }
+        public DbSet<Korisnik> Korisnici { get; set; }
+        public DbSet<Stomatolog> Stomatolozi { get; set; }
+        public DbSet<MedicinskoOsoblje> MedicinskoOsoblje { get; set; }
+        public DbSet<Pacijent> Pacijenti { get; set; }
+        
     }
 }

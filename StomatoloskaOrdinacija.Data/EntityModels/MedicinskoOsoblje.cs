@@ -10,17 +10,32 @@ namespace StomatoloskaOrdinacija.Data.EntityModels
         [Key] 
         public int MedicinskoOsoboljeId { get; set; }
 
-        [ForeignKey(nameof(Korisnik))]
-        public int KorisnikId { get; set; }
-        public Korisnik Korisnik { get; set; }
+        [ForeignKey(nameof(KorisnickiNalog))]
+        public int KorisnickiNalogId { get; set; }
+        public KorisnickiNalog KorisnickiNalog { get; set; }
 
-        [StringLength(100)]
+
+        [ForeignKey(nameof(Titula))]
+        public int TitulaID { get; set; }
+        public Titula Titula { get; set; }
+
         [Required]
-        public string Titula { get; set; }
-
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd.mm.yyyy}", ApplyFormatInEditMode = true)]
         [Display(Name = "Datum zaposlenja")]
         public DateTime DatumZaposlenja { get; set; }
+
+        [Required]
+        [StringLength(200)]
+        public string OpisPosla { get; set; }
+
+        [Required]
+        [StringLength(20)]
+        [Display(Name = "Broj žiro računa")]
+        public string BrojZiroRacuna { get; set; }
+
+        [Required]
+        [Column(TypeName = "BIT")]
+        public bool Aktivan { get; set; }
     }
 }

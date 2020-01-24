@@ -10,13 +10,34 @@ namespace StomatoloskaOrdinacija.Data.EntityModels
         [Key]
         public int PacijentId { get; set; }
 
-        [ForeignKey(nameof(Korisnik))]
-        public int KorisnikId { get; set; }
-        public Korisnik Korisnik { get; set; }
+        [ForeignKey(nameof(KorisnickiNalog))]
+        public int KorisnickiNalogId { get; set; }
+        public KorisnickiNalog KorisnickiNalog { get; set; }
 
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd.mm.yyyy}", ApplyFormatInEditMode = true)]
-        [Display(Name = "Datum rođenja")]
-        public DateTime DatumRodjenja { get; set; }
+        [Required]
+        [Column(TypeName = "BIT")]
+        [Display(Name = "Alergija na lijek")]
+        public bool AlergijaNaLijek { get; set; }
+
+        [Required]
+        [Column(TypeName = "BIT")]
+        public bool Proteza { get; set; }
+
+        [Required]
+        [Column(TypeName = "BIT")]
+        public bool Terapija { get; set; }
+
+        [Required]
+        [Column(TypeName = "BIT")]
+        public bool Navlake { get; set; }
+
+        [Required]
+        [Column(TypeName = "BIT")]
+        public bool Aparatic { get; set; }
+
+        [Required]
+        [StringLength(200)]
+        public string Napomena { get; set; }
+
     }
 }

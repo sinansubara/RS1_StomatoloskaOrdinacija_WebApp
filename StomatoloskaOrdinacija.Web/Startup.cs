@@ -21,7 +21,7 @@ namespace StomatoloskaOrdinacija.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<MyContext>(x =>
-                x.UseSqlServer(Configuration.GetConnectionString("PleskConnectionString")));
+                x.UseSqlServer(Configuration.GetConnectionString("SinanConnectionString")));
 
             services.AddControllersWithViews();
         }
@@ -50,7 +50,7 @@ namespace StomatoloskaOrdinacija.Web
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Prijava}/{action=Prijava}/{id?}");
             });
         }
     }

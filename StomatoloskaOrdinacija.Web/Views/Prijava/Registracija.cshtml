@@ -1,0 +1,173 @@
+﻿@model StomatoloskaOrdinacija.Web.ViewModels.Prijava.RegistracijaViewModel
+@{
+    string errorMessage = (string)TempData["errorMessage"];
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Stomatološka ordinacija | Registracija</title>
+    <!-- Bootstrap core CSS-->
+    <link href="~/template/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom fonts for this template-->
+    <link href="~/template/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <!-- Custom styles for this template-->
+    <link href="~/template/css/sb-admin.css" rel="stylesheet">
+</head>
+
+<body class="bg-dark">
+    <div class="container">
+        <div class="card card-register mx-auto mt-5">
+            <div class="card-header">Registracija korisnickog naloga</div>
+            <div class="card-body">
+                <form id="registracija" asp-controller="Prijava" asp-action="Registracija" method="POST" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <label for="ime">Ime</label>
+                                <input class="form-control" id="ime" type="text" name="ime" asp-for="Ime" aria-describedby="nameHelp" placeholder="Unesite ime">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="prezime">Prezime</label>
+                                <input class="form-control" id="prezime" type="text" name="prezime" asp-for="Prezime" aria-describedby="nameHelp" placeholder="Unesite prezime">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <label for="jmbg">JMBG</label>
+                                <input class="form-control" id="jmbg" aria-describedby="nameHelp" placeholder="Unesite JMBG" type="text" name="jmbg" asp-for="JMBG">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="mobitel">Broj mobitela</label>
+                                <input class="form-control" id="mobitel" aria-describedby="nameHelp" placeholder="Unesite broj mobitela" type="text" name="mobitel" asp-for="Mobitel">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <label for="adresa">Adresa</label>
+                                <input class="form-control" id="adresa" aria-describedby="nameHelp" placeholder="Unesite adresu" type="text" name="adresa" asp-for="Adresa">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="date-error-message">Izaberite datum rođenja</label>
+                                <input type="text" name="datumRodjenja" asp-for="DatumRodjenja" value="" class="form-control"
+                                       onfocus="(this.type = 'date')" onblur="(this.type = 'text')" placeholder="Datum rođenja">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <div class="form-row">
+                                    <div class="col-md-12">
+                                        <label for="imgInp">Dodaj sliku</label>
+                                        <input type="file" name="slika" id="imgInp" asp-for="Slika" class="form-control" required>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-row">
+                                    <div class="col-md-6">
+                                        <label for="alergijenalijekove">Alergije na lijekove</label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="checkbox" name="alergijenalijekove" id="alergijenalijekove" asp-for="AlergijaNaLijek">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-md-6">
+                                        <label for="proteza">Proteza</label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="checkbox" name="proteza" id="proteza" asp-for="Proteza">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-md-6">
+                                        <label for="terapija">Terapija</label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="checkbox" name="terapija" id="terapija" asp-for="Terapija">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-md-6">
+                                        <label for="navlake">Navlake</label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="checkbox" name="navlake" id="navlake" asp-for="Navlake">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-md-6">
+                                        <label for="aparatic">Aparatić</label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="checkbox" name="aparatic" id="aparatic" asp-for="Aparatic">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <label>Izaberite grad</label>
+                                <select asp-for="GradID" asp-items="@Model.Gradovi" class="form-control" required>
+                                    <option value="" selected disabled>Grad</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label>Izberite spol</label>
+                                <select name="spol" asp-for="Spol" class="form-control" required>
+                                    <option value="" selected disabled>Spol</option>
+                                    <option value="Muško">Muško</option>
+                                    <option value="Žensko">Žensko</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="emailadresa">Email adresa</label>
+                        <input class="form-control" id="emailadresa" type="email" name="email" asp-for="Email" aria-describedby="emailHelp" placeholder="Unesite email">
+                    </div>
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <label for="lozinka1">Lozinka</label>
+                                <input class="form-control" id="lozinka1" type="password" name="lozinka" asp-for="Lozinka" placeholder="Lozinka">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="potvrdapassworda">Confirm password</label>
+                                <input class="form-control" id="potvrdapassworda" type="password" name="potvrdaLozinke" asp-for="PotvrdaLozinke" placeholder="Potvrda lozinke">
+                            </div>
+                        </div>
+                    </div>
+                    <input class="btn btn-primary btn-block" type="submit" value="Registracija" style="cursor: pointer;">
+                </form>
+                <div class="text-center">
+                    <a class="d-block small mt-3" asp-controller="Prijava" asp-action="Prijava">Prijavi se</a>
+                    <a class="d-block small" asp-controller="Prijava" asp-action="zaboravljena-lozinka">Zaboravljena lozinka?</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Bootstrap core JavaScript-->
+    <script src="~/template/vendor/jquery/jquery.min.js"></script>
+    <script src="~/template/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Core plugin JavaScript-->
+    <script src="~/template/vendor/jquery-easing/jquery.easing.min.js"></script>
+</body>
+
+</html>

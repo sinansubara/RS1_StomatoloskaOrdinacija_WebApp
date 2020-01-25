@@ -35,9 +35,5 @@ namespace StomatoloskaOrdinacija.Data.EntityModels
         [Column(TypeName = "BIT")]
         public bool Aparatic { get; set; }
 
-        [Required]
-        [StringLength(200)]
-        public string Napomena { get; set; }
-
     }
 }

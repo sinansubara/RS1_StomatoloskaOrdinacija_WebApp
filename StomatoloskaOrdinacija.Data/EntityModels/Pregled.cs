@@ -10,6 +10,10 @@ namespace StomatoloskaOrdinacija.Data.EntityModels
         [Key]
         public int PregledId { get; set; }
 
+        [ForeignKey(nameof(Stomatolog))]
+        public int StomatologId { get; set; }
+        public Stomatolog Stomatolog { get; set; }
+
         [ForeignKey(nameof(Termin))]
         public int TerminId { get; set; }
         public Termin Termin { get; set; }
@@ -21,6 +25,10 @@ namespace StomatoloskaOrdinacija.Data.EntityModels
         [ForeignKey(nameof(Terapija))]
         public int TerapijaId { get; set; }
         public Terapija Terapija { get; set; }
+
+        [ForeignKey(nameof(UspostavljenaDijagnoza))]
+        public int UspostavljenaDijagnozaId { get; set; }
+        public UspostavljenaDijagnoza UspostavljenaDijagnoza { get; set; }
 
         [Required]
         [Column(TypeName = "SMALLINT")]

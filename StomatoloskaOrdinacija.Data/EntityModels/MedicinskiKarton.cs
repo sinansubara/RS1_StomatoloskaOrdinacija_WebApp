@@ -14,10 +14,6 @@ namespace StomatoloskaOrdinacija.Data.EntityModels
         public int IzvrsenaUslugaId { get; set; }
         public IzvrsenaUsluga IzvrsenaUsluga { get; set; }
 
-        [ForeignKey(nameof(Terapija))]
-        public int TerapijaId { get; set; }
-        public Terapija Terapija { get; set; }
-
         [ForeignKey(nameof(Pacijent))]
         public int PacijentId { get; set; }
         public Pacijent Pacijent { get; set; }

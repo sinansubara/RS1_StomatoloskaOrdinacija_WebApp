@@ -31,5 +31,7 @@ namespace StomatoloskaOrdinacija.Data
         public DbSet<UlazStavke> UlazStavkes { get; set; }
         public DbSet<UlazUSkladiste> UlazUSkladistes { get; set; }
         public DbSet<Usluga> Uslugas { get; set; }
+        public DbSet<UspostavljenaDijagnoza> UspostavljenaDijagnozas { get; set; }
+        public DbSet<Dijagnoza> Dijagnozas { get; set; }
     }
 }

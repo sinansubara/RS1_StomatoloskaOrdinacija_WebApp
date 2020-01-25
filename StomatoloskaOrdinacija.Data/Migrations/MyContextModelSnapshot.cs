@@ -52,6 +52,23 @@ namespace StomatoloskaOrdinacija.Data.Migrations
                     b.ToTable("Administrator");
                 });
 
+            modelBuilder.Entity("StomatoloskaOrdinacija.Data.EntityModels.Dijagnoza", b =>
+                {
+                    b.Property<int>("DijagnozaId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Naziv")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
+
+                    b.HasKey("DijagnozaId");
+
+                    b.ToTable("Dijagnoza");
+                });
+
             modelBuilder.Entity("StomatoloskaOrdinacija.Data.EntityModels.Drzava", b =>
                 {
                     b.Property<int>("DrzavaId")
@@ -274,16 +291,11 @@ namespace StomatoloskaOrdinacija.Data.Migrations
                     b.Property<int>("PacijentId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TerapijaId")
-                        .HasColumnType("int");
-
                     b.HasKey("MedicinskiKartonId");
 
                     b.HasIndex("IzvrsenaUslugaId");
 
                     b.HasIndex("PacijentId");
-
-                    b.HasIndex("TerapijaId");
 
                     b.ToTable("MedicinskiKarton");
                 });
@@ -342,11 +354,6 @@ namespace StomatoloskaOrdinacija.Data.Migrations
                     b.Property<int>("KorisnickiNalogId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Napomena")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
-
                     b.Property<bool>("Navlake")
                         .HasColumnType("BIT");
 
@@ -378,6 +385,9 @@ namespace StomatoloskaOrdinacija.Data.Migrations
                     b.Property<int>("PacijentId")
                         .HasColumnType("int");
 
+                    b.Property<int>("StomatologId")
+                        .HasColumnType("int");
+
                     b.Property<int>("TerapijaId")
                         .HasColumnType("int");
 
@@ -387,13 +397,20 @@ namespace StomatoloskaOrdinacija.Data.Migrations
                     b.Property<short>("TrajanjePregleda")
                         .HasColumnType("SMALLINT");
 
+                    b.Property<int>("UspostavljenaDijagnozaId")
+                        .HasColumnType("int");
+
                     b.HasKey("PregledId");
 
                     b.HasIndex("PacijentId");
 
+                    b.HasIndex("StomatologId");
+
                     b.HasIndex("TerapijaId");
 
                     b.HasIndex("TerminId");
+
+                    b.HasIndex("UspostavljenaDijagnozaId");
 
                     b.ToTable("Pregledi");
                 });
@@ -694,6 +711,31 @@ namespace StomatoloskaOrdinacija.Data.Migrations
                     b.ToTable("Usluga");
                 });
 
+            modelBuilder.Entity("StomatoloskaOrdinacija.Data.EntityModels.UspostavljenaDijagnoza", b =>
+                {
+                    b.Property<int>("UspostavljenaDijagnozaId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("DijagnozaId")
+                        .HasColumnType("int");
+
+                    b.Property<byte>("JacinaDijagnoze")
+                        .HasColumnType("TINYINT");
+
+                    b.Property<string>("Napomena")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(300)")
+                        .HasMaxLength(300);
+
+                    b.HasKey("UspostavljenaDijagnozaId");
+
+                    b.HasIndex("DijagnozaId");
+
+                    b.ToTable("UspostavljenaDijagnoza");
+                });
+
             modelBuilder.Entity("StomatoloskaOrdinacija.Data.EntityModels.Administrator", b =>
                 {
                     b.HasOne("StomatoloskaOrdinacija.Data.EntityModels.KorisnickiNalog", "KorisnickiNalog")
@@ -749,12 +791,6 @@ namespace StomatoloskaOrdinacija.Data.Migrations
                         .HasForeignKey("PacijentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("StomatoloskaOrdinacija.Data.EntityModels.Terapija", "Terapija")
-                        .WithMany()
-                        .HasForeignKey("TerapijaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("StomatoloskaOrdinacija.Data.EntityModels.MedicinskoOsoblje", b =>
@@ -789,6 +825,12 @@ namespace StomatoloskaOrdinacija.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("StomatoloskaOrdinacija.Data.EntityModels.Stomatolog", "Stomatolog")
+                        .WithMany()
+                        .HasForeignKey("StomatologId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("StomatoloskaOrdinacija.Data.EntityModels.Terapija", "Terapija")
                         .WithMany()
                         .HasForeignKey("TerapijaId")
@@ -798,6 +840,12 @@ namespace StomatoloskaOrdinacija.Data.Migrations
                     b.HasOne("StomatoloskaOrdinacija.Data.EntityModels.Termin", "Termin")
                         .WithMany()
                         .HasForeignKey("TerminId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StomatoloskaOrdinacija.Data.EntityModels.UspostavljenaDijagnoza", "UspostavljenaDijagnoza")
+                        .WithMany()
+                        .HasForeignKey("UspostavljenaDijagnozaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -909,6 +957,15 @@ namespace StomatoloskaOrdinacija.Data.Migrations
                     b.HasOne("StomatoloskaOrdinacija.Data.EntityModels.UlazStavke", "UlazStavke")
                         .WithMany()
                         .HasForeignKey("UlazStavkeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("StomatoloskaOrdinacija.Data.EntityModels.UspostavljenaDijagnoza", b =>
+                {
+                    b.HasOne("StomatoloskaOrdinacija.Data.EntityModels.Dijagnoza", "Dijagnoza")
+                        .WithMany()
+                        .HasForeignKey("DijagnozaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

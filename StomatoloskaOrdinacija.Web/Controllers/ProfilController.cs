@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using StomatoloskaOrdinacija.Data;
+using StomatoloskaOrdinacija.Data.EntityModels;
+using StomatoloskaOrdinacija.Web.Helper;
 
 namespace StomatoloskaOrdinacija.Web.Controllers
 {
@@ -18,6 +20,26 @@ namespace StomatoloskaOrdinacija.Web.Controllers
 
         public IActionResult Pocetna()
         {
+            KorisnickiNalog logiraniKorisnik = HttpContext.GetLogiraniKorisnik();
+            if (logiraniKorisnik.Permisije == 0)
+                TempData["Layout"] = "_Administrator";
+
+            if (logiraniKorisnik.Permisije == 1)
+                TempData["Layout"] = "_Stomatolog";
+
+            if (logiraniKorisnik.Permisije == 2)
+                TempData["Layout"] = "_MedicinskoOsoblje";
+
+            if (logiraniKorisnik.Permisije == 3)
+            {
+                TempData["pacijentId"] = _context.Pacijents.Where(i => i.KorisnickiNalogId == HttpContext.GetLogiraniKorisnik().KorisnickiNalogId).FirstOrDefault().PacijentId;
+                TempData["Layout"] = "_Pacijent";
+            }
+
+            //TempData[""] = _context..Count();
+            //TempData[""] = _context..Count();
+            //TempData[""] = _context..Count();
+
             return View();
         }
 
@@ -28,7 +50,34 @@ namespace StomatoloskaOrdinacija.Web.Controllers
 
         public IActionResult Odjava()
         {
-            return View();
+            KorisnickiNalog logiraniKorisnik = HttpContext.GetLogiraniKorisnik();
+
+            if (logiraniKorisnik == null)
+                return RedirectToAction("Prijava", "Prijava");
+
+            string trenutniToken = HttpContext.GetTrenutniToken();
+
+            Token token = _context.Tokens.Where(x =>
+                x.KorisnickiNalogId == logiraniKorisnik.KorisnickiNalogId && x.Vrijednost == trenutniToken).First();
+                
+
+            _context.Tokens.Remove(token);
+
+            var tokeni = _context.Tokens.Where(x => x.KorisnickiNalogId == logiraniKorisnik.KorisnickiNalogId)
+                .AsEnumerable().Where(x => (DateTime.Now - x.Kreirano).TotalHours >= 24).ToList();
+            //List<Token> tokeni = _context.Tokens.Where
+            //    (x => (DateTime.Now - x.Kreirano).TotalHours >= 24 && x.KorisnickiNalogId == logiraniKorisnik.KorisnickiNalogId).ToList();
+
+            foreach (Token t in tokeni)
+            {
+                _context.Tokens.Remove(t);
+            }
+
+            _context.SaveChanges();
+
+            Response.Cookies.Delete("logiraniKorisnik");
+
+            return RedirectToAction("Prijava", "Prijava");
         }
     }
 }

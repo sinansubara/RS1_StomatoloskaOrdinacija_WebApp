@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.WebEncoders.Testing;
 using StomatoloskaOrdinacija.Data;
 using StomatoloskaOrdinacija.Data.EntityModels;
 using StomatoloskaOrdinacija.Web.Helper;
@@ -38,13 +40,12 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-
-            /*
-             * bug ne moze procitati ovu sintaksu pri loginu, popraviti!
-             */
-            KorisnickiNalog korisnickiNalog = _context.KorisnickiNalogs.SingleOrDefault
-                (i => i.Email == model.Email && i.LozinkaHash == PasswordSettings.GetHash(model.Lozinka, Convert.FromBase64String(i.LozinkaSalt)));
-
+            
+           var korisnickiNalog = _context.KorisnickiNalogs
+               .Where(i => i.Email == model.Email)
+               .AsEnumerable()
+               .Where(i => i.LozinkaHash ==
+                           PasswordSettings.GetHash(model.Lozinka, Convert.FromBase64String(i.LozinkaSalt)));
             
             if (korisnickiNalog == null)
             {
@@ -52,15 +53,19 @@ namespace StomatoloskaOrdinacija.Web.Controllers
                 return View(model);
             }
 
-            if ((korisnickiNalog.Permisije == 0 &&
-                 _context.Administrators.SingleOrDefault(i => i.KorisnickiNalogId == korisnickiNalog.KorisnickiNalogId).Aktivan) ||
-                (korisnickiNalog.Permisije == 1 &&
-                 _context.Stomatologs.SingleOrDefault(i => i.KorisnickiNalogId == korisnickiNalog.KorisnickiNalogId).Aktivan) ||
-                (korisnickiNalog.Permisije == 2 &&
-                 _context.MedicinskoOsobljes.SingleOrDefault(i => i.KorisnickiNalogId == korisnickiNalog.KorisnickiNalogId).Aktivan) ||
-                korisnickiNalog.Permisije == 3)
+            
+            if ((korisnickiNalog.First().Permisije == 0 &&
+                 _context.Administrators
+                     .Where(i => i.KorisnickiNalogId == korisnickiNalog.First().KorisnickiNalogId).First().Aktivan) ||
+                (korisnickiNalog.First().Permisije == 1 &&
+                 _context.Stomatologs
+                     .Where(i => i.KorisnickiNalogId == korisnickiNalog.First().KorisnickiNalogId).First().Aktivan) ||
+                (korisnickiNalog.First().Permisije == 2 &&
+                 _context.MedicinskoOsobljes
+                     .Where(i => i.KorisnickiNalogId == korisnickiNalog.First().KorisnickiNalogId).First().Aktivan) ||
+                korisnickiNalog.First().Permisije == 3)
             {
-                HttpContext.SetLogiraniKorisnik(korisnickiNalog, true);
+                HttpContext.SetLogiraniKorisnik(korisnickiNalog.First(), true);
 
                 return RedirectToAction("Pocetna", "Profil");
             }

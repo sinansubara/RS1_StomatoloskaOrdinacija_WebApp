@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StomatoloskaOrdinacija.Data;
 
 namespace StomatoloskaOrdinacija.Data.Migrations
 {
     [DbContext(typeof(MyContext))]
-    partial class MyContextModelSnapshot : ModelSnapshot
+    [Migration("20200229114528_StavkeFix")]
+    partial class StavkeFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -197,9 +199,9 @@ namespace StomatoloskaOrdinacija.Data.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
 
-                    b.Property<string>("Slika")
+                    b.Property<byte[]>("Slika")
                         .IsRequired()
-                        .HasColumnType("nvarchar(MAX)");
+                        .HasColumnType("VARBINARY(MAX)");
 
                     b.Property<string>("Spol")
                         .IsRequired()
@@ -459,6 +461,9 @@ namespace StomatoloskaOrdinacija.Data.Migrations
                     b.Property<int>("PacijentId")
                         .HasColumnType("int");
 
+                    b.Property<int>("RacunStavkeId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("Uplaceno")
                         .HasColumnType("BIT");
 
@@ -469,6 +474,9 @@ namespace StomatoloskaOrdinacija.Data.Migrations
                     b.HasIndex("MedicinskoOsobljeId");
 
                     b.HasIndex("PacijentId");
+
+                    b.HasIndex("RacunStavkeId")
+                        .IsUnique();
 
                     b.ToTable("Racun");
                 });
@@ -658,7 +666,8 @@ namespace StomatoloskaOrdinacija.Data.Migrations
 
                     b.HasIndex("MaterijalId");
 
-                    b.HasIndex("UlazUSkladisteId");
+                    b.HasIndex("UlazUSkladisteId")
+                        .IsUnique();
 
                     b.ToTable("UlazStavke");
                 });
@@ -687,9 +696,14 @@ namespace StomatoloskaOrdinacija.Data.Migrations
                     b.Property<decimal>("PDV")
                         .HasColumnType("DECIMAL(18,2)");
 
+                    b.Property<int>("UlazStavkeId")
+                        .HasColumnType("int");
+
                     b.HasKey("UlazUSkladisteID");
 
                     b.HasIndex("MedicinskoOsobljeId");
+
+                    b.HasIndex("UlazStavkeId");
 
                     b.ToTable("UlazUSkladiste");
                 });
@@ -878,6 +892,12 @@ namespace StomatoloskaOrdinacija.Data.Migrations
                         .HasForeignKey("PacijentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("StomatoloskaOrdinacija.Data.EntityModels.RacunStavke", "RacunStavke")
+                        .WithOne()
+                        .HasForeignKey("StomatoloskaOrdinacija.Data.EntityModels.Racun", "RacunStavkeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("StomatoloskaOrdinacija.Data.EntityModels.RacunStavke", b =>
@@ -946,8 +966,8 @@ namespace StomatoloskaOrdinacija.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("StomatoloskaOrdinacija.Data.EntityModels.UlazUSkladiste", "UlazUSkladiste")
-                        .WithMany()
-                        .HasForeignKey("UlazUSkladisteId")
+                        .WithOne()
+                        .HasForeignKey("StomatoloskaOrdinacija.Data.EntityModels.UlazStavke", "UlazUSkladisteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -957,6 +977,12 @@ namespace StomatoloskaOrdinacija.Data.Migrations
                     b.HasOne("StomatoloskaOrdinacija.Data.EntityModels.MedicinskoOsoblje", "MedicinskoOsoblje")
                         .WithMany()
                         .HasForeignKey("MedicinskoOsobljeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StomatoloskaOrdinacija.Data.EntityModels.UlazStavke", "UlazStavke")
+                        .WithMany()
+                        .HasForeignKey("UlazStavkeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

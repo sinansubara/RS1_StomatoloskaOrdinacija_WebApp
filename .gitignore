@@ -259,3 +259,5 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+/StomatoloskaOrdinacija.Web/wwwroot/images/535f7ba5-5aaf-4011-90de-75ba54144c65_sinan2.jpg
+/StomatoloskaOrdinacija.Web/wwwroot/images/7774d945-d1a6-4e91-a27d-7f928633ee4f_mama.jpg

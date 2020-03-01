@@ -13,6 +13,10 @@ namespace StomatoloskaOrdinacija.Data.EntityModels
         public int MaterijalId { get; set; }
         public Materijal Materijal { get; set; }
 
+        [ForeignKey(nameof(UlazUSkladiste))]
+        public int UlazUSkladisteId { get; set; }
+        public UlazUSkladiste UlazUSkladiste { get; set; }
+
         [Required]
         [Column(TypeName = "DECIMAL(18,1)")]
         public decimal Kolicina { get; set; }

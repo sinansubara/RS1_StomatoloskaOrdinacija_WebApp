@@ -65,9 +65,11 @@ namespace StomatoloskaOrdinacija.Data.EntityModels
         [Required]
         public string Spol { get; set; }
 
+        //[Required]
+        //[Column(TypeName = "VARBINARY(MAX)")]
+        //public byte[] Slika { get; set; }
+        [Column(TypeName = "nvarchar(MAX)")]
         [Required]
-        [Column(TypeName = "VARBINARY(MAX)")]
-        public byte[] Slika { get; set; }
-
+        public string Slika { get; set; }
     }
 }

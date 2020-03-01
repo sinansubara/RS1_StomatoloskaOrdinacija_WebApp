@@ -22,9 +22,6 @@ namespace StomatoloskaOrdinacija.Data.EntityModels
         public int PacijentId { get; set; }
         public Pacijent Pacijent { get; set; }
 
-        [ForeignKey(nameof(RacunStavke))]
-        public int RacunStavkeId { get; set; }
-        public RacunStavke RacunStavke { get; set; }
 
         [Required]
         [Column(TypeName = "SMALLDATETIME")]

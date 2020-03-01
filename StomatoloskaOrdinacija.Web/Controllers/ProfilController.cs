@@ -1,8 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using StomatoloskaOrdinacija.Data;
 using StomatoloskaOrdinacija.Data.EntityModels;
@@ -14,10 +20,11 @@ namespace StomatoloskaOrdinacija.Web.Controllers
     public class ProfilController : Controller
     {
         private MyContext _context;
-
-        public ProfilController(MyContext context)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public ProfilController(MyContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         [Autorizacija(true,true,true,true)]
@@ -39,11 +46,13 @@ namespace StomatoloskaOrdinacija.Web.Controllers
                 TempData["Layout"] = "_Pacijent";
             }
 
-            //TempData[""] = _context..Count();
-            //TempData[""] = _context..Count();
-            //TempData[""] = _context..Count();
+            var model = new ProfilPocetnaViewModel
+            {
+                Ime = logiraniKorisnik.Ime,
+                Prezime = logiraniKorisnik.Prezime
+            };
 
-            return View();
+            return View(model);
         }
 
 
@@ -55,7 +64,6 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             dynamic korisnik = null;
 
 
-            //moze stvarat probleme sintaksa korisnik = ... treba debug
             if (logiraniKorisnik.Permisije == 0)
             {
                 korisnik = _context.Administrators
@@ -65,7 +73,7 @@ namespace StomatoloskaOrdinacija.Web.Controllers
                 
                 TempData["Layout"] = "_Administrator";
             }
-
+            
             if (logiraniKorisnik.Permisije == 1)
             {
                 korisnik = _context.Stomatologs
@@ -95,32 +103,73 @@ namespace StomatoloskaOrdinacija.Web.Controllers
                 TempData["pacijentId"] = _context.Pacijents.Where(i => i.KorisnickiNalogId == HttpContext.GetLogiraniKorisnik().KorisnickiNalogId).FirstOrDefault().PacijentId;
                 TempData["Layout"] = "_Pacijent";
             }
-            var model = new UrediProfilViewModel
-            {
-                Ime = korisnik.Ime,
-                Prezime = korisnik.Prezime,
-                Email = korisnik.Email,
-                JMBG = korisnik.JMBG,
-                DatumRodjenja = korisnik.DatumRodjenja,
-                Mobitel = korisnik.Mobitel,
-                Adresa = korisnik.Adresa,
-                GradID = korisnik.GradID,
-                Spol = korisnik.Spol,
-                Slika = korisnik.Slika,
-                AlergijaNaLijek = korisnik.AlergijaNaLijek,
-                Proteza = korisnik.Proteza,
-                Terapija = korisnik.Terapija,
-                Navlake = korisnik.Navlake,
-                Aparatic = korisnik.Aparatic
-            };
 
-            return View("PregledProfila",model);
+            
+
+            var model = new UrediProfilViewModel //za sve usere
+            {
+                Ime = korisnik.KorisnickiNalog.Ime,
+                Prezime = korisnik.KorisnickiNalog.Prezime,
+                Email = korisnik.KorisnickiNalog.Email,
+                JMBG = korisnik.KorisnickiNalog.JMBG,
+                DatumRodjenjaString = korisnik.KorisnickiNalog.DatumRodjenja.ToString("dd.MM.yyyy"),
+                Mobitel = korisnik.KorisnickiNalog.Mobitel,
+                Adresa = korisnik.KorisnickiNalog.Adresa,
+                GradID = korisnik.KorisnickiNalog.GradId,
+                Grad = korisnik.KorisnickiNalog.Grad.Naziv,
+                Gradovi = _context.Grads.Select
+                    (i => new SelectListItem { Text = i.Naziv, Value = i.GradId.ToString() }).ToList(),
+                Spol = korisnik.KorisnickiNalog.Spol,
+                Slika = korisnik.KorisnickiNalog.Slika
+            };
+            if (logiraniKorisnik.Permisije == 0)//admin
+            {
+                model.DatumZaposlenjaString = korisnik.DatumZaposlenja.ToString("dd.MM.yyyy");
+                model.BrojZiroRacuna = korisnik.BrojZiroRacuna;
+                model.OpisPosla = korisnik.OpisPosla;
+                model.Aktivan = korisnik.Aktivan ? "Da" : "Ne";
+                model.VrstaAcc = "Administrator";
+            }
+            if (logiraniKorisnik.Permisije == 1)//stomatolog
+            {
+                model.DatumZaposlenjaString = korisnik.DatumZaposlenja.ToString("dd.MM.yyyy");
+                model.BrojZiroRacuna = korisnik.BrojZiroRacuna;
+                model.OpisPosla = korisnik.OpisPosla;
+                model.Aktivan = korisnik.Aktivan ? "Da" : "Ne";
+                model.TitulaID = korisnik.TitulaID;
+                model.Titula = korisnik.Titula.Naziv;
+                model.VrstaAcc = "Stomatolog";
+                model.Titule = _context.Titulas.Select
+                    (i => new SelectListItem {Text = i.Naziv, Value = i.TitulaId.ToString()}).ToList();
+            }
+            if (logiraniKorisnik.Permisije == 2)//med.osoblje
+            {
+                model.DatumZaposlenjaString = korisnik.DatumZaposlenja.ToString("dd.MM.yyyy");
+                model.BrojZiroRacuna = korisnik.BrojZiroRacuna;
+                model.OpisPosla = korisnik.OpisPosla;
+                model.Aktivan = korisnik.Aktivan ? "Da" : "Ne";
+                model.TitulaID = korisnik.TitulaID;
+                model.Titula = korisnik.Titula.Naziv;
+                model.VrstaAcc = "Medicinsko osoblje";
+                model.Titule = _context.Titulas.Select
+                    (i => new SelectListItem {Text = i.Naziv, Value = i.TitulaId.ToString()}).ToList();
+            }
+            if (logiraniKorisnik.Permisije == 3)//pacijent
+            {
+                model.AlergijaNaLijek = korisnik.AlergijaNaLijek;
+                model.Aparatic = korisnik.Aparatic;
+                model.Navlake = korisnik.Navlake;
+                model.Proteza = korisnik.Proteza;
+                model.Terapija = korisnik.Terapija;
+                model.VrstaAcc = "Pacijent";
+            }
+            return View("PregledProfila", model);
         }
 
-
         [HttpPost]
-        [ActionName("pregled-profila")]
-        public IActionResult PregledProfila(UrediProfilViewModel model)
+        [ActionName("snimi-izmjene")]
+        [DisableRequestSizeLimit]
+        public IActionResult SnimiIzmjene(UrediProfilViewModel model)
         {
             if (!ModelState.IsValid)
                 return RedirectToAction("pregled-profila");
@@ -140,53 +189,60 @@ namespace StomatoloskaOrdinacija.Web.Controllers
 
             if (logiraniKorisnik.Permisije == 3)
             {
-                TempData["korisnikId"] = _context.Pacijents.Where(i => i.KorisnickiNalogId == HttpContext.GetLogiraniKorisnik().KorisnickiNalogId).FirstOrDefault().PacijentId;
+                //TempData["korisnikId"] = _context.Pacijents.Where(i => i.KorisnickiNalogId == HttpContext.GetLogiraniKorisnik().KorisnickiNalogId).FirstOrDefault().PacijentId;
                 korisnik = _context.Pacijents.SingleOrDefault(i => i.KorisnickiNalogId == logiraniKorisnik.KorisnickiNalogId);
             }
 
-            if (korisnik.Ime != model.Ime)
+            if (korisnik.KorisnickiNalog.Ime != model.Ime)
             {
-                korisnik.Ime = model.Ime;
+                korisnik.KorisnickiNalog.Ime = model.Ime;
                 _context.SaveChanges();
 
                 TempData["successMessage"] = "Ime uspješno promjenuto.";
             }
 
-            if (korisnik.Prezime != model.Prezime)
+            if (korisnik.KorisnickiNalog.Prezime != model.Prezime)
             {
-                korisnik.Prezime = model.Prezime;
+                korisnik.KorisnickiNalog.Prezime = model.Prezime;
                 _context.SaveChanges();
 
                 TempData["successMessage"] = "Prezime uspješno promjenuto.";
             }
 
-            if (korisnik.Mobitel != model.Mobitel)
+            if (korisnik.KorisnickiNalog.Mobitel != model.Mobitel)
             {
-                korisnik.Mobitel = model.Mobitel;
+                korisnik.KorisnickiNalog.Mobitel = model.Mobitel;
                 _context.SaveChanges();
 
                 TempData["successMessage"] = "Broj mobitela uspješno promjenut.";
             }
 
-            if (korisnik.Adresa != model.Adresa)
+            if (korisnik.KorisnickiNalog.Adresa != model.Adresa)
             {
-                korisnik.Adresa = model.Adresa;
+                korisnik.KorisnickiNalog.Adresa = model.Adresa;
                 _context.SaveChanges();
 
                 TempData["successMessage"] = "Adresa uspješno promjenuta.";
             }
 
-            if (korisnik.GradID != model.GradID)
+            if (korisnik.KorisnickiNalog.GradId != model.GradID)
             {
-                korisnik.GradID = model.GradID;
+                korisnik.KorisnickiNalog.GradId = model.GradID;
                 _context.SaveChanges();
 
                 TempData["successMessage"] = "Grad uspješno promjenut.";
             }
-
-            if (korisnik.Slika != model.Slika)
+            string uniqueFileName = UploadedFile(model);
+            if (uniqueFileName != null)
             {
-                korisnik.Slika = model.Slika;
+                string _imageToBeDeleted = Path.Combine(_webHostEnvironment.WebRootPath, "images", korisnik.KorisnickiNalog.Slika);
+
+                if(System.IO.File.Exists(_imageToBeDeleted))
+                {
+                    System.IO.File.Delete(_imageToBeDeleted);
+                }
+
+                korisnik.KorisnickiNalog.Slika = uniqueFileName;
                 _context.SaveChanges();
 
                 TempData["successMessage"] = "Slika uspješno promjenuta.";
@@ -229,7 +285,22 @@ namespace StomatoloskaOrdinacija.Web.Controllers
 
             return RedirectToAction("pregled-profila");
         }
-
+        private string UploadedFile(UrediProfilViewModel model)  
+        {  
+            string uniqueFileName = null;  
+  
+            if (model.NovaSlika != null) 
+            {  
+                string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");  
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + model.NovaSlika.FileName;
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);  
+                using (var fileStream = new FileStream(filePath, FileMode.Create))  
+                {  
+                    model.NovaSlika.CopyTo(fileStream);  
+                }  
+            }  
+            return uniqueFileName;  
+        }
 
         [ActionName("izmjena-lozinke")]
         [Autorizacija(true, true, true,true)]
@@ -248,7 +319,6 @@ namespace StomatoloskaOrdinacija.Web.Controllers
 
             if (logiraniKorisnik.Permisije == 3)
             {
-                TempData["pacijentId"] = _context.Pacijents.Where(i => i.KorisnickiNalogId == HttpContext.GetLogiraniKorisnik().KorisnickiNalogId).FirstOrDefault().PacijentId;
                 TempData["Layout"] = "_Pacijent";
             }
             return View("IzmjenaLozinke");
@@ -257,14 +327,32 @@ namespace StomatoloskaOrdinacija.Web.Controllers
 
         [HttpPost]
         [ActionName("izmjena-lozinke")]
-        public IActionResult PromijeniLozinku(PromjeniLozinkuViewModel model)
+        public IActionResult PromijeniLozinku(ProfilIzmjenaLozinkeViewModel model)
         {
-            if (!ModelState.IsValid)
-                return View("IzmjenaLozinke", model);
-
             KorisnickiNalog logiraniKorisnik = HttpContext.GetLogiraniKorisnik();
 
-            if (PasswordSettings.GetHash(model.TrenutnaLozinka, Convert.FromBase64String(logiraniKorisnik.LozinkaSalt))
+            if (logiraniKorisnik.Permisije == 0)
+                TempData["Layout"] = "_Administrator";
+
+            if (logiraniKorisnik.Permisije == 1)
+                TempData["Layout"] = "_Stomatolog";
+
+            if (logiraniKorisnik.Permisije == 2)
+                TempData["Layout"] = "_MedicinskoOsoblje";
+
+            if (logiraniKorisnik.Permisije == 3)
+            {
+                TempData["Layout"] = "_Pacijent";
+            }
+            //if (!ModelState.IsValid)
+            //    return View("IzmjenaLozinke", model);
+            if (!TestNoveLozinke(model.NovaLozinka))
+            {
+                TempData["errorMessage"] = "Dužina lozinke je minimalno 8 karaktera. Lozinka se sastoji od malih i velikih slova, brojeva te specijalnih karaktera.";
+                return View("IzmjenaLozinke", model);
+            }
+
+            if (PasswordSettings.GetHash(model.StaraLozinka, Convert.FromBase64String(logiraniKorisnik.LozinkaSalt))
                 != logiraniKorisnik.LozinkaHash)
             {
                 TempData["errorMessage"] = "Netačno unesena trenutna lozinka.";
@@ -278,14 +366,23 @@ namespace StomatoloskaOrdinacija.Web.Controllers
                 return RedirectToAction("izmjena-lozinke");
             }
 
+            if (model.NovaLozinka != model.PotvrdaNoveLozinke)
+            {
+                TempData["errorMessage"] = "Niste potvrdili vašu novu lozinku.";
+                return RedirectToAction("izmjena-lozinke");
+            }
             logiraniKorisnik.LozinkaHash = PasswordSettings.GetHash(model.NovaLozinka, Convert.FromBase64String(logiraniKorisnik.LozinkaSalt));
-
+           
             _context.SaveChanges();
 
             TempData["successMessage"] = "Uspješno ste promijenili lozinku.";
             return RedirectToAction("pregled-profila");
         }
 
+        private bool TestNoveLozinke(string temp)
+        {
+            return Regex.IsMatch(temp, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$");
+        }
 
         public IActionResult Odjava()
         {
@@ -316,5 +413,6 @@ namespace StomatoloskaOrdinacija.Web.Controllers
 
             return RedirectToAction("Prijava", "Prijava");
         }
+
     }
 }

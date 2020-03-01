@@ -14,9 +14,6 @@ namespace StomatoloskaOrdinacija.Data.EntityModels
         public int MedicinskoOsobljeId { get; set; }
         public MedicinskoOsoblje MedicinskoOsoblje { get; set; }
 
-        [ForeignKey(nameof(UlazStavke))]
-        public int UlazStavkeId { get; set; }
-        public UlazStavke UlazStavke { get; set; }
 
         [Required]
         [StringLength(50)]

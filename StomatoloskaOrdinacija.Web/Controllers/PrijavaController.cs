@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
@@ -19,11 +20,13 @@ namespace StomatoloskaOrdinacija.Web.Controllers
     {
         private MyContext _context;
         private IConfiguration _configuration;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public PrijavaController(MyContext context, IConfiguration configuration)
+        public PrijavaController(MyContext context, IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
             _configuration = configuration;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public IActionResult Prijava()
@@ -41,13 +44,13 @@ namespace StomatoloskaOrdinacija.Web.Controllers
                 return View(model);
 
             
-           var korisnickiNalog = _context.KorisnickiNalogs
-               .Where(i => i.Email == model.Email)
-               .AsEnumerable()
-               .Where(i => i.LozinkaHash ==
-                           PasswordSettings.GetHash(model.Lozinka, Convert.FromBase64String(i.LozinkaSalt)));
+            var korisnickiNalog = _context.KorisnickiNalogs
+                .Where(i => i.Email == model.Email)
+                .AsEnumerable()
+                .Where(i => i.LozinkaHash ==
+                            PasswordSettings.GetHash(model.Lozinka, Convert.FromBase64String(i.LozinkaSalt)));
             
-            if (korisnickiNalog == null)
+            if (korisnickiNalog == null || !korisnickiNalog.Any())
             {
                 TempData["errorMessage"] = "Niste unijeli ispravne podatke za prijavu.";
                 return View(model);
@@ -104,9 +107,8 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             byte[] lozinkaSalt = PasswordSettings.GetSalt();
             string lozinkaHash = PasswordSettings.GetHash(model.Lozinka, lozinkaSalt);
 
-            var memstream = new MemoryStream();
-            model.Slika.CopyTo(memstream);
-            byte[] slikaBytes = memstream.ToArray();
+
+            string uniqueFileName = UploadedFile(model); 
 
             KorisnickiNalog korisnickiNalog = new KorisnickiNalog
             {
@@ -123,7 +125,7 @@ namespace StomatoloskaOrdinacija.Web.Controllers
                 JMBG = model.JMBG,
                 DatumRodjenja = model.DatumRodjenja,
                 Spol = model.Spol,
-                Slika = slikaBytes
+                Slika = uniqueFileName
             };
             Pacijent pacijent = new Pacijent
             {
@@ -142,6 +144,22 @@ namespace StomatoloskaOrdinacija.Web.Controllers
 
             TempData["successMessage"] = "Uspješno ste se registrovali.";
             return RedirectToAction("Prijava");
+        }
+        private string UploadedFile(RegistracijaViewModel model)  
+        {  
+            string uniqueFileName = null;  
+  
+            if (model.Slika != null)  
+            {  
+                string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");  
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Slika.FileName;  
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);  
+                using (var fileStream = new FileStream(filePath, FileMode.Create))  
+                {  
+                    model.Slika.CopyTo(fileStream);  
+                }  
+            }  
+            return uniqueFileName;  
         }
 
         [ActionName("zaboravljena-lozinka")]

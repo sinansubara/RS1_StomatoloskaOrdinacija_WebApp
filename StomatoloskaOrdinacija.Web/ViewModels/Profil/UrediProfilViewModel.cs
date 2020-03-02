@@ -63,7 +63,7 @@ namespace StomatoloskaOrdinacija.Web.ViewModels.Profil
         [Display(Name = "Broj žiro računa")]
         public string BrojZiroRacuna { get; set; }
 
-        public string Aktivan { get; set; }
+        public bool Aktivan { get; set; }
 
         public int TitulaID { get; set; }
         public string Titula { get; set; }

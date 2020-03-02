@@ -31,6 +31,70 @@ namespace StomatoloskaOrdinacija.Web.Controllers
 
         public IActionResult Prijava()
         {
+            if (!_context.Administrators.Any())
+            {
+                byte[] lozinkaSalt = PasswordSettings.GetSalt();
+                string lozinkaHash = PasswordSettings.GetHash("Admin24!", lozinkaSalt);
+                if (!_context.Grads.Any())
+                {
+                    if (!_context.Drzavas.Any())
+                    {
+                        var novaDrzava = new Drzava
+                        {
+                            Naziv = "Bosna i Hercegovina"
+                        };
+                        _context.Add(novaDrzava);
+                        _context.SaveChanges();
+                    }
+
+                    var noviGrad = new Grad
+                    {
+                        DrzavaId = 1,
+                        Naziv = "Jablanica",
+                        PostanskiBroj = "88420"
+                    };
+                    _context.Add(noviGrad);
+                    _context.SaveChanges();
+                }
+                var AdminKorisnik = new KorisnickiNalog
+                {
+                    Ime = "Dino",
+                    Prezime = "Nanić",
+                    Email = "stomordiadmin@gmail.com",
+                    LozinkaHash = lozinkaHash,
+                    LozinkaSalt = Convert.ToBase64String(lozinkaSalt),
+                    Permisije = 0,
+                    Kreirano = DateTime.Now,
+                    JMBG = "0101990150023",
+                    DatumRodjenja = new DateTime(1990, 1, 1),
+                    Mobitel = "052213321",
+                    Adresa = "San BB",
+                    GradId = 1,
+                    Spol = "Muško",
+                    Slika = "blank-profile.jpg"
+                };
+                _context.Add(AdminKorisnik);
+                _context.SaveChanges();
+                var NoviAdministrator = new Administrator
+                {
+                    KorisnickiNalog = _context.KorisnickiNalogs.SingleOrDefault(i => i.Email == AdminKorisnik.Email),
+                    DatumZaposlenja = DateTime.Now,
+                    OpisPosla = "Administracija stranice",
+                    BrojZiroRacuna = "4343000022225555",
+                    Aktivan = true
+                };
+                _context.Add(NoviAdministrator);
+                _context.SaveChanges();
+
+                var novaTitula = new Titula
+                {
+                    Naziv = "dr."
+                };
+                _context.Add(novaTitula);
+                _context.SaveChanges();
+            }
+                
+
             if (HttpContext.GetLogiraniKorisnik() != null)
                 return RedirectToAction("Pocetna", "Profil");
 

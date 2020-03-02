@@ -199,7 +199,8 @@
                                     <label>Aktivan</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <p><input name="aktivan" asp-for="Aktivan" type="text" class="form-control" value="@Model.Aktivan"></p>
+                                    <input type="checkbox" name="aktivan" id="aktivan" asp-for="Aktivan" checked="@Model.Aktivan">
+                                    <label><p>@(Model.Aktivan ? "Da" : "Ne")</p></label>
                                 </div>
                             </div>
                             @if (Model.VrstaAcc == "Stomatolog" || Model.VrstaAcc == "Medicinsko osoblje")

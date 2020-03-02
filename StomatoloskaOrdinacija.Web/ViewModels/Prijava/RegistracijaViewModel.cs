@@ -46,7 +46,7 @@ namespace StomatoloskaOrdinacija.Web.ViewModels.Prijava
         [Required]
         public string Spol { get; set; }
 
-        [Required]
+        
         public IFormFile Slika { get; set; }
 
         [Required]

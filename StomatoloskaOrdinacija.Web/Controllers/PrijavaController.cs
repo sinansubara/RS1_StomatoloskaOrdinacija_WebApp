@@ -147,7 +147,7 @@ namespace StomatoloskaOrdinacija.Web.Controllers
         }
         private string UploadedFile(RegistracijaViewModel model)  
         {  
-            string uniqueFileName = null;  
+            string uniqueFileName = "blank-profile.jpg";  
   
             if (model.Slika != null)  
             {  

@@ -41,6 +41,13 @@
     <link href="~/template/css/sb-admin.css" rel="stylesheet">
 </head>
 
+@if (errorMessage != null)
+{
+    <div class="alert alert-danger alert-prijavljen" data-alert="alert">
+        <a class="close" style="cursor: pointer !important" data-dismiss="alert">&times;</a>
+        <p class="text-center text-danger">@errorMessage</p>
+    </div>
+}
 <body class="bg-dark">
     <div class="container">
         <div class="card card-register mx-auto mt-5">

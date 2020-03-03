@@ -1,0 +1,135 @@
+﻿@model StomatoloskaOrdinacija.Web.ViewModels.Korisnik.KorisnikDodajOsobljeViewModel
+
+@{
+    Layout = "_Administrator";
+    ViewBag.Title = "Stomatološka ordinacija | Dodavanje novog uposlenika";
+    string successMessage = (string)TempData["successMessage"];
+    string errorMessage = (string)TempData["errorMessage"];
+}
+
+<head>
+    <link href="~/template/css/PregledProfila.css" rel="stylesheet">
+</head>
+
+@if (successMessage != null)
+{
+    <div class="alert alert-info alert-prijavljen" data-alert="alert">
+        <a class="close" style="cursor: pointer !important" data-dismiss="alert">&times;</a>
+        <p class="text-center text-info">@successMessage</p>
+    </div>
+}
+@if (errorMessage != null)
+{
+    <div class="alert alert-danger alert-prijava" data-alert="alert">
+        <a class="close" data-dismiss="alert" style="cursor: pointer">&times;</a>
+        <p class="text-center text-danger">@errorMessage</p>
+    </div>
+}
+
+<div class="card mx-auto mt-3">
+    <div class="card-header">Dodavanje novog uposlenika</div>
+    <div class="card-body">
+        <form id="registracija" asp-controller="Korisnik" asp-action="dodaj-osoblje" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <div class="form-row">
+                    <div class="col-md-4">
+                        <label for="ime">Ime</label>
+                        <input class="form-control" id="ime" type="text" name="ime" asp-for="Ime" aria-describedby="nameHelp" placeholder="Unesite ime" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="prezime">Prezime</label>
+                        <input class="form-control" id="prezime" type="text" name="prezime" asp-for="Prezime" aria-describedby="nameHelp" placeholder="Unesite prezime" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="jmbg">JMBG</label>
+                        <input class="form-control" id="jmbg" aria-describedby="nameHelp" placeholder="Unesite JMBG" type="text" name="jmbg" asp-for="JMBG" required>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-row">
+                    <div class="col-md-4">
+                        <label for="mobitel">Broj mobitela</label>
+                        <input class="form-control" id="mobitel" aria-describedby="nameHelp" placeholder="Unesite broj mobitela" type="text" name="mobitel" asp-for="Mobitel" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="adresa">Adresa</label>
+                        <input class="form-control" id="adresa" aria-describedby="nameHelp" placeholder="Unesite adresu" type="text" name="adresa" asp-for="Adresa" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="date-error-message">Izaberite datum rođenja</label>
+                        <input type="text" name="datumRodjenja" asp-for="DatumRodjenja" value="" class="form-control"
+                               onfocus="(this.type = 'date')" onblur="(this.type = 'text')" placeholder="Datum rođenja" required>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-row">
+                    <div class="col-md-3">
+                        <label for="imgInp">Dodaj sliku</label>
+                        <input type="file" name="slika" id="imgInp" asp-for="Slika" class="form-control">
+                    </div>
+                    <div class="col-md-3">
+                        <label>Izaberite grad</label>
+                        <select asp-for="GradID" asp-items="@Model.Gradovi" class="form-control" required>
+                            <option value="" selected disabled>Grad</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Izberite spol</label>
+                        <select name="spol" asp-for="Spol" class="form-control" required>
+                            <option value="" selected disabled>Spol</option>
+                            <option value="Muško">Muško</option>
+                            <option value="Žensko">Žensko</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="date-error-message">Izaberite datum zaposlenja</label>
+                        <input type="text" name="datumZaposlenja" asp-for="DatumZaposlenja" value="" class="form-control"
+                               onfocus="(this.type = 'date')" onblur="(this.type = 'text')" placeholder="Datum zaposlenja" required>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-row">
+                    <div class="col-md-3">
+                        <label>Izaberite titulu</label>
+                        <select asp-for="TitulaID" asp-items="@Model.Titule" class="form-control" required>
+                            <option value="" selected disabled>Titula</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="brojziroracuna">Broj žiro računa</label>
+                        <input class="form-control" id="brojziroracuna" aria-describedby="nameHelp" placeholder="Unesite broj žiro računa" type="text" name="brojziroracuna" asp-for="BrojZiroRacuna" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="opisposla">Opis posla</label>
+                        <input class="form-control" id="opisposla" aria-describedby="nameHelp" placeholder="Unesite opis posla" type="text" name="opisposla" asp-for="OpisPosla" required>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="aktivan">Aktivan</label>
+                        <input type="checkbox" name="aktivan" id="aktivan" asp-for="Aktivan">
+                    </div>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="emailadresa">Email adresa</label>
+                <input class="form-control" id="emailadresa" type="email" name="email" asp-for="Email" aria-describedby="emailHelp" placeholder="Unesite email" required>
+            </div>
+            <div class="form-group">
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <label for="lozinka1">Lozinka</label>
+                        <input class="form-control" id="lozinka1" type="password" name="lozinka" asp-for="Lozinka" placeholder="Lozinka" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="potvrdapassworda">Confirm password</label>
+                        <input class="form-control" id="potvrdapassworda" type="password" name="potvrdaLozinke" asp-for="PotvrdaLozinke" placeholder="Potvrda lozinke" required>
+                    </div>
+                </div>
+            </div>
+            <input class="btn btn-primary btn-block" type="submit" value="Snimi novog pacijenta" style="cursor: pointer;">
+        </form>
+    </div>
+</div>

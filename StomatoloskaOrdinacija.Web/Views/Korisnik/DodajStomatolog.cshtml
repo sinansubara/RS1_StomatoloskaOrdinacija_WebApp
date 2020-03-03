@@ -1,8 +1,8 @@
-﻿@model StomatoloskaOrdinacija.Web.ViewModels.Korisnik.KorisnikDodajPacijentaViewModel
+﻿@model StomatoloskaOrdinacija.Web.ViewModels.Korisnik.KorisnikDodajStomatologViewModel
 
 @{
     Layout = "_Administrator";
-    ViewBag.Title = "Stomatološka ordinacija | Dodavanje novog pacijenta";
+    ViewBag.Title = "Stomatološka ordinacija | Dodavanje novog stomatologa";
     string successMessage = (string)TempData["successMessage"];
     string errorMessage = (string)TempData["errorMessage"];
 }
@@ -27,9 +27,9 @@
 }
 
 <div class="card mx-auto mt-3">
-    <div class="card-header">Dodavanje novog pacijenta</div>
+    <div class="card-header">Dodavanje novog stomatologa</div>
     <div class="card-body">
-        <form id="registracija" asp-controller="Korisnik" asp-action="dodaj-pacijenta" method="POST" enctype="multipart/form-data">
+        <form id="registracija" asp-controller="Korisnik" asp-action="dodaj-stomatolog" method="POST" enctype="multipart/form-data">
             <div class="form-group">
                 <div class="form-row">
                     <div class="col-md-4">
@@ -66,64 +66,45 @@
             <div class="form-group">
                 <div class="form-row">
                     <div class="col-md-3">
-                        <div class="form-row">
-                            <div class="col-md-6">
-                                <label for="alergijenalijekove">Alergije na lijekove</label>
-                            </div>
-                            <div class="col-md-6">
-                                <input type="checkbox" name="alergijenalijekove" id="alergijenalijekove" asp-for="AlergijaNaLijek">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col-md-6">
-                                <label for="proteza">Proteza</label>
-                            </div>
-                            <div class="col-md-6">
-                                <input type="checkbox" name="proteza" id="proteza" asp-for="Proteza">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col-md-6">
-                                <label for="terapija">Terapija</label>
-                            </div>
-                            <div class="col-md-6">
-                                <input type="checkbox" name="terapija" id="terapija" asp-for="Terapija">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col-md-6">
-                                <label for="navlake">Navlake</label>
-                            </div>
-                            <div class="col-md-6">
-                                <input type="checkbox" name="navlake" id="navlake" asp-for="Navlake">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="col-md-6">
-                                <label for="aparatic">Aparatić</label>
-                            </div>
-                            <div class="col-md-6">
-                                <input type="checkbox" name="aparatic" id="aparatic" asp-for="Aparatic">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mt-3">
                         <label for="imgInp">Dodaj sliku</label>
                         <input type="file" name="slika" id="imgInp" asp-for="Slika" class="form-control">
                     </div>
-                    <div class="col-md-3 mt-3">
+                    <div class="col-md-3">
                         <label>Izaberite grad</label>
                         <select asp-for="GradID" asp-items="@Model.Gradovi" class="form-control" required>
                             <option value="" selected disabled>Grad</option>
                         </select>
                     </div>
-                    <div class="col-md-3 mt-3">
+                    <div class="col-md-3">
                         <label>Izberite spol</label>
                         <select name="spol" asp-for="Spol" class="form-control" required>
                             <option value="" selected disabled>Spol</option>
                             <option value="Muško">Muško</option>
                             <option value="Žensko">Žensko</option>
                         </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="date-error-message">Izaberite datum zaposlenja</label>
+                        <input type="text" name="datumZaposlenja" asp-for="DatumZaposlenja" value="" class="form-control"
+                               onfocus="(this.type = 'date')" onblur="(this.type = 'text')" placeholder="Datum zaposlenja">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-row">
+                    <div class="col-md-4">
+                        <label>Izaberite titulu</label>
+                        <select asp-for="TitulaID" asp-items="@Model.Titule" class="form-control" required>
+                            <option value="" selected disabled>Titula</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="brojziroracuna">Broj žiro računa</label>
+                        <input class="form-control" id="brojziroracuna" aria-describedby="nameHelp" placeholder="Unesite broj žiro računa" type="text" name="brojziroracuna" asp-for="BrojZiroRacuna">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="aktivan">Aktivan</label>
+                        <input type="checkbox" name="aktivan" id="aktivan" asp-for="Aktivan">
                     </div>
                 </div>
             </div>

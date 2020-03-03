@@ -721,23 +721,23 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             return RedirectToAction("uredi-pacijent");
         }
 
-        //[Autorizacija(true, false, false, false)]
-        //[ActionName("izbrisi-osoblje")]
-        //public IActionResult IzbrisiOsoblje(int id)
-        //{
-        //    var osoblje = _context.MedicinskoOsobljes.FirstOrDefault(i => i.MedicinskoOsoboljeId == id);
-        //    if (osoblje != null)
-        //    {
-        //        var korisnikId = osoblje.KorisnickiNalogId;
-        //        var nalogzabrisanje = _context.KorisnickiNalogs.FirstOrDefault(i => i.KorisnickiNalogId == korisnikId);
-        //        _context.Remove(osoblje);
-        //        _context.Remove(nalogzabrisanje);
-        //        _context.SaveChanges();
-        //    }
-        //    return RedirectToAction("uredi-osoblje");
-        //}
+        [Autorizacija(true, false, false, false)]
+        [ActionName("izbrisi-osoblje")]
+        public IActionResult IzbrisiOsoblje(int id)
+        {
+            var osoblje = _context.MedicinskoOsobljes.FirstOrDefault(i => i.MedicinskoOsoboljeId == id);
+            if (osoblje != null)
+            {
+                var korisnikId = osoblje.KorisnickiNalogId;
+                var nalogzabrisanje = _context.KorisnickiNalogs.FirstOrDefault(i => i.KorisnickiNalogId == korisnikId);
+                _context.Remove(osoblje);
+                _context.Remove(nalogzabrisanje);
+                _context.SaveChanges();
+            }
+            return RedirectToAction("uredi-osoblje");
+        }
 
-    [Autorizacija(true, false, false, false)]
+        [Autorizacija(true, false, false, false)]
     [ActionName("izbrisi-stomatolog")]
     public IActionResult IzbrisiStomatolog(int id)
     {

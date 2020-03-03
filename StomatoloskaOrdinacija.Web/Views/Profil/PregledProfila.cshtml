@@ -12,224 +12,238 @@
 @if (successMessage != null)
 {
     <div class="alert alert-info alert-prijavljen" data-alert="alert">
-        <a class="close" data-dismiss="alert">&times;</a>
+        <a class="close" style="cursor: pointer !important" data-dismiss="alert">&times;</a>
         <p class="text-center text-info">@successMessage</p>
     </div>
 }
-
-<div class="container emp-profile">
-    <form asp-action="snimi-izmjene" asp-controller="Profil" method="POST" enctype="multipart/form-data">
-        <div class="row">
-            <div class="col-md-4">
-                <div class="profile-img">
-                    <input type="hidden" value="@Model.Slika" asp-for="Slika" />
-                    <img src="~/images/@Model.Slika"
-                         class="rounded-circle"
-                         height="250" width="250"
-                         asp-append-version="true" />
-                    <div class="file btn btn-lg btn-primary">
-                        Promjeni sliku
-                        <input type="file" name="novaslika" id="imgInp" asp-for="NovaSlika" class="form-control" accept="image/*">
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="profile-head">
-                    <h2>
-                        @Model.Prezime @Model.Ime
-                    </h2>
-                    <h6>
-                        @Model.VrstaAcc
-                    </h6>
-                    <p class="proile-rating">SPOL : <span>@Model.Spol</span></p>
-                    <ul class="nav nav-tabs" id="myTab" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Podaci</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Specifični podaci</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="tab-content profile-tab" id="myTabContent">
-                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                        <div class="row">
-                            <div class="col-md-5">
-                                <label>Ime</label>
-                            </div>
-                            <div class="col-md-6">
-                                <p><input name="ime" asp-for="Ime" type="text" class="form-control" value="@Model.Ime"></p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-5">
-                                <label>Email</label>
-                            </div>
-                            <div class="col-md-6">
-                                <p><input name="prezime" asp-for="Prezime" type="text" class="form-control" value="@Model.Prezime"></p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-5">
-                                <label>Email</label>
-                            </div>
-                            <div class="col-md-6">
-                                <p><input name="email" asp-for="Email" type="text" class="form-control" value="@Model.Email" disabled></p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-5">
-                                <label>JMBG</label>
-                            </div>
-                            <div class="col-md-6">
-                                <p><input name="jmbg" asp-for="JMBG" type="text" class="form-control" value="@Model.JMBG" disabled></p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-5">
-                                <label>Datum rođenja</label>
-                            </div>
-                            <div class="col-md-6">
-                                <p><input name="datumrodjenja" asp-for="DatumRodjenja" type="datetime" class="form-control" value="@Model.DatumRodjenjaString" disabled></p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-5">
-                                <label>Broj telefona</label>
-                            </div>
-                            <div class="col-md-6">
-                                <p><input name="mobitel" asp-for="Mobitel" type="text" class="form-control" value="@Model.Mobitel"></p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-5">
-                                <label>Adresa</label>
-                            </div>
-                            <div class="col-md-6">
-                                <p><input name="adresa" asp-for="Adresa" type="text" class="form-control" value="@Model.Adresa"></p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-5">
-                                <label>Grad</label>
-                            </div>
-                            <div class="col-md-6">
-                                <select asp-for="GradID" asp-items="@Model.Gradovi" class="form-control">
-                                </select>
-                            </div>
+<div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a asp-controller="Profil" asp-action="Pocetna">Početna</a>
+        </li>
+        <li class="breadcrumb-item active">Pregled profila</li>
+    </ol>
+    <div class="container emp-profile">
+        <form asp-action="snimi-izmjene" asp-controller="Profil" method="POST" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="profile-img">
+                        <input type="hidden" value="@Model.Slika" asp-for="Slika" />
+                        <img src="~/images/@Model.Slika"
+                             class="rounded-circle"
+                             height="250" width="250"
+                             asp-append-version="true" />
+                        <div class="file btn btn-lg btn-primary">
+                            Promjeni sliku
+                            <input type="file" name="novaslika" id="imgInp" asp-for="NovaSlika" class="form-control" accept="image/*">
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                        @if (Model.VrstaAcc == "Pacijent")
-                        {
+                </div>
+                <div class="col-md-6">
+                    <div class="profile-head">
+                        <h2>
+                            @Model.Prezime @Model.Ime
+                        </h2>
+                        <h6>
+                            @Model.VrstaAcc
+                        </h6>
+                        <p class="proile-rating">SPOL : <span>@Model.Spol</span></p>
+                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Podaci</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Specifični podaci</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="tab-content profile-tab" id="myTabContent">
+                        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                             <div class="row">
                                 <div class="col-md-5">
-                                    <label>Alergija na lijek</label>
+                                    <label>Ime</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <input type="checkbox" name="alergijanalijek" id="alergijanalijek" asp-for="AlergijaNaLijek" checked="@Model.AlergijaNaLijek">
-                                    <label><p>@(Model.AlergijaNaLijek ? "Da" : "Ne")</p></label>
+                                    <p><input name="ime" asp-for="Ime" type="text" class="form-control" value="@Model.Ime"></p>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-5">
-                                    <label>Proteza</label>
+                                    <label>Email</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <input type="checkbox" name="proteza" id="proteza" asp-for="Proteza" checked="@Model.Proteza">
-                                    <label><p>@(Model.Proteza ? "Da" : "Ne")</p></label>
+                                    <p><input name="prezime" asp-for="Prezime" type="text" class="form-control" value="@Model.Prezime"></p>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-5">
-                                    <label>Terapija</label>
+                                    <label>Email</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <input type="checkbox" name="terapija" id="terapija" asp-for="Terapija" checked="@Model.Terapija">
-                                    <label><p>@(Model.Terapija ? "Da" : "Ne")</p></label>
+                                    <p><input name="email" asp-for="Email" type="text" class="form-control" value="@Model.Email" disabled></p>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-5">
-                                    <label>Navlake</label>
+                                    <label>JMBG</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <input type="checkbox" name="navlake" id="navlake" asp-for="Navlake" checked="@Model.Navlake">
-                                    <label><p>@(Model.Navlake ? "Da" : "Ne")</p></label>
+                                    <p><input name="jmbg" asp-for="JMBG" type="text" class="form-control" value="@Model.JMBG" disabled></p>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-5">
-                                    <label>Aparatić</label>
+                                    <label>Datum rođenja</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <input type="checkbox" name="aparatic" id="aparatic" asp-for="Aparatic" checked="@Model.Aparatic">
-                                    <label><p>@(Model.Aparatic ? "Da" : "Ne")</p></label>
-                                </div>
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="row">
-                                <div class="col-md-5">
-                                    <label>Datum zaposlenja</label>
-                                </div>
-                                <div class="col-md-6">
-                                    <p><input name="datumzaposlenja" asp-for="DatumZaposlenja" type="text" class="form-control" value="@Model.DatumZaposlenjaString" disabled></p>
+                                    <p><input name="datumrodjenja" asp-for="DatumRodjenja" type="datetime" class="form-control" value="@Model.DatumRodjenjaString" disabled></p>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-5">
-                                    <label>Broj žiro računa</label>
+                                    <label>Broj telefona</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <p><input name="brojziroracuna" asp-for="BrojZiroRacuna" type="text" class="form-control" value="@Model.BrojZiroRacuna"></p>
+                                    <p><input name="mobitel" asp-for="Mobitel" type="text" class="form-control" value="@Model.Mobitel"></p>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-5">
-                                    <label>Opis posla</label>
+                                    <label>Adresa</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <p><input name="opisposla" asp-for="OpisPosla" type="text" class="form-control" value="@Model.OpisPosla"></p>
+                                    <p><input name="adresa" asp-for="Adresa" type="text" class="form-control" value="@Model.Adresa"></p>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-5">
-                                    <label>Aktivan</label>
+                                    <label>Grad</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <input type="checkbox" name="aktivan" id="aktivan" asp-for="Aktivan" checked="@Model.Aktivan">
-                                    <label><p>@(Model.Aktivan ? "Da" : "Ne")</p></label>
+                                    <select asp-for="GradID" asp-items="@Model.Gradovi" class="form-control">
+                                    </select>
                                 </div>
                             </div>
-                            @if (Model.VrstaAcc == "Stomatolog" || Model.VrstaAcc == "Medicinsko osoblje")
+                        </div>
+                        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                            @if (Model.VrstaAcc == "Pacijent")
                             {
                                 <div class="row">
                                     <div class="col-md-5">
-                                        <label>Titula</label>
+                                        <label>Alergija na lijek</label>
                                     </div>
                                     <div class="col-md-6">
-                                        <select asp-for="TitulaID" asp-items="@Model.Titule" class="form-control"></select>
+                                        <input type="checkbox" name="alergijanalijek" id="alergijanalijek" asp-for="AlergijaNaLijek" checked="@Model.AlergijaNaLijek">
+                                        <label><p>@(Model.AlergijaNaLijek ? "Da" : "Ne")</p></label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <label>Proteza</label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="checkbox" name="proteza" id="proteza" asp-for="Proteza" checked="@Model.Proteza">
+                                        <label><p>@(Model.Proteza ? "Da" : "Ne")</p></label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <label>Terapija</label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="checkbox" name="terapija" id="terapija" asp-for="Terapija" checked="@Model.Terapija">
+                                        <label><p>@(Model.Terapija ? "Da" : "Ne")</p></label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <label>Navlake</label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="checkbox" name="navlake" id="navlake" asp-for="Navlake" checked="@Model.Navlake">
+                                        <label><p>@(Model.Navlake ? "Da" : "Ne")</p></label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <label>Aparatić</label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="checkbox" name="aparatic" id="aparatic" asp-for="Aparatic" checked="@Model.Aparatic">
+                                        <label><p>@(Model.Aparatic ? "Da" : "Ne")</p></label>
                                     </div>
                                 </div>
                             }
-                        }
+                            else
+                            {
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <label>Datum zaposlenja</label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><input name="datumzaposlenja" asp-for="DatumZaposlenja" type="text" class="form-control" value="@Model.DatumZaposlenjaString" disabled></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <label>Broj žiro računa</label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><input name="brojziroracuna" asp-for="BrojZiroRacuna" type="text" class="form-control" value="@Model.BrojZiroRacuna"></p>
+                                    </div>
+                                </div>
+                                @if (Model.VrstaAcc == "Administrator" || Model.VrstaAcc == "Medicinsko osoblje")
+                                {
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <label>Opis posla</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p><input name="opisposla" asp-for="OpisPosla" type="text" class="form-control" value="@Model.OpisPosla"></p>
+                                        </div>
+                                    </div>
+                                }
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <label>Aktivan</label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="checkbox" name="aktivan" id="aktivan" asp-for="Aktivan" checked="@Model.Aktivan">
+                                        <label><p>@(Model.Aktivan ? "Da" : "Ne")</p></label>
+                                    </div>
+                                </div>
+                                @if (Model.VrstaAcc == "Stomatolog" || Model.VrstaAcc == "Medicinsko osoblje")
+                                {
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <label>Titula</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <select asp-for="TitulaID" asp-items="@Model.Titule" class="form-control"></select>
+                                        </div>
+                                    </div>
+                                }
+                            }
 
 
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-2">
-                <div class="row">
-                    <a asp-controller="Profil" asp-action="izmjena-lozinke" class="btn btn-primary" name="btnChangePassword" style="cursor: pointer">Promjeni lozinku</a>
-                </div>
-                <div class="row">
-                    <input type="submit" class="btn btn-success" name="btnAddMore" style="cursor: pointer;margin: 10px;" value="Snimi izmjene" />
-                </div>
+                <div class="col-md-2">
+                    <div class="row">
+                        <a asp-controller="Profil" asp-action="izmjena-lozinke" class="btn btn-primary" name="btnChangePassword" style="cursor: pointer">Promjeni lozinku</a>
+                    </div>
+                    <div class="row">
+                        <input type="submit" class="btn btn-success" name="btnAddMore" style="cursor: pointer;margin: 10px;" value="Snimi izmjene" />
+                    </div>
 
+                </div>
             </div>
-        </div>
 
-    </form>
+        </form>
+    </div>
+
+
+
 </div>

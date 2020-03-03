@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
@@ -51,7 +52,10 @@ namespace StomatoloskaOrdinacija.Web.Controllers
                 Ime = logiraniKorisnik.Ime,
                 Prezime = logiraniKorisnik.Prezime
             };
+            var imepre = model.Ime + " " + model.Prezime;
 
+            HttpContext.Response.SetCookieJson("imeprezime",imepre);
+            
             return View(model);
         }
 
@@ -76,7 +80,7 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             
             if (logiraniKorisnik.Permisije == 1)
             {
-                korisnik = _context.Stomatologs
+                korisnik = _context.Stomatologs.Include(i=>i.Titula)
                     .Include(i => i.KorisnickiNalog)
                     .ThenInclude(i => i.Grad)
                     .SingleOrDefault(i => i.KorisnickiNalog == HttpContext.GetLogiraniKorisnik());
@@ -85,7 +89,7 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             }
             if (logiraniKorisnik.Permisije == 2)
             {
-                korisnik = _context.MedicinskoOsobljes
+                korisnik = _context.MedicinskoOsobljes.Include(i=>i.Titula)
                     .Include(i => i.KorisnickiNalog)
                     .ThenInclude(i => i.Grad)
                     .SingleOrDefault(i => i.KorisnickiNalog == HttpContext.GetLogiraniKorisnik());
@@ -134,7 +138,6 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             {
                 model.DatumZaposlenjaString = korisnik.DatumZaposlenja.ToString("dd.MM.yyyy");
                 model.BrojZiroRacuna = korisnik.BrojZiroRacuna;
-                model.OpisPosla = korisnik.OpisPosla;
                 model.Aktivan = korisnik.Aktivan;
                 model.TitulaID = korisnik.TitulaID;
                 model.Titula = korisnik.Titula.Naziv;
@@ -290,12 +293,15 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             }
             else
             {
-                if (korisnik.OpisPosla != model.OpisPosla)
+                if (logiraniKorisnik.Permisije == 0 || logiraniKorisnik.Permisije == 2)
                 {
-                    korisnik.OpisPosla = model.OpisPosla;
-                    _context.SaveChanges();
+                    if (korisnik.OpisPosla != model.OpisPosla)
+                    {
+                        korisnik.OpisPosla = model.OpisPosla;
+                        _context.SaveChanges();
 
-                    TempData["successMessage"] = "Opis posla uspješno promjenut.";
+                        TempData["successMessage"] = "Opis posla uspješno promjenut.";
+                    }
                 }
                 if (korisnik.BrojZiroRacuna != model.BrojZiroRacuna)
                 {

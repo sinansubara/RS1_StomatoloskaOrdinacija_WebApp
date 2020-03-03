@@ -65,13 +65,13 @@
             <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
                 <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Početna">
                     <a class="nav-link" asp-controller="Profil" asp-action="Pocetna">
-                        <i class="fa fa-fw fa-dashboard"></i>
+                        <i class="fa fa-fw fa-home"></i>
                         <span class="nav-link-text">Početna</span>
                     </a>
                 </li>
                 <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Profil">
                     <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseComponents" data-parent="#exampleAccordion">
-                        <i class="fa fa-fw fa-wrench"></i>
+                        <i class="fa fa-fw fa-address-card"></i>
                         <span class="nav-link-text">Profil</span>
                     </a>
                     <ul class="sidenav-second-level collapse" id="collapseComponents">
@@ -86,7 +86,7 @@
 
                 <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Korisnici">
                     <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseExamplePages" data-parent="#exampleAccordion">
-                        <i class="fa fa-fw fa-file"></i>
+                        <i class="fa fa-fw fa-copy"></i>
                         <span class="nav-link-text">Korisnici</span>
                     </a>
                     <ul class="sidenav-second-level collapse" id="collapseExamplePages">
@@ -246,7 +246,7 @@
                 <li class="nav-item">
                     <form class="form-inline my-2 my-lg-0 mr-lg-2">
                         <div class="input-group">
-                            <input class="form-control" type="text" placeholder="Search for...">
+                            <input class="form-control" type="text" placeholder="Pretraga">
                             <span class="input-group-btn">
                                 <button class="btn btn-primary" type="button">
                                     <i class="fa fa-search"></i>
@@ -254,6 +254,11 @@
                             </span>
                         </div>
                     </form>
+                </li>
+                <li class="nav-item">
+                    <a id="korisnik" asp-controller="Profil" asp-action="pregled-profila" class="nav-link">
+
+                    </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="modal" data-target="#exampleModal">
@@ -264,10 +269,10 @@
         </div>
     </nav>
     <div class="content-wrapper">
-        
-        
+
+
         @RenderBody()
-        
+
 
         <!-- /.container-fluid-->
         <!-- /.content-wrapper-->
@@ -301,6 +306,14 @@
             </div>
         </div>
         <!-- ovde su bili javascript i pomjerio sam ih u head-->
+        <script src="~/template/vendor/jquery/js.cookie.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                var temp = Cookies.get('imeprezime');
+                var temp2 = temp.replace(/"/g, "");
+                $("#korisnik").html(temp2);
+            });
+        </script>
     </div>
 </body>
 </html>

@@ -215,49 +215,49 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             return RedirectToAction("uredi-pacijent");
         }
 
-        //[Autorizacija(true,false,false,false)]
-        //[ActionName("uredi-stomatolog")]
-        //public IActionResult UrediStomatolog(int id = -1)
-        //{
-        //    if (id != -1)
-        //    {
-        //        dynamic korisnik = _context.Stomatologs.Include(i=>i.Titula)
-        //            .Include(i => i.KorisnickiNalog)
-        //            .ThenInclude(i => i.Grad)
-        //            .SingleOrDefault(i => i.StomatologId == id);
+        [Autorizacija(true, false, false, false)]
+        [ActionName("uredi-stomatolog")]
+        public IActionResult UrediStomatolog(int id = -1)
+        {
+            if (id != -1)
+            {
+                dynamic korisnik = _context.Stomatologs.Include(i => i.Titula)
+                    .Include(i => i.KorisnickiNalog)
+                    .ThenInclude(i => i.Grad)
+                    .SingleOrDefault(i => i.StomatologId == id);
 
-        //        TempData["Layout"] = "_Administrator";
+                TempData["Layout"] = "_Administrator";
 
 
-        //        var model = new KorisnikPrikazViewModel 
-        //        {
-        //            Ime = korisnik.KorisnickiNalog.Ime,
-        //            Prezime = korisnik.KorisnickiNalog.Prezime,
-        //            Email = korisnik.KorisnickiNalog.Email,
-        //            JMBG = korisnik.KorisnickiNalog.JMBG,
-        //            DatumRodjenjaString = korisnik.KorisnickiNalog.DatumRodjenja.ToString("dd.MM.yyyy"),
-        //            Mobitel = korisnik.KorisnickiNalog.Mobitel,
-        //            Adresa = korisnik.KorisnickiNalog.Adresa,
-        //            GradID = korisnik.KorisnickiNalog.GradId,
-        //            Grad = korisnik.KorisnickiNalog.Grad.Naziv,
-        //            Gradovi = _context.Grads.Select
-        //                (i => new SelectListItem { Text = i.Naziv, Value = i.GradId.ToString() }).ToList(),
-        //            Spol = korisnik.KorisnickiNalog.Spol,
-        //            Slika = korisnik.KorisnickiNalog.Slika,
-        //            DatumZaposlenjaString = korisnik.DatumZaposlenja.ToString("dd.MM.yyyy"),
-        //            BrojZiroRacuna = korisnik.BrojZiroRacuna,
-        //            Aktivan = korisnik.Aktivan,
-        //            TitulaID = korisnik.TitulaID,
-        //            Titula = korisnik.Titula.Naziv,
-        //            VrstaAcc = "Stomatolog",
-        //            Titule = _context.Titulas.Select
-        //                (i => new SelectListItem {Text = i.Naziv, Value = i.TitulaId.ToString()}).ToList(),
-        //            KorisnikId = id
-        //        };
-        //        return View("UrediKorisnike", model);
-        //    }
-        //    return View("UrediStomatolog");
-        //}
+                var model = new KorisnikPrikazViewModel
+                {
+                    Ime = korisnik.KorisnickiNalog.Ime,
+                    Prezime = korisnik.KorisnickiNalog.Prezime,
+                    Email = korisnik.KorisnickiNalog.Email,
+                    JMBG = korisnik.KorisnickiNalog.JMBG,
+                    DatumRodjenjaString = korisnik.KorisnickiNalog.DatumRodjenja.ToString("dd.MM.yyyy"),
+                    Mobitel = korisnik.KorisnickiNalog.Mobitel,
+                    Adresa = korisnik.KorisnickiNalog.Adresa,
+                    GradID = korisnik.KorisnickiNalog.GradId,
+                    Grad = korisnik.KorisnickiNalog.Grad.Naziv,
+                    Gradovi = _context.Grads.Select
+                        (i => new SelectListItem { Text = i.Naziv, Value = i.GradId.ToString() }).ToList(),
+                    Spol = korisnik.KorisnickiNalog.Spol,
+                    Slika = korisnik.KorisnickiNalog.Slika,
+                    DatumZaposlenjaString = korisnik.DatumZaposlenja.ToString("dd.MM.yyyy"),
+                    BrojZiroRacuna = korisnik.BrojZiroRacuna,
+                    Aktivan = korisnik.Aktivan,
+                    TitulaID = korisnik.TitulaID,
+                    Titula = korisnik.Titula.Naziv,
+                    VrstaAcc = "Stomatolog",
+                    Titule = _context.Titulas.Select
+                        (i => new SelectListItem { Text = i.Naziv, Value = i.TitulaId.ToString() }).ToList(),
+                    KorisnikId = id
+                };
+                return View("UrediKorisnike", model);
+            }
+            return View("UrediStomatolog");
+        }
 
         //[Autorizacija(true,false,false,false)]
         //[ActionName("dodaj-stomatolog")]

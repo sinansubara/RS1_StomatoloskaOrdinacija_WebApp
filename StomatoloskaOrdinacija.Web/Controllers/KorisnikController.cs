@@ -372,19 +372,19 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             return View("UrediOsoblje");
         }
 
-        //[Autorizacija(true,false,false,false)]
-        //[ActionName("dodaj-osoblje")]
-        //public IActionResult DodajOsoblje()
-        //{
-        //    var model = new KorisnikDodajOsobljeViewModel
-        //    {
-        //        Gradovi = _context.Grads.Select
-        //            (i => new SelectListItem { Text = i.Naziv, Value = i.GradId.ToString() }).ToList(),
-        //        Titule = _context.Titulas.Select
-        //            (i=>new SelectListItem{Text = i.Naziv,Value = i.TitulaId.ToString()}).ToList()
-        //    };
-        //    return View("DodajOsoblje", model);
-        //}
+        [Autorizacija(true, false, false, false)]
+        [ActionName("dodaj-osoblje")]
+        public IActionResult DodajOsoblje()
+        {
+            var model = new KorisnikDodajOsobljeViewModel
+            {
+                Gradovi = _context.Grads.Select
+                    (i => new SelectListItem { Text = i.Naziv, Value = i.GradId.ToString() }).ToList(),
+                Titule = _context.Titulas.Select
+                    (i => new SelectListItem { Text = i.Naziv, Value = i.TitulaId.ToString() }).ToList()
+            };
+            return View("DodajOsoblje", model);
+        }
 
         //[Autorizacija(true,false,false,false)]
         //[ActionName("dodaj-osoblje")]

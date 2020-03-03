@@ -490,20 +490,20 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             }  
             return uniqueFileName;  
         }
-        //[Autorizacija(true,false,false,false)]
-        //[ActionName("izbrisi-pacijenta")]
-        //public IActionResult IzbrisiPacijenta(int id)
-        //{
-        //    var pacijent = _context.Pacijents.FirstOrDefault(i => i.PacijentId == id);
-        //    if(pacijent != null)
-        //    {
-        //        var korisnikId = pacijent.KorisnickiNalogId;
-        //        var nalogzabrisanje = _context.KorisnickiNalogs.FirstOrDefault(i => i.KorisnickiNalogId == korisnikId);
-        //        _context.Remove(pacijent);
-        //        _context.Remove(nalogzabrisanje);
-        //        _context.SaveChanges();
-        //    }
-        //    return RedirectToAction("uredi-pacijent");
-        //}
+        [Autorizacija(true, false, false, false)]
+        [ActionName("izbrisi-pacijenta")]
+        public IActionResult IzbrisiPacijenta(int id)
+        {
+            var pacijent = _context.Pacijents.FirstOrDefault(i => i.PacijentId == id);
+            if (pacijent != null)
+            {
+                var korisnikId = pacijent.KorisnickiNalogId;
+                var nalogzabrisanje = _context.KorisnickiNalogs.FirstOrDefault(i => i.KorisnickiNalogId == korisnikId);
+                _context.Remove(pacijent);
+                _context.Remove(nalogzabrisanje);
+                _context.SaveChanges();
+            }
+            return RedirectToAction("uredi-pacijent");
+        }
     }
 }

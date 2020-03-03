@@ -386,61 +386,61 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             return View("DodajOsoblje", model);
         }
 
-        //[Autorizacija(true,false,false,false)]
-        //[ActionName("dodaj-osoblje")]
-        //[HttpPost]
-        //public IActionResult DodajOsoblje(KorisnikDodajOsobljeViewModel model)
-        //{
-        //    if (!ModelState.IsValid)
-        //        return RedirectToAction("dodaj-osoblje");
+        [Autorizacija(true, false, false, false)]
+        [ActionName("dodaj-osoblje")]
+        [HttpPost]
+        public IActionResult DodajOsoblje(KorisnikDodajOsobljeViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return RedirectToAction("dodaj-osoblje");
 
-        //    if (_context.KorisnickiNalogs.Any(i => i.Email == model.Email))
-        //    {
-        //        TempData["errorMessage"] = "Email adresa se koristi.";
-        //        return RedirectToAction("dodaj-osoblje");
-        //    }
+            if (_context.KorisnickiNalogs.Any(i => i.Email == model.Email))
+            {
+                TempData["errorMessage"] = "Email adresa se koristi.";
+                return RedirectToAction("dodaj-osoblje");
+            }
 
-        //    byte[] lozinkaSalt = PasswordSettings.GetSalt();
-        //    string lozinkaHash = PasswordSettings.GetHash(model.Lozinka, lozinkaSalt);
+            byte[] lozinkaSalt = PasswordSettings.GetSalt();
+            string lozinkaHash = PasswordSettings.GetHash(model.Lozinka, lozinkaSalt);
 
 
-        //    string uniqueFileName = UploadedFile(model);
+            string uniqueFileName = UploadedFile(model);
 
-        //    KorisnickiNalog korisnickiNalog = new KorisnickiNalog
-        //    {
-        //        Ime = model.Ime,
-        //        Prezime = model.Prezime,
-        //        Email = model.Email,
-        //        LozinkaHash = lozinkaHash,
-        //        LozinkaSalt = Convert.ToBase64String(lozinkaSalt),
-        //        Permisije = 2,
-        //        Kreirano = DateTime.Now,
-        //        Mobitel = model.Mobitel,
-        //        GradId = model.GradID,
-        //        Adresa = model.Adresa,
-        //        JMBG = model.JMBG,
-        //        DatumRodjenja = model.DatumRodjenja,
-        //        Spol = model.Spol,
-        //        Slika = uniqueFileName
-        //    };
-        //    MedicinskoOsoblje osoblje = new MedicinskoOsoblje
-        //    {
-        //        KorisnickiNalog = korisnickiNalog,
-        //        TitulaID = model.TitulaID,
-        //        DatumZaposlenja = model.DatumZaposlenja,
-        //        BrojZiroRacuna = model.BrojZiroRacuna,
-        //        Aktivan = model.Aktivan,
-        //        OpisPosla = model.OpisPosla
-        //    };
+            KorisnickiNalog korisnickiNalog = new KorisnickiNalog
+            {
+                Ime = model.Ime,
+                Prezime = model.Prezime,
+                Email = model.Email,
+                LozinkaHash = lozinkaHash,
+                LozinkaSalt = Convert.ToBase64String(lozinkaSalt),
+                Permisije = 2,
+                Kreirano = DateTime.Now,
+                Mobitel = model.Mobitel,
+                GradId = model.GradID,
+                Adresa = model.Adresa,
+                JMBG = model.JMBG,
+                DatumRodjenja = model.DatumRodjenja,
+                Spol = model.Spol,
+                Slika = uniqueFileName
+            };
+            MedicinskoOsoblje osoblje = new MedicinskoOsoblje
+            {
+                KorisnickiNalog = korisnickiNalog,
+                TitulaID = model.TitulaID,
+                DatumZaposlenja = model.DatumZaposlenja,
+                BrojZiroRacuna = model.BrojZiroRacuna,
+                Aktivan = model.Aktivan,
+                OpisPosla = model.OpisPosla
+            };
 
-        //    _context.KorisnickiNalogs.Add(korisnickiNalog);
-        //    _context.MedicinskoOsobljes.Add(osoblje);
+            _context.KorisnickiNalogs.Add(korisnickiNalog);
+            _context.MedicinskoOsobljes.Add(osoblje);
 
-        //    _context.SaveChanges();
+            _context.SaveChanges();
 
-        //    TempData["successMessage"] = "Uspješno ste dodali novog uposlenika.";
-        //    return RedirectToAction("uredi-osoblje");
-        //}
+            TempData["successMessage"] = "Uspješno ste dodali novog uposlenika.";
+            return RedirectToAction("uredi-osoblje");
+        }
 
         [HttpPost]
         [ActionName("snimi-izmjene")]

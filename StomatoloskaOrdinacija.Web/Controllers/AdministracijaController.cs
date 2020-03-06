@@ -74,5 +74,92 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             return RedirectToAction("uredi-titulu");
         }
 
+        [Autorizacija(true,false,false,false)]
+        public IActionResult ListaDrzava()
+        {
+            var lista = _context.Drzavas.Select(i => new AdministracijaPrikazDrzavaViewModel
+            {
+                DrzavaId = i.DrzavaId,
+                Drzava = i.Naziv
+            }).ToList();
+
+            return Json(new {data = lista});
+        }
+
+        [Autorizacija(true,false,false,false)]
+        [ActionName("uredi-drzavu")]
+        public IActionResult UrediDrzavu(string imedrzave = "")
+        {
+            if (imedrzave != "")
+            {
+                var novadrzava = new Drzava
+                {
+                    Naziv = imedrzave
+                };
+                _context.Drzavas.Add(novadrzava);
+                _context.SaveChanges();
+            }
+            return View("UrediDrzavu");
+        }
+        [Autorizacija(true,false,false,false)]
+        [ActionName("dodaj-drzavu")]
+        public IActionResult DodajDrzavu()
+        {
+            return PartialView("DodajDrzavu");
+        }
+        [Autorizacija(true,false,false,false)]
+        [ActionName("izbrisi-drzavu")]
+        public IActionResult IzbrisiDrzavu(int id)
+        {
+            Drzava drzavazabrisanje = _context.Drzavas.Find(id);
+            _context.Drzavas.Remove(drzavazabrisanje);
+            _context.SaveChanges();
+            return RedirectToAction("uredi-drzavu");
+        }
+
+        [Autorizacija(true,false,false,false)]
+        public IActionResult ListaGradova()
+        {
+            var lista = _context.Grads.Select(i => new AdministracijaPrikazGradViewModel
+            {
+                GradId = i.GradId,
+                Grad = i.Naziv,
+                DrzavaId = i.DrzavaId
+            }).ToList();
+
+            return Json(new {data = lista});
+        }
+
+        [Autorizacija(true,false,false,false)]
+        [ActionName("uredi-grad")]
+        public IActionResult UrediGrad(int drzavaid, string imegrada = "")
+        {
+            if (imegrada != "")
+            {
+                var novigrad = new Grad
+                {
+                    Naziv = imegrada,
+                    DrzavaId = drzavaid
+                };
+                _context.Grads.Add(novigrad);
+                _context.SaveChanges();
+            }
+            return View("UrediGrad");
+        }
+        [Autorizacija(true,false,false,false)]
+        [ActionName("dodaj-grad")]
+        public IActionResult DodajGrad()
+        {
+            return PartialView("DodajGrad");
+        }
+        [Autorizacija(true,false,false,false)]
+        [ActionName("izbrisi-grad")]
+        public IActionResult IzbrisiGrad(int id)
+        {
+            Grad gradzabrisanje = _context.Grads.Find(id);
+            _context.Grads.Remove(gradzabrisanje);
+            _context.SaveChanges();
+            return RedirectToAction("uredi-grad");
+        }
     }
 }

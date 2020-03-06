@@ -11,12 +11,11 @@
             </div>
         </div>
     </div>
-    <input class="btn btn-success" id="submitSnimi" type="submit" value="Snimi"/>
+    <input class="btn btn-success" style="cursor: pointer" id="submitSnimi" type="submit" value="Snimi"/>
 </form>
 <script>
     $("#submitSnimi").click(function(event) {
         var forma = $("#formaId");
-        alert("test");
         $.ajax({
             type: "POST",
             url: "/Administracija/uredi-titulu",

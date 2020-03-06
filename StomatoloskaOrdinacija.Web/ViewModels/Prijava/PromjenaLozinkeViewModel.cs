@@ -14,5 +14,7 @@ namespace StomatoloskaOrdinacija.Web.ViewModels.Prijava
 
         [Required]
         public string PotvrdaNoveLozinke { get; set; }
+
+        public string GenerisanaVrijednost { get; set; }
     }
 }

@@ -1,0 +1,25 @@
+﻿@model StomatoloskaOrdinacija.Web.ViewModels.Administracija.AdministracijaDodajTitulu
+
+<h2>Dodaj novu titulu</h2>
+
+<form id="formaId">
+    <div class="form-group">
+        <div class="form-row">
+            <div class="col-md-12">
+                <label for="imetitule">Naziv titule</label>
+                <input class="form-control" id="imetitule" type="text" name="imetitule" asp-for="Naziv" aria-describedby="nameHelp" placeholder="Unesite naziv titule">
+            </div>
+        </div>
+    </div>
+    <input class="btn btn-success" style="cursor: pointer" id="submitSnimi" type="submit" value="Snimi"/>
+</form>
+<script>
+    $("#submitSnimi").click(function(event) {
+        var forma = $("#formaId");
+        $.ajax({
+            type: "POST",
+            url: "/Administracija/uredi-titulu",
+            data: forma.serialize()
+        });
+    });
+</script>

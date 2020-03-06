@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Policy;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using StomatoloskaOrdinacija.Data;
 using StomatoloskaOrdinacija.Data.EntityModels;
 using StomatoloskaOrdinacija.Web.Helper;
@@ -21,11 +24,12 @@ namespace StomatoloskaOrdinacija.Web.Controllers
     {
         private MyContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
-
-        public KorisnikController(MyContext context, IWebHostEnvironment webHostEnvironment)
+        private IConfiguration _configuration;
+        public KorisnikController(MyContext context, IWebHostEnvironment webHostEnvironment, IConfiguration configuration)
         {
             _context = context;
             _webHostEnvironment = webHostEnvironment;
+            _configuration = configuration;
         }
 
         [Autorizacija(true,true,true,false)]
@@ -50,7 +54,7 @@ namespace StomatoloskaOrdinacija.Web.Controllers
 
             return Json(new {data = lista});
         }
-        [Autorizacija(true,true,true,false)]
+        [Autorizacija(true,false,false,false)]
         public IActionResult ListaOsoblja()
         {
             var lista = _context.MedicinskoOsobljes.Select(i => new KorisnikPrikazOsobljeViewModel
@@ -67,7 +71,7 @@ namespace StomatoloskaOrdinacija.Web.Controllers
 
             return Json(new {data = lista});
         }
-        [Autorizacija(true,true,true,false)]
+        [Autorizacija(true,false,false,false)]
         public IActionResult ListaStomatologa()
         {
             var lista = _context.Stomatologs.Select(i => new KorisnikPrikazStomatologaViewModel
@@ -173,8 +177,8 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             }
 
             byte[] lozinkaSalt = PasswordSettings.GetSalt();
-            string lozinkaHash = PasswordSettings.GetHash(model.Lozinka, lozinkaSalt);
-
+            var templozinka = GenerateRandomPassword();
+            string lozinkaHash = PasswordSettings.GetHash(templozinka, lozinkaSalt);
 
             string uniqueFileName = UploadedFile(model);
 
@@ -209,6 +213,12 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             _context.Pacijents.Add(pacijent);
 
             _context.SaveChanges();
+
+            string primalacPoruke = korisnickiNalog.Ime + " " + korisnickiNalog.Prezime;
+            string poruka = primalacPoruke + " vaši pristupni podaci su: \nEmail: " + korisnickiNalog.Email +
+                            "\nPassword: " + templozinka;
+
+            EmailSettings.SendEmail(_configuration, primalacPoruke, korisnickiNalog.Email, "Nalog napravljen", poruka);
 
             TempData["successMessage"] = "Uspješno ste dodali novog pacijenta.";
 
@@ -288,7 +298,8 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             }
 
             byte[] lozinkaSalt = PasswordSettings.GetSalt();
-            string lozinkaHash = PasswordSettings.GetHash(model.Lozinka, lozinkaSalt);
+            var templozinka = GenerateRandomPassword();
+            string lozinkaHash = PasswordSettings.GetHash(templozinka, lozinkaSalt);
 
 
             string uniqueFileName = UploadedFile(model);
@@ -323,6 +334,12 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             _context.Stomatologs.Add(stomatolog);
 
             _context.SaveChanges();
+
+            string primalacPoruke = korisnickiNalog.Ime + " " + korisnickiNalog.Prezime;
+            string poruka = primalacPoruke + " vaši pristupni podaci su: \nEmail: " + korisnickiNalog.Email +
+                            "\nPassword: " + templozinka;
+
+            EmailSettings.SendEmail(_configuration, primalacPoruke, korisnickiNalog.Email, "Nalog napravljen", poruka);
 
             TempData["successMessage"] = "Uspješno ste dodali novog stomatologa.";
             return RedirectToAction("uredi-stomatolog");
@@ -401,7 +418,8 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             }
 
             byte[] lozinkaSalt = PasswordSettings.GetSalt();
-            string lozinkaHash = PasswordSettings.GetHash(model.Lozinka, lozinkaSalt);
+            var templozinka = GenerateRandomPassword();
+            string lozinkaHash = PasswordSettings.GetHash(templozinka, lozinkaSalt);
 
 
             string uniqueFileName = UploadedFile(model);
@@ -437,6 +455,12 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             _context.MedicinskoOsobljes.Add(osoblje);
 
             _context.SaveChanges();
+
+            string primalacPoruke = korisnickiNalog.Ime + " " + korisnickiNalog.Prezime;
+            string poruka = primalacPoruke + " vaši pristupni podaci su: \nEmail: " + korisnickiNalog.Email +
+                            "\nPassword: " + templozinka;
+
+            EmailSettings.SendEmail(_configuration, primalacPoruke, korisnickiNalog.Email, "Nalog napravljen", poruka);
 
             TempData["successMessage"] = "Uspješno ste dodali novog uposlenika.";
             return RedirectToAction("uredi-osoblje");
@@ -760,5 +784,54 @@ namespace StomatoloskaOrdinacija.Web.Controllers
                 return true;
             return false;
         }
+    public static string GenerateRandomPassword()
+    {
+        PasswordOptions opts = new PasswordOptions()
+        {
+            RequiredLength = 8,
+            RequiredUniqueChars = 4,
+            RequireDigit = true,
+            RequireLowercase = true,
+            RequireNonAlphanumeric = true,
+            RequireUppercase = true
+        };
+ 
+        string[] randomChars = new [] {
+            "ABCDEFGHJKLMNOPQRSTUVWXYZ",    // uppercase 
+            "abcdefghijkmnopqrstuvwxyz",    // lowercase
+            "0123456789",                   // digits
+            "!@$?_-"                        // non-alphanumeric
+        };
+        Random rand = new Random(Environment.TickCount);
+        List<char> chars = new List<char>();
+ 
+        if (opts.RequireUppercase)
+            chars.Insert(rand.Next(0, chars.Count), 
+                randomChars[0][rand.Next(0, randomChars[0].Length)]);
+ 
+        if (opts.RequireLowercase)
+            chars.Insert(rand.Next(0, chars.Count),
+                randomChars[1][rand.Next(0, randomChars[1].Length)]);
+ 
+        if (opts.RequireDigit)
+            chars.Insert(rand.Next(0, chars.Count),
+                randomChars[2][rand.Next(0, randomChars[2].Length)]);
+ 
+        if (opts.RequireNonAlphanumeric)
+            chars.Insert(rand.Next(0, chars.Count),
+                randomChars[3][rand.Next(0, randomChars[3].Length)]);
+ 
+        for (int i = chars.Count; i < opts.RequiredLength 
+                                  || chars.Distinct().Count() < opts.RequiredUniqueChars; i++)
+        {
+            string rcs = randomChars[rand.Next(0, randomChars.Length)];
+            chars.Insert(rand.Next(0, chars.Count), 
+                rcs[rand.Next(0, rcs.Length)]);
+        }
+ 
+        return new string(chars.ToArray());
     }
+
+    }
+    
 }

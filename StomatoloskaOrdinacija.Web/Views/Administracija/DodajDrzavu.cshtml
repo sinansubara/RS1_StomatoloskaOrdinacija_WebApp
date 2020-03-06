@@ -1,0 +1,25 @@
+﻿@model StomatoloskaOrdinacija.Web.ViewModels.Administracija.AdministracijaDodajDrzavu
+
+<h2>Dodaj novu drzavu</h2>
+
+<form id="formaId">
+    <div class="form-group">
+        <div class="form-row">
+            <div class="col-md-12">
+                <label for="imedrzave">Naziv drzave</label>
+                <input class="form-control" id="imedrzave" type="text" name="imedrzave" asp-for="Naziv" aria-describedby="nameHelp" placeholder="Unesite naziv drzave">
+            </div>
+        </div>
+    </div>
+    <input class="btn btn-success" style="cursor: pointer" id="submitSnimi" type="submit" value="Snimi" />
+</form>
+<script>
+    $("#submitSnimi").click(function(event) {
+        var forma = $("#formaId");
+        $.ajax({
+            type: "POST",
+            url: "/Administracija/uredi-drzavu",
+            data: forma.serialize()
+        });
+    });
+</script>

@@ -271,27 +271,19 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             string primalacPoruke = "";
 
             if (korisnickiNalog.Permisije == 0)
-            {
-                Administrator administrator = _context.Administrators.SingleOrDefault(i => i.KorisnickiNalogId == korisnickiNalog.KorisnickiNalogId);
-                primalacPoruke = administrator.KorisnickiNalog.Ime + " " + administrator.KorisnickiNalog.Prezime;
-            }
+                primalacPoruke = korisnickiNalog.Ime + " " + korisnickiNalog.Prezime;
+            
 
             if (korisnickiNalog.Permisije == 1)
-            {
-                Stomatolog stomatolog = _context.Stomatologs.SingleOrDefault(i => i.KorisnickiNalogId == korisnickiNalog.KorisnickiNalogId);
-                primalacPoruke = stomatolog.KorisnickiNalog.Ime + " " + stomatolog.KorisnickiNalog.Prezime;
-            }
+                primalacPoruke = korisnickiNalog.Ime + " " + korisnickiNalog.Prezime;
+            
 
             if (korisnickiNalog.Permisije == 2)
-            {
-                MedicinskoOsoblje medicinskoOsoblje = _context.MedicinskoOsobljes.SingleOrDefault(i => i.KorisnickiNalogId == korisnickiNalog.KorisnickiNalogId);
-                primalacPoruke = medicinskoOsoblje.KorisnickiNalog.Ime + " " + medicinskoOsoblje.KorisnickiNalog.Prezime;
-            }
+                primalacPoruke = korisnickiNalog.Ime + " " + korisnickiNalog.Prezime;
+            
             if (korisnickiNalog.Permisije == 3)
-            {
-                Pacijent pacijent = _context.Pacijents.SingleOrDefault(i => i.KorisnickiNalogId == korisnickiNalog.KorisnickiNalogId);
-                primalacPoruke = pacijent.KorisnickiNalog.Ime + " " + pacijent.KorisnickiNalog.Prezime;
-            }
+                primalacPoruke = korisnickiNalog.Ime + " " + korisnickiNalog.Prezime;
+            
 
             string vrijednost = RandomString.GetString(30);
             string link = 
@@ -326,8 +318,12 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             if (_context.PromjenaLozinkes.SingleOrDefault(i => i.Vrijednost == vrijednost) == null)
                 return RedirectToAction("Prijava");
 
-            TempData["vrijednost"] = vrijednost;
-            return View("PromjenaLozinke");
+            //TempData["vrijednost"] = vrijednost;
+            var model = new PromjenaLozinkeViewModel
+            {
+                GenerisanaVrijednost = vrijednost
+            };
+            return View("PromjenaLozinke", model);
         }
 
         [HttpPost]
@@ -337,7 +333,8 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             if (!ModelState.IsValid)
                 return View("PromjenaLozinke", model);
 
-            string vrijednost = (string)TempData["vrijednost"];
+            //string vrijednost = (string)TempData["vrijednost"];
+            string vrijednost = model.GenerisanaVrijednost;
 
             PromjenaLozinke promjenaLozinke = _context.PromjenaLozinkes.SingleOrDefault(i => i.Vrijednost == vrijednost);
 

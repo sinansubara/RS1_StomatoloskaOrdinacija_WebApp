@@ -72,6 +72,7 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             Titula titulazabrisanje = _context.Titulas.Find(id);
             _context.Titulas.Remove(titulazabrisanje);
             _context.SaveChanges();
+            TempData["successMessage"] = "Titula uspješno izbrisana.";
             return RedirectToAction("uredi-titulu");
         }
 
@@ -116,6 +117,7 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             Drzava drzavazabrisanje = _context.Drzavas.Find(id);
             _context.Drzavas.Remove(drzavazabrisanje);
             _context.SaveChanges();
+            TempData["successMessage"] = "Država uspješno izbrisana.";
             return RedirectToAction("uredi-drzavu");
         }
 
@@ -147,6 +149,7 @@ namespace StomatoloskaOrdinacija.Web.Controllers
                 };
                 _context.Grads.Add(novigrad);
                 _context.SaveChanges();
+                TempData["successMessage"] = "Grad uspješno dodan.";
             }
             return View("UrediGrad");
         }
@@ -174,7 +177,7 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             {
                 _context.Grads.Remove(gradzabrisanje);
                 _context.SaveChanges();
-                TempData["successMessage"] = "Grad uspješno dodan.";
+                TempData["successMessage"] = "Grad uspješno izbrisan.";
                 return RedirectToAction("uredi-grad");
             }
             TempData["errorMessage"] = "Grad se koristi.";
@@ -222,6 +225,7 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             Usluga uslugazabrisanje = _context.Uslugas.Find(id);
             _context.Uslugas.Remove(uslugazabrisanje);
             _context.SaveChanges();
+            TempData["successMessage"] = "Usluga uspješno izbrisana.";
             return RedirectToAction("uredi-uslugu");
         }
     }

@@ -1,4 +1,25 @@
-﻿
-@*
-    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model StomatoloskaOrdinacija.Web.ViewModels.Administracija.AdministracijaDodajDrzavu
+
+<h2>Dodaj novu uslugu</h2>
+
+<form id="formaId">
+    <div class="form-group">
+        <div class="form-row">
+            <div class="col-md-12">
+                <label for="imeusluge">Naziv usluge</label>
+                <input class="form-control" id="imeusluge" type="text" name="imeusluge" asp-for="Naziv" aria-describedby="nameHelp" placeholder="Unesite naziv usluge">
+            </div>
+        </div>
+    </div>
+    <input class="btn btn-success" style="cursor: pointer" id="submitSnimi" type="submit" value="Snimi" />
+</form>
+<script>
+    $("#submitSnimi").click(function(event) {
+        var forma = $("#formaId");
+        $.ajax({
+            type: "POST",
+            url: "/Administracija/uredi-uslugu",
+            data: forma.serialize()
+        });
+    });
+</script>

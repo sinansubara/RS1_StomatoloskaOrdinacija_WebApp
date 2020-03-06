@@ -1,1 +1,40 @@
-﻿
+﻿@model StomatoloskaOrdinacija.Web.ViewModels.Administracija.AdministracijaDodajGrad
+
+<h2>Dodaj novi grad</h2>
+
+<div style="display: inline-flex">
+    <form id="formaId">
+        <div class="form-group">
+            <div class="form-row">
+                <div class="col-md-12">
+                    <label for="drzavaid">Država</label>
+                    <select class="form-control" id="drzavaid" name="drzavaid" asp-items="@Model.Drzave"></select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-md-12">
+                    <label for="imegrada">Naziv grada</label>
+                    <input class="form-control" id="imegrada" type="text" name="imegrada" asp-for="Naziv" aria-describedby="nameHelp" placeholder="Unesite naziv grada">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-md-12">
+                    <label for="postanskibroj">Poštanski broj</label>
+                    <input class="form-control" id="postanskibroj" type="text" name="postanskibroj" asp-for="PostanskiBroj" aria-describedby="nameHelp" placeholder="Unesite naziv grada">
+                </div>
+            </div>
+        </div>
+        <input class="btn btn-success" style="cursor: pointer" id="submitSnimi" type="submit" value="Snimi" />
+    </form>
+</div>
+
+<script>
+    $("#submitSnimi").click(function (event) {
+        var forma = $("#formaId");
+        $.ajax({
+            type: "POST",
+            url: "/Administracija/uredi-grad",
+            data: forma.serialize()
+        });
+    });
+</script>

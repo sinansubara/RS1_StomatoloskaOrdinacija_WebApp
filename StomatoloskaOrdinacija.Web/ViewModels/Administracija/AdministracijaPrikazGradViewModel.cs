@@ -8,7 +8,8 @@ namespace StomatoloskaOrdinacija.Web.ViewModels.Administracija
     public class AdministracijaPrikazGradViewModel
     {
         public int GradId { get; set; }
-        public int DrzavaId { get; set; }
+        public string Drzava { get; set; }
         public string Grad { get; set; }
+        public string PostanskiBroj { get; set; }
     }
 }

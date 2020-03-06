@@ -55,6 +55,7 @@ namespace StomatoloskaOrdinacija.Web.Controllers
                 };
                 _context.Titulas.Add(novatitula);
                 _context.SaveChanges();
+                TempData["successMessage"] = "Titula uspješno dodana.";
             }
             return View("UrediTitulu");
         }
@@ -98,6 +99,7 @@ namespace StomatoloskaOrdinacija.Web.Controllers
                 };
                 _context.Drzavas.Add(novadrzava);
                 _context.SaveChanges();
+                TempData["successMessage"] = "Država uspješno dodana.";
             }
             return View("UrediDrzavu");
         }
@@ -124,7 +126,8 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             {
                 GradId = i.GradId,
                 Grad = i.Naziv,
-                DrzavaId = i.DrzavaId
+                Drzava = i.Drzava.Naziv,
+                PostanskiBroj = i.PostanskiBroj
             }).ToList();
 
             return Json(new {data = lista});
@@ -132,14 +135,15 @@ namespace StomatoloskaOrdinacija.Web.Controllers
 
         [Autorizacija(true,false,false,false)]
         [ActionName("uredi-grad")]
-        public IActionResult UrediGrad(int drzavaid, string imegrada = "")
+        public IActionResult UrediGrad(int drzavaid, string imegrada = "", string postanskibroj="")
         {
             if (imegrada != "")
             {
                 var novigrad = new Grad
                 {
                     Naziv = imegrada,
-                    DrzavaId = drzavaid
+                    DrzavaId = drzavaid,
+                    PostanskiBroj = postanskibroj
                 };
                 _context.Grads.Add(novigrad);
                 _context.SaveChanges();
@@ -150,16 +154,75 @@ namespace StomatoloskaOrdinacija.Web.Controllers
         [ActionName("dodaj-grad")]
         public IActionResult DodajGrad()
         {
-            return PartialView("DodajGrad");
+            var model = new AdministracijaDodajGrad
+            {
+                Drzave = _context.Drzavas.Select(x => new SelectListItem
+                {
+                    Text = x.Naziv,
+                    Value = x.DrzavaId.ToString()
+                }).ToList()
+            };
+            return PartialView("DodajGrad", model);
         }
         [Autorizacija(true,false,false,false)]
         [ActionName("izbrisi-grad")]
         public IActionResult IzbrisiGrad(int id)
         {
             Grad gradzabrisanje = _context.Grads.Find(id);
-            _context.Grads.Remove(gradzabrisanje);
-            _context.SaveChanges();
+            var gradSeKoristi = _context.KorisnickiNalogs.FirstOrDefault(x => x.GradId == id);
+            if (gradSeKoristi == null)
+            {
+                _context.Grads.Remove(gradzabrisanje);
+                _context.SaveChanges();
+                TempData["successMessage"] = "Grad uspješno dodan.";
+                return RedirectToAction("uredi-grad");
+            }
+            TempData["errorMessage"] = "Grad se koristi.";
             return RedirectToAction("uredi-grad");
+        }
+
+        [Autorizacija(true,false,false,false)]
+        public IActionResult ListaUsluga()
+        {
+            var lista = _context.Uslugas.Select(i => new AdministracijaPrikazUslugaViewModel
+            {
+                UslugaId = i.UslugaId,
+                Usluga = i.Naziv
+            }).ToList();
+
+            return Json(new {data = lista});
+        }
+
+        [Autorizacija(true,false,false,false)]
+        [ActionName("uredi-uslugu")]
+        public IActionResult UrediUslugu(string imeusluge = "")
+        {
+            if (imeusluge != "")
+            {
+                var novausluga = new Usluga
+                {
+                    Naziv = imeusluge
+                };
+                _context.Uslugas.Add(novausluga);
+                _context.SaveChanges();
+                TempData["successMessage"] = "Usluga uspješno dodana.";
+            }
+            return View("UrediUslugu");
+        }
+        [Autorizacija(true,false,false,false)]
+        [ActionName("dodaj-uslugu")]
+        public IActionResult DodajUslugu()
+        {
+            return PartialView("DodajUslugu");
+        }
+        [Autorizacija(true,false,false,false)]
+        [ActionName("izbrisi-uslugu")]
+        public IActionResult IzbrisiUslugu(int id)
+        {
+            Usluga uslugazabrisanje = _context.Uslugas.Find(id);
+            _context.Uslugas.Remove(uslugazabrisanje);
+            _context.SaveChanges();
+            return RedirectToAction("uredi-uslugu");
         }
     }
 }

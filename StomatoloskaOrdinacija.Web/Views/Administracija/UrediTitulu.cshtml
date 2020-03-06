@@ -1,0 +1,123 @@
+﻿
+@{
+    Layout = "_Administrator";
+    ViewBag.Title = "Stomatološka ordinacija | Pregled titula";
+    string successMessage = (string)TempData["successMessage"];
+}
+@if (successMessage != null)
+{
+    <div class="alert alert-info alert-prijavljen" data-alert="alert">
+        <a class="close" style="cursor: pointer !important" data-dismiss="alert">&times;</a>
+        <p class="text-center text-info">@successMessage</p>
+    </div>
+}
+
+<div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a asp-controller="Profil" asp-action="Pocetna">Početna</a>
+        </li>
+        <li class="breadcrumb-item active">Pregled titula</li>
+    </ol>
+    <div class="inlineunos" style="display: inline-flex">
+        <div class="tablecontent" style="max-width: 700px;">
+            <table id="dataTable" class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th>Titula</th>
+                    <th>Funkcije</th>
+                </tr>
+                </thead>
+                <tfoot>
+                <tr>
+                    <th>Titula</th>
+                    <th>Funkcije</th>
+                </tr>
+                </tfoot>
+            </table>
+            <button class="btn btn-primary" style="cursor: pointer" id="dodaj">Dodaj novu titulu</button>
+        </div>
+        <div id="ajaxDiv" class="mt-3 ml-3"></div>
+    </div>
+    
+
+</div>
+<script>
+    $(document).ready(function () {
+        $("#dataTable").DataTable({
+            dom: 'lfrtipB',
+            "ajax": {
+                "url": "/Administracija/ListaTitula",
+                "type": "GET",
+                "datatype": "json"
+            },
+            "columns": [
+                {
+                    "data": "titula"
+                },
+                {
+                    "data": "titulaId"
+                }
+            ],
+            columnDefs: [
+                {'max-width': '50%', 'targets': 0},
+                {'max-width': '50%', 'targets': 1},
+                {
+                    "targets": 1,
+                    "render": function (data, type, full, meta) {
+                        return '<a id="izbrisi" class="ml-1" href="/Administracija/izbrisi-titulu/' +
+                            data +
+                            '">Izbrisi</a></span>';
+                    }
+                }
+            ],
+            select: true,
+            buttons: [
+                {
+                    extend: 'collection',
+                    text: 'Export',
+                    buttons: [
+                        {
+                            extend: 'copy',
+                            exportOptions: {
+                                columns: [0]
+                            }
+                        },
+                        {
+                            extend: 'excel',
+                            exportOptions: {
+                                columns: [0]
+                            }
+                        },
+                        {
+                            extend: 'csv',
+                            exportOptions: {
+                                columns: [0]
+                            }
+                        },
+                        {
+                            extend: 'pdf',
+                            exportOptions: {
+                                columns: [0]
+                            }
+                        },
+                        {
+                            extend: 'print',
+                            exportOptions: {
+                                columns: [0]
+                            }
+                        }
+                    ]
+                }
+            ]
+        });
+        $("dataTable").attr("style", "max-width: 700px !important;");
+        $("#dodaj").click(function (event) {
+            $.get("/Administracija/dodaj-titulu", function (rezultat, status) {
+                $("#ajaxDiv").html(rezultat);
+            });
+        });
+    });
+    
+</script>

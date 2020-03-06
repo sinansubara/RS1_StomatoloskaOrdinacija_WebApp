@@ -1,12 +1,18 @@
-﻿
+﻿@model StomatoloskaOrdinacija.Web.ViewModels.Prijava.PromjenaLozinkeViewModel
 @{
-    Layout = null;
+    string errorMessage = (string)TempData["errorMessage"];
 }
 
 <!DOCTYPE html>
+<html lang="en">
 
-<html>
 <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Stomatološka ordinacija | Prijava</title>
     <link rel="apple-touch-icon-precomposed" sizes="57x57" href="~/apple-touch-icon-57x57.png" />
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="~/apple-touch-icon-114x114.png" />
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="~/apple-touch-icon-72x72.png" />
@@ -27,9 +33,58 @@
     <meta name="msapplication-square150x150logo" content="mstile-150x150.png" />
     <meta name="msapplication-wide310x150logo" content="mstile-310x150.png" />
     <meta name="msapplication-square310x310logo" content="mstile-310x310.png" />
-    <meta name="viewport" content="width=device-width" />
-    <title>PromjenaLozinke</title>
+    <!-- Bootstrap core CSS-->
+    <link href="~/template/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom fonts for this template-->
+    <link href="~/template/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <!-- Custom styles for this template-->
+    <link href="~/template/css/sb-admin.css" rel="stylesheet">
 </head>
-<body>
+
+@if (errorMessage != null)
+{
+    <div class="alert alert-danger alert-prijavljen" data-alert="alert">
+        <a class="close" style="cursor: pointer !important" data-dismiss="alert">&times;</a>
+        <p class="text-center text-danger">@errorMessage</p>
+    </div>
+}
+<body class="bg-dark">
+    <div class="container">
+        <div class="card card-login mx-auto mt-5">
+            <div class="card-header">Resetiranje lozinke</div>
+            <div class="card-body">
+                <div class="text-center mt-4 mb-5">
+                    <h4>Zaboravili ste lozinku?</h4>
+                    <p>Unesite svoj mail, a mi ćemo vamo poslati instrukcije kako da ga resetujete.</p>
+                </div>
+                <form id="zaboravljena-lozinka" asp-controller="Prijava" asp-action="promjena-lozinke" method="POST">
+                    <input type="hidden" asp-for="GenerisanaVrijednost" value="@Model.GenerisanaVrijednost" />
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <label for="NovaLozinka">Lozinka</label>
+                                <input class="form-control" id="NovaLozinka" type="password" name="NovaLozinka" asp-for="NovaLozinka" placeholder="Unesite novu lozinku" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="PotvrdaNoveLozinke">Confirm password</label>
+                                <input class="form-control" id="PotvrdaNoveLozinke" type="password" name="PotvrdaNoveLozinke" asp-for="PotvrdaNoveLozinke" placeholder="Potvrda nove lozinke" required>
+                            </div>
+                        </div>
+                    </div>
+                    <input class="btn btn-primary btn-block" type="submit" value="Resetuj password" style="cursor: pointer;">
+                </form>
+                <div class="text-center">
+                    <a class="d-block small mt-3" asp-controller="Prijava" asp-action="Registracija">Registruj se</a>
+                    <a class="d-block small" asp-controller="Prijava" asp-action="Prijava">Prijavi se</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Bootstrap core JavaScript-->
+    <script src="~/template/vendor/jquery/jquery.min.js"></script>
+    <script src="~/template/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Core plugin JavaScript-->
+    <script src="~/template/vendor/jquery-easing/jquery.easing.min.js"></script>
 </body>
+
 </html>

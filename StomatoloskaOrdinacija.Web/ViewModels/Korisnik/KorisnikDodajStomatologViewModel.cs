@@ -65,11 +65,6 @@ namespace StomatoloskaOrdinacija.Web.ViewModels.Korisnik
         [Required]
         public int TitulaID { get; set; }
 
-        [Required]
-        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$")]
-        public string Lozinka { get; set; }
-
-        [Required]
-        public string PotvrdaLozinke { get; set; }
+        
     }
 }

@@ -3,19 +3,13 @@
     Layout = (string)TempData["Layout"];
     ViewBag.Title = "Stomatološka ordinacija | Pregled profila";
     string successMessage = (string)TempData["successMessage"];
+    string errorMessage = (string)TempData["errorMessage"];
 }
 
 <head>
     <link href="~/template/css/PregledProfila.css" rel="stylesheet">
 </head>
 
-@if (successMessage != null)
-{
-    <div class="alert alert-info alert-prijavljen" data-alert="alert">
-        <a class="close" style="cursor: pointer !important" data-dismiss="alert">&times;</a>
-        <p class="text-center text-info">@successMessage</p>
-    </div>
-}
 <div class="container-fluid">
     <!-- Breadcrumbs-->
     <ol class="breadcrumb">
@@ -24,8 +18,22 @@
         </li>
         <li class="breadcrumb-item active">Pregled profila</li>
     </ol>
+    @if (successMessage != null)
+    {
+        <div class="alert alert-info alert-prijava" data-alert="alert">
+            <a class="close" data-dismiss="alert" style="cursor: pointer">&times;</a>
+            <p class="text-center text-info">@successMessage</p>
+        </div>
+    }
+    @if (errorMessage != null)
+    {
+        <div class="alert alert-danger alert-prijava" data-alert="alert">
+            <a class="close" data-dismiss="alert" style="cursor: pointer">&times;</a>
+            <p class="text-center text-danger">@errorMessage</p>
+        </div>
+    }
     <div class="container emp-profile">
-        <form asp-action="snimi-izmjene" asp-controller="Profil" method="POST" enctype="multipart/form-data">
+        <form name="formapregledprofila" asp-action="snimi-izmjene" asp-controller="Profil" method="POST" enctype="multipart/form-data">
             <div class="row">
                 <div class="col-md-4">
                     <div class="profile-img">
@@ -66,14 +74,16 @@
                                 </div>
                                 <div class="col-md-6">
                                     <p><input name="ime" asp-for="Ime" type="text" class="form-control" value="@Model.Ime"></p>
+                                    <span asp-validation-for="Ime" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-5">
-                                    <label>Email</label>
+                                    <label>Prezime</label>
                                 </div>
                                 <div class="col-md-6">
                                     <p><input name="prezime" asp-for="Prezime" type="text" class="form-control" value="@Model.Prezime"></p>
+                                    <span asp-validation-for="Prezime" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="row">
@@ -106,6 +116,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <p><input name="mobitel" asp-for="Mobitel" type="text" class="form-control" value="@Model.Mobitel"></p>
+                                    <span asp-validation-for="Mobitel" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="row">
@@ -114,6 +125,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <p><input name="adresa" asp-for="Adresa" type="text" class="form-control" value="@Model.Adresa"></p>
+                                    <span asp-validation-for="Adresa" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="row">
@@ -123,6 +135,7 @@
                                 <div class="col-md-6">
                                     <select asp-for="GradID" asp-items="@Model.Gradovi" class="form-control">
                                     </select>
+                                    <span asp-validation-for="GradID" class="text-danger"></span>
                                 </div>
                             </div>
                         </div>
@@ -191,6 +204,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <p><input name="brojziroracuna" asp-for="BrojZiroRacuna" type="text" class="form-control" value="@Model.BrojZiroRacuna"></p>
+                                        <span asp-validation-for="BrojZiroRacuna" class="text-danger"></span>
                                     </div>
                                 </div>
                                 @if (Model.VrstaAcc == "Administrator" || Model.VrstaAcc == "Medicinsko osoblje")
@@ -201,6 +215,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <p><input name="opisposla" asp-for="OpisPosla" type="text" class="form-control" value="@Model.OpisPosla"></p>
+                                            <span asp-validation-for="OpisPosla" class="text-danger"></span>
                                         </div>
                                     </div>
                                 }
@@ -221,6 +236,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <select asp-for="TitulaID" asp-items="@Model.Titule" class="form-control"></select>
+                                            <span asp-validation-for="TitulaID" class="text-danger"></span>
                                         </div>
                                     </div>
                                 }
@@ -247,3 +263,4 @@
 
 
 </div>
+<script src="~/template/js/validacijaurediprofil.js"></script>

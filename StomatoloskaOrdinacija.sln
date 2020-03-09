@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StomatoloskaOrdinacija.Web", "StomatoloskaOrdinacija.Web\StomatoloskaOrdinacija.Web.csproj", "{48528940-6B30-474C-9A8C-18FADC6B69C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StomatoloskaOrdinacija.Web", "StomatoloskaOrdinacija.Web\StomatoloskaOrdinacija.Web.csproj", "{48528940-6B30-474C-9A8C-18FADC6B69C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StomatoloskaOrdinacija.Data", "StomatoloskaOrdinacija.Data\StomatoloskaOrdinacija.Data.csproj", "{0F7E8F55-AEA7-4947-B187-AF41BD418311}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StomatoloskaOrdinacija.Data", "StomatoloskaOrdinacija.Data\StomatoloskaOrdinacija.Data.csproj", "{0F7E8F55-AEA7-4947-B187-AF41BD418311}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{6A083F55-57EF-468F-9D60-E436EA008D55}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{0F7E8F55-AEA7-4947-B187-AF41BD418311}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F7E8F55-AEA7-4947-B187-AF41BD418311}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F7E8F55-AEA7-4947-B187-AF41BD418311}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A083F55-57EF-468F-9D60-E436EA008D55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A083F55-57EF-468F-9D60-E436EA008D55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A083F55-57EF-468F-9D60-E436EA008D55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A083F55-57EF-468F-9D60-E436EA008D55}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

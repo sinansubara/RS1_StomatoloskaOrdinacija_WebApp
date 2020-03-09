@@ -20,7 +20,7 @@ namespace StomatoloskaOrdinacija.Web.ViewModels.Prijava
 
         [Required]
         [StringLength(320)]
-        [RegularExpression(@"^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$")]
+        [RegularExpression(@"^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$", ErrorMessage = "Email adresa mora biti u formatu primjer@primjer.com")]
         public string Email { get; set; }
 
         [StringLength(13,MinimumLength = 13,ErrorMessage = "JMBG mora da ima 13 brojeva!")]
@@ -65,7 +65,7 @@ namespace StomatoloskaOrdinacija.Web.ViewModels.Prijava
         public bool Aparatic { get; set; }
 
         [Required]
-        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$")]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$", ErrorMessage = "Lozinka mora da posjeduje kombinaciju velikih i malih slova, brojeva i znakova, minimalno 8")]
         public string Lozinka { get; set; }
 
         [Required]

@@ -66,10 +66,12 @@
                     <div class="form-group">
                         <label for="emailadresa">Email adresa</label>
                         <input class="form-control" id="emailadresa" type="email" name="email" asp-for="Email" aria-describedby="emailHelp" placeholder="Unesite email">
+                        <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label for="lozinka1">Lozinka</label>
                         <input class="form-control" id="lozinka1" type="password" name="lozinka" asp-for="Lozinka" placeholder="Lozinka">
+                        <span asp-validation-for="Lozinka" class="text-danger"></span>
                     </div>
                     <input class="btn btn-primary btn-block" type="submit" value="Prijava" style="cursor: pointer;">
                 </form>

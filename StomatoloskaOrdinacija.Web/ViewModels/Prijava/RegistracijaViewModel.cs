@@ -32,6 +32,7 @@ namespace StomatoloskaOrdinacija.Web.ViewModels.Prijava
 
         [StringLength(30)]
         [Required]
+        [RegularExpression("([0-9]+)", ErrorMessage = "Unesite ispravan broj telefona, primjer: 061222333")]
         public string Mobitel { get; set; }
 
         [StringLength(200)]

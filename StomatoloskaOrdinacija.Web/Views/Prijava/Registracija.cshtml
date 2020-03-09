@@ -51,7 +51,9 @@
 <body class="bg-dark">
     <div class="container">
         <div class="card card-register mx-auto mt-5">
-            <div class="card-header">Registracija korisnickog naloga</div>
+            <div class="card-header text-center">
+                <div class="font-weight-bold">REGISTRACIJA KORISNIČKOG NALOGA</div>
+            </div>
             <div class="card-body">
                 <form id="registracija" asp-controller="Prijava" asp-action="Registracija" method="POST" enctype="multipart/form-data">
                     <div class="form-group">
@@ -59,10 +61,12 @@
                             <div class="col-md-6">
                                 <label for="ime">Ime</label>
                                 <input class="form-control" id="ime" type="text" name="ime" asp-for="Ime" aria-describedby="nameHelp" placeholder="Unesite ime">
+                                <span asp-validation-for="Ime" class="text-danger"></span>
                             </div>
                             <div class="col-md-6">
                                 <label for="prezime">Prezime</label>
                                 <input class="form-control" id="prezime" type="text" name="prezime" asp-for="Prezime" aria-describedby="nameHelp" placeholder="Unesite prezime">
+                                <span asp-validation-for="Prezime" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
@@ -71,10 +75,12 @@
                             <div class="col-md-6">
                                 <label for="jmbg">JMBG</label>
                                 <input class="form-control" id="jmbg" aria-describedby="nameHelp" placeholder="Unesite JMBG" type="text" name="jmbg" asp-for="JMBG">
+                                <span asp-validation-for="JMBG" class="text-danger"></span>
                             </div>
                             <div class="col-md-6">
                                 <label for="mobitel">Broj mobitela</label>
                                 <input class="form-control" id="mobitel" aria-describedby="nameHelp" placeholder="Unesite broj mobitela" type="text" name="mobitel" asp-for="Mobitel">
+                                <span asp-validation-for="Mobitel" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
@@ -83,11 +89,13 @@
                             <div class="col-md-6">
                                 <label for="adresa">Adresa</label>
                                 <input class="form-control" id="adresa" aria-describedby="nameHelp" placeholder="Unesite adresu" type="text" name="adresa" asp-for="Adresa">
+                                <span asp-validation-for="Adresa" class="text-danger"></span>
                             </div>
                             <div class="col-md-6">
                                 <label class="date-error-message">Izaberite datum rođenja</label>
-                                <input type="text" name="datumRodjenja" asp-for="DatumRodjenja" value="" class="form-control"
+                                <input type="text" name="datumRodjenja" asp-for="DatumRodjenja" value="@Model.DatumRodjenja" class="form-control"
                                        onfocus="(this.type = 'date')" onblur="(this.type = 'text')" placeholder="Datum rođenja">
+                                <span asp-validation-for="DatumRodjenja" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
@@ -100,8 +108,6 @@
                                         <input type="file" name="slika" id="imgInp" asp-for="Slika" class="form-control">
                                     </div>
                                 </div>
-
-
                             </div>
                             <div class="col-md-6">
                                 <div class="form-row">
@@ -151,33 +157,38 @@
                         <div class="form-row">
                             <div class="col-md-6">
                                 <label>Izaberite grad</label>
-                                <select asp-for="GradID" asp-items="@Model.Gradovi" class="form-control" required>
+                                <select asp-for="GradID" asp-items="@Model.Gradovi" class="form-control">
                                     <option value="" selected disabled>Grad</option>
                                 </select>
+                                <span asp-validation-for="GradID" class="text-danger"></span>
                             </div>
                             <div class="col-md-6">
                                 <label>Izberite spol</label>
-                                <select name="spol" asp-for="Spol" class="form-control" required>
+                                <select name="spol" asp-for="Spol" class="form-control">
                                     <option value="" selected disabled>Spol</option>
                                     <option value="Muško">Muško</option>
                                     <option value="Žensko">Žensko</option>
                                 </select>
+                                <span asp-validation-for="Spol" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="emailadresa">Email adresa</label>
                         <input class="form-control" id="emailadresa" type="email" name="email" asp-for="Email" aria-describedby="emailHelp" placeholder="Unesite email">
+                        <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <div class="form-row">
                             <div class="col-md-6">
                                 <label for="lozinka1">Lozinka</label>
                                 <input class="form-control" id="lozinka1" type="password" name="lozinka" asp-for="Lozinka" placeholder="Lozinka">
+                                <span asp-validation-for="Lozinka" class="text-danger"></span>
                             </div>
                             <div class="col-md-6">
                                 <label for="potvrdapassworda">Confirm password</label>
                                 <input class="form-control" id="potvrdapassworda" type="password" name="potvrdaLozinke" asp-for="PotvrdaLozinke" placeholder="Potvrda lozinke">
+                                <span asp-validation-for="PotvrdaLozinke" class="text-danger"></span>
                             </div>
                         </div>
                     </div>

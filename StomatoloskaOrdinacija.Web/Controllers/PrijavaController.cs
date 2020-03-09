@@ -159,8 +159,33 @@ namespace StomatoloskaOrdinacija.Web.Controllers
         [HttpPost]
         public IActionResult Registracija(RegistracijaViewModel model)
         {
+            //if (!ModelState.IsValid)
+            //    return RedirectToAction("Registracija");
+
             if (!ModelState.IsValid)
-                return RedirectToAction("Registracija");
+            {
+                var errorModel = new RegistracijaViewModel
+                {
+                    Gradovi = _context.Grads.Select
+                        (i => new SelectListItem { Text = i.Naziv, Value = i.GradId.ToString() }).ToList(),
+                    Adresa = model.Adresa,
+                    AlergijaNaLijek = model.AlergijaNaLijek,
+                    Aparatic = model.Aparatic,
+                    DatumRodjenja = model.DatumRodjenja,
+                    Email = model.Email,
+                    GradID = model.GradID,
+                    Ime = model.Ime,
+                    JMBG = model.JMBG,
+                    Prezime = model.Prezime,
+                    Proteza = model.Proteza,
+                    Mobitel = model.Mobitel,
+                    Spol = model.Spol,
+                    Terapija = model.Terapija,
+                    Navlake = model.Navlake
+                };
+                return View("Registracija", errorModel);
+            }
+
 
             if (_context.KorisnickiNalogs.Any(i => i.Email == model.Email))
             {

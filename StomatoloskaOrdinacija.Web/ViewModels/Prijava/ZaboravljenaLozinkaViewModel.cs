@@ -10,7 +10,7 @@ namespace StomatoloskaOrdinacija.Web.ViewModels.Prijava
     {
         [Required]
         [StringLength(320)]
-        [RegularExpression(@"^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$")]
+        [RegularExpression(@"^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$", ErrorMessage = "Email adresa mora biti u formatu primjer@primjer.com")]
         public string Email { get; set; }
     }
 }

@@ -65,11 +65,13 @@
                         <div class="form-row">
                             <div class="col-md-6">
                                 <label for="NovaLozinka">Lozinka</label>
-                                <input class="form-control" id="NovaLozinka" type="password" name="NovaLozinka" asp-for="NovaLozinka" placeholder="Unesite novu lozinku" required>
+                                <input class="form-control" id="NovaLozinka" type="password" name="NovaLozinka" asp-for="NovaLozinka" placeholder="Unesite novu lozinku">
+                                <span asp-validation-for="NovaLozinka" class="text-danger"></span>
                             </div>
                             <div class="col-md-6">
                                 <label for="PotvrdaNoveLozinke">Confirm password</label>
-                                <input class="form-control" id="PotvrdaNoveLozinke" type="password" name="PotvrdaNoveLozinke" asp-for="PotvrdaNoveLozinke" placeholder="Potvrda nove lozinke" required>
+                                <input class="form-control" id="PotvrdaNoveLozinke" type="password" name="PotvrdaNoveLozinke" asp-for="PotvrdaNoveLozinke" placeholder="Potvrda nove lozinke">
+                                <span asp-validation-for="PotvrdaNoveLozinke" class="text-danger"></span>
                             </div>
                         </div>
                     </div>

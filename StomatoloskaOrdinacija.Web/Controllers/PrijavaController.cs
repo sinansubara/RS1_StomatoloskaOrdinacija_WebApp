@@ -314,9 +314,8 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             string link = 
                 $"{ this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}/prijava/promjena-lozinke?vrijednost=" + vrijednost;
 
-            string poruka = "Posjetite sljedeći link kako biste promijenili lozinku: \n" + link +
-                "\nUkoliko ne promijenite lozinku putem datog link-a u roku od 24 sata, link će " +
-                "postati nevažeći.";
+            string poruka = "Kako bi promjenili lozinku, morate kliknut na sljedeći link: \n" + link +
+                "\nLink za resetiranje lozinke, će biti aktivan samo 24 sata, a poslije toga će postati nevažeći.";
 
             EmailSettings.SendEmail(_configuration, primalacPoruke, korisnickiNalog.Email, "Promjena lozinke", poruka);
 
@@ -343,7 +342,6 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             if (_context.PromjenaLozinkes.SingleOrDefault(i => i.Vrijednost == vrijednost) == null)
                 return RedirectToAction("Prijava");
 
-            //TempData["vrijednost"] = vrijednost;
             var model = new PromjenaLozinkeViewModel
             {
                 GenerisanaVrijednost = vrijednost
@@ -358,7 +356,6 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             if (!ModelState.IsValid)
                 return View("PromjenaLozinke", model);
 
-            //string vrijednost = (string)TempData["vrijednost"];
             string vrijednost = model.GenerisanaVrijednost;
 
             PromjenaLozinke promjenaLozinke = _context.PromjenaLozinkes.SingleOrDefault(i => i.Vrijednost == vrijednost);

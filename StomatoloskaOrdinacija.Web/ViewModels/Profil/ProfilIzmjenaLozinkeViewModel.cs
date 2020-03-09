@@ -12,7 +12,7 @@ namespace StomatoloskaOrdinacija.Web.ViewModels.Profil
         public string StaraLozinka { get; set; }
 
         [Required]
-        //[RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$", ErrorMessage = "Lozinka mora sadržavati, veliko i malo slovo, broj i znak, minimalno 8 karaktera")]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$", ErrorMessage = "Lozinka mora da posjeduje kombinaciju velikih i malih slova, brojeva i znakova, minimalno 8")]
         public string NovaLozinka { get; set; }
 
         [Required]

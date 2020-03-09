@@ -393,13 +393,10 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             {
                 TempData["Layout"] = "_Pacijent";
             }
-            //if (!ModelState.IsValid)
-            //    return View("IzmjenaLozinke", model);
-            if (!TestNoveLozinke(model.NovaLozinka))
-            {
-                TempData["errorMessage"] = "Dužina lozinke je minimalno 8 karaktera. Lozinka se sastoji od malih i velikih slova, brojeva te specijalnih karaktera.";
+
+            if (!ModelState.IsValid)
                 return View("IzmjenaLozinke", model);
-            }
+
 
             if (PasswordSettings.GetHash(model.StaraLozinka, Convert.FromBase64String(logiraniKorisnik.LozinkaSalt))
                 != logiraniKorisnik.LozinkaHash)
@@ -426,11 +423,6 @@ namespace StomatoloskaOrdinacija.Web.Controllers
 
             TempData["successMessage"] = "Uspješno ste promijenili lozinku.";
             return RedirectToAction("pregled-profila");
-        }
-
-        private bool TestNoveLozinke(string temp)
-        {
-            return Regex.IsMatch(temp, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$");
         }
 
         public IActionResult Odjava()

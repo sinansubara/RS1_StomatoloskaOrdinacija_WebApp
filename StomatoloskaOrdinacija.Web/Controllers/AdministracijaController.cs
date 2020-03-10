@@ -115,9 +115,13 @@ namespace StomatoloskaOrdinacija.Web.Controllers
         public IActionResult IzbrisiDrzavu(int id)
         {
             Drzava drzavazabrisanje = _context.Drzavas.Find(id);
-            _context.Drzavas.Remove(drzavazabrisanje);
-            _context.SaveChanges();
-            TempData["successMessage"] = "Država uspješno izbrisana.";
+            Grad drzavaSeKoristi = _context.Grads.Where(i => i.DrzavaId == id).FirstOrDefault();
+            if (drzavaSeKoristi == null)
+            {
+                _context.Drzavas.Remove(drzavazabrisanje);
+                _context.SaveChanges();
+                TempData["successMessage"] = "Država uspješno izbrisana.";
+            }
             return RedirectToAction("uredi-drzavu");
         }
 

@@ -1,21 +1,20 @@
 
 $(function() {
 
-    $("form[name='formaunosdrzave']").validate({
+    $("form[name='formatitula']").validate({
 
         rules: {
-
-            imedrzave: {
+            imetitule: {
                 required: true,
-                minlength: 2,
-                maxlength: 100
+                minlength: 1,
+                maxlength: 50
             }
         },
         messages: {
-            imedrzave: {
+            imetitule: {
                 required: "Molimo vas unesite ime drzave",
-                minlength: "Drzava ne moze imat manje od 2 slova",
-                maxlength: "Drzava ne moze imat vise od 100 slova"
+                minlength: "Drzava ne moze imat manje od 1 slova",
+                maxlength: "Drzava ne moze imat vise od 50 slova"
             }
         },
 

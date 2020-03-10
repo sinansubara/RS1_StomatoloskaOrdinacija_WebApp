@@ -41,6 +41,7 @@ namespace StomatoloskaOrdinacija.Web.ViewModels.Korisnik
         public List<SelectListItem> Gradovi { get; set; }
 
         [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "Molimo vas da odaberete grad")]
         public int GradID { get; set; }
 
         [Required]

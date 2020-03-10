@@ -66,7 +66,8 @@ $(function() {
             email: {
                 required: true,
                 emailExt: true,
-                maxlength: 320
+                maxlength: 320,
+                email: true
             }
         },
 
@@ -129,7 +130,8 @@ $(function() {
             email: {
                 required: "Molimo vas unesite email",
                 emailExt: "Email koji ste unijeli nije validan",
-                maxlength: "Email ne moze sadrzavat vise od 320 karaktera"
+                maxlength: "Email ne moze sadrzavat vise od 320 karaktera",
+                email: "Email koji ste unijeli nije validan"
             }
         },
 

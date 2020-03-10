@@ -68,6 +68,7 @@ namespace StomatoloskaOrdinacija.Web.ViewModels.Profil
 
         public bool Aktivan { get; set; }
 
+        
         public int TitulaID { get; set; }
         public string Titula { get; set; }
         public List<SelectListItem> Titule { get; set; }

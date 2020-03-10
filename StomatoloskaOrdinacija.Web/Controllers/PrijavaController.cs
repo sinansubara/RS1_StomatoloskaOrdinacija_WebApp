@@ -345,7 +345,9 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             KorisnickiNalog korisnickiNalog = _context.KorisnickiNalogs.SingleOrDefault
                 (i => i.KorisnickiNalogId == promjenaLozinke.KorisnickiNalogID);
 
-            korisnickiNalog.LozinkaHash = PasswordSettings.GetHash(model.NovaLozinka, Convert.FromBase64String(korisnickiNalog.LozinkaSalt));
+            if (korisnickiNalog != null)
+                korisnickiNalog.LozinkaHash = PasswordSettings.GetHash(model.NovaLozinka,
+                    Convert.FromBase64String(korisnickiNalog.LozinkaSalt));
 
             _context.PromjenaLozinkes.Remove(promjenaLozinke);
             _context.SaveChanges();

@@ -1,7 +1,7 @@
 
 $(function() {
 
-    $("form[name='formapregledprofila']").validate({
+    $("form[name='formazauredjivanjekorisnika']").validate({
 
         rules: {
 

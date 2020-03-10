@@ -121,7 +121,9 @@ namespace StomatoloskaOrdinacija.Web.Controllers
                 _context.Drzavas.Remove(drzavazabrisanje);
                 _context.SaveChanges();
                 TempData["successMessage"] = "Država uspješno izbrisana.";
+                return RedirectToAction("uredi-drzavu");
             }
+            TempData["errorMessage"] = "Država se koristi.";
             return RedirectToAction("uredi-drzavu");
         }
 
@@ -145,15 +147,21 @@ namespace StomatoloskaOrdinacija.Web.Controllers
         {
             if (imegrada != "")
             {
-                var novigrad = new Grad
+                if (imegrada != null && postanskibroj != null)
                 {
-                    Naziv = imegrada,
-                    DrzavaId = drzavaid,
-                    PostanskiBroj = postanskibroj
-                };
-                _context.Grads.Add(novigrad);
-                _context.SaveChanges();
-                TempData["successMessage"] = "Grad uspješno dodan.";
+                    if (imegrada.Length > 2 && imegrada.Length<100 && postanskibroj.Length>2 && postanskibroj.Length<20)
+                    {
+                        var novigrad = new Grad
+                        {
+                            Naziv = imegrada,
+                            DrzavaId = drzavaid,
+                            PostanskiBroj = postanskibroj
+                        };
+                        _context.Grads.Add(novigrad);
+                        _context.SaveChanges();
+                        TempData["successMessage"] = "Grad uspješno dodan.";
+                    }
+                }
             }
             return View("UrediGrad");
         }

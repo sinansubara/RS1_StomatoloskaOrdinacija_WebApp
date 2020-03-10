@@ -3,6 +3,7 @@
     Layout = "_Administrator";
     ViewBag.Title = "Stomatološka ordinacija | Pregled država";
     string successMessage = (string)TempData["successMessage"];
+    string errorMessage = (string)TempData["errorMessage"];
 }
 
 
@@ -19,6 +20,13 @@
             <div class="alert alert-info alert-prijavljen" data-alert="alert">
                 <a class="close" style="cursor: pointer !important" data-dismiss="alert">&times;</a>
                 <p class="text-center text-info">@successMessage</p>
+            </div>
+        }
+        @if (errorMessage != null)
+        {
+            <div class="alert alert-danger alert-prijavljen" data-alert="alert">
+                <a class="close" style="cursor: pointer !important" data-dismiss="alert">&times;</a>
+                <p class="text-center text-danger">@errorMessage</p>
             </div>
         }
         <div class="inlineunos" style="display: inline-flex">

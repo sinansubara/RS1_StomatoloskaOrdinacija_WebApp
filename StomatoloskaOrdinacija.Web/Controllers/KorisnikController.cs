@@ -168,12 +168,18 @@ namespace StomatoloskaOrdinacija.Web.Controllers
         public IActionResult DodajPacijenta(KorisnikDodajPacijentaViewModel model)
         {
             if (!ModelState.IsValid)
-                return RedirectToAction("dodaj-pacijenta");
+            {
+                model.Gradovi = _context.Grads.Select
+                    (i => new SelectListItem {Text = i.Naziv, Value = i.GradId.ToString()}).ToList();
+                return View("DodajPacijenta", model);
+            }
 
             if (_context.KorisnickiNalogs.Any(i => i.Email == model.Email))
             {
                 TempData["errorMessage"] = "Email adresa se koristi.";
-                return RedirectToAction("dodaj-pacijenta");
+                model.Gradovi = _context.Grads.Select
+                    (i => new SelectListItem {Text = i.Naziv, Value = i.GradId.ToString()}).ToList();
+                return View("DodajPacijenta", model);
             }
 
             byte[] lozinkaSalt = PasswordSettings.GetSalt();
@@ -289,12 +295,22 @@ namespace StomatoloskaOrdinacija.Web.Controllers
         public IActionResult DodajStomatolog(KorisnikDodajStomatologViewModel model)
         {
             if (!ModelState.IsValid)
-                return RedirectToAction("dodaj-stomatolog");
+            {
+                model.Gradovi = _context.Grads.Select
+                    (i => new SelectListItem {Text = i.Naziv, Value = i.GradId.ToString()}).ToList();
+                model.Titule = _context.Titulas.Select
+                    (i => new SelectListItem {Text = i.Naziv, Value = i.TitulaId.ToString()}).ToList();
+                return View("DodajStomatolog", model);
+            }
 
             if (_context.KorisnickiNalogs.Any(i => i.Email == model.Email))
             {
                 TempData["errorMessage"] = "Email adresa se koristi.";
-                return RedirectToAction("dodaj-stomatolog");
+                model.Gradovi = _context.Grads.Select
+                    (i => new SelectListItem {Text = i.Naziv, Value = i.GradId.ToString()}).ToList();
+                model.Titule = _context.Titulas.Select
+                    (i => new SelectListItem {Text = i.Naziv, Value = i.TitulaId.ToString()}).ToList();
+                return View("DodajStomatolog", model);
             }
 
             byte[] lozinkaSalt = PasswordSettings.GetSalt();
@@ -409,12 +425,23 @@ namespace StomatoloskaOrdinacija.Web.Controllers
         public IActionResult DodajOsoblje(KorisnikDodajOsobljeViewModel model)
         {
             if (!ModelState.IsValid)
-                return RedirectToAction("dodaj-osoblje");
+            {
+                model.Gradovi = _context.Grads.Select
+                    (i => new SelectListItem {Text = i.Naziv, Value = i.GradId.ToString()}).ToList();
+                model.Titule = _context.Titulas.Select
+                    (i => new SelectListItem {Text = i.Naziv, Value = i.TitulaId.ToString()}).ToList();
+                return View("DodajOsoblje", model);
+            }
+                
 
             if (_context.KorisnickiNalogs.Any(i => i.Email == model.Email))
             {
                 TempData["errorMessage"] = "Email adresa se koristi.";
-                return RedirectToAction("dodaj-osoblje");
+                model.Gradovi = _context.Grads.Select
+                    (i => new SelectListItem {Text = i.Naziv, Value = i.GradId.ToString()}).ToList();
+                model.Titule = _context.Titulas.Select
+                    (i => new SelectListItem {Text = i.Naziv, Value = i.TitulaId.ToString()}).ToList();
+                return View("DodajOsoblje", model);
             }
 
             byte[] lozinkaSalt = PasswordSettings.GetSalt();

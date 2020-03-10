@@ -1,21 +1,21 @@
 
 $(function() {
 
-    $("form[name='formaunosdrzave']").validate({
+    $("form[name='formausluga']").validate({
 
         rules: {
 
-            imedrzave: {
+            imeusluge: {
                 required: true,
                 minlength: 2,
-                maxlength: 100
+                maxlength: 150
             }
         },
         messages: {
-            imedrzave: {
-                required: "Molimo vas unesite ime drzave",
-                minlength: "Drzava ne moze imat manje od 2 slova",
-                maxlength: "Drzava ne moze imat vise od 100 slova"
+            imeusluge: {
+                required: "Molimo vas unesite ime usluge",
+                minlength: "Usluga ne moze imat manje od 2 slova",
+                maxlength: "Usluga ne moze imat vise od 150 slova"
             }
         },
 

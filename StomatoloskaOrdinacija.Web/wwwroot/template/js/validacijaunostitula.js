@@ -6,15 +6,15 @@ $(function() {
         rules: {
             imetitule: {
                 required: true,
-                minlength: 1,
+                minlength: 2,
                 maxlength: 50
             }
         },
         messages: {
             imetitule: {
-                required: "Molimo vas unesite ime drzave",
-                minlength: "Drzava ne moze imat manje od 1 slova",
-                maxlength: "Drzava ne moze imat vise od 50 slova"
+                required: "Molimo vas unesite ime titule",
+                minlength: "Titula ne moze imat manje od 2 slova",
+                maxlength: "Titula ne moze imat vise od 50 slova"
             }
         },
 

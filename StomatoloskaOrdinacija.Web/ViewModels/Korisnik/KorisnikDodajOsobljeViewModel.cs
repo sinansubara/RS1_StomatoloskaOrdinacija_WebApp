@@ -57,6 +57,7 @@ namespace StomatoloskaOrdinacija.Web.ViewModels.Korisnik
         public bool Aktivan { get; set; }
 
         [Required]
+        [StringLength(20)]
         public string BrojZiroRacuna { get; set; }
 
         public List<SelectListItem> Titule { get; set; }
@@ -66,6 +67,7 @@ namespace StomatoloskaOrdinacija.Web.ViewModels.Korisnik
         public int TitulaID { get; set; }
 
         [Required]
+        [StringLength(200)]
         public string OpisPosla { get; set; }
     }
 }

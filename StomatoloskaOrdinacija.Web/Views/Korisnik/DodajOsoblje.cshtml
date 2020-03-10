@@ -11,126 +11,141 @@
     <link href="~/template/css/PregledProfila.css" rel="stylesheet">
 </head>
 
-@if (successMessage != null)
-{
-    <div class="alert alert-info alert-prijavljen" data-alert="alert">
-        <a class="close" style="cursor: pointer !important" data-dismiss="alert">&times;</a>
-        <p class="text-center text-info">@successMessage</p>
-    </div>
-}
-@if (errorMessage != null)
-{
-    <div class="alert alert-danger alert-prijava" data-alert="alert">
-        <a class="close" data-dismiss="alert" style="cursor: pointer">&times;</a>
-        <p class="text-center text-danger">@errorMessage</p>
-    </div>
-}
 
-<div class="card mx-auto mt-3">
-    <div class="card-header">Dodavanje novog uposlenika</div>
-    <div class="card-body">
-        <form id="registracija" asp-controller="Korisnik" asp-action="dodaj-osoblje" method="POST" enctype="multipart/form-data">
-            <div class="form-group">
-                <div class="form-row">
-                    <div class="col-md-4">
-                        <label for="ime">Ime</label>
-                        <input class="form-control" id="ime" type="text" name="ime" asp-for="Ime" aria-describedby="nameHelp" placeholder="Unesite ime">
-                        <span asp-validation-for="Ime" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-4">
-                        <label for="prezime">Prezime</label>
-                        <input class="form-control" id="prezime" type="text" name="prezime" asp-for="Prezime" aria-describedby="nameHelp" placeholder="Unesite prezime">
-                        <span asp-validation-for="Prezime" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-4">
-                        <label for="jmbg">JMBG</label>
-                        <input class="form-control" id="jmbg" aria-describedby="nameHelp" placeholder="Unesite JMBG" type="text" name="jmbg" asp-for="JMBG">
-                        <span asp-validation-for="JMBG" class="text-danger"></span>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="form-row">
-                    <div class="col-md-4">
-                        <label for="mobitel">Broj mobitela</label>
-                        <input class="form-control" id="mobitel" aria-describedby="nameHelp" placeholder="Unesite broj mobitela" type="text" name="mobitel" asp-for="Mobitel">
-                        <span asp-validation-for="Mobitel" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-4">
-                        <label for="adresa">Adresa</label>
-                        <input class="form-control" id="adresa" aria-describedby="nameHelp" placeholder="Unesite adresu" type="text" name="adresa" asp-for="Adresa">
-                        <span asp-validation-for="Adresa" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="date-error-message">Izaberite datum rođenja</label>
-                        <input type="text" name="datumRodjenja" asp-for="DatumRodjenja" value="@Model.DatumRodjenja" class="form-control"
-                               onfocus="(this.type = 'date')" onblur="(this.type = 'text')" placeholder="Datum rođenja">
-                        <span asp-validation-for="DatumRodjenja" class="text-danger"></span>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="form-row">
-                    <div class="col-md-3">
-                        <label for="imgInp">Dodaj sliku</label>
-                        <input type="file" name="slika" id="imgInp" asp-for="Slika" class="form-control">
-                    </div>
-                    <div class="col-md-3">
-                        <label>Izaberite grad</label>
-                        <select asp-for="GradID" asp-items="@Model.Gradovi" class="form-control">
-                            <option value="" selected disabled>Grad</option>
-                        </select>
-                        <span asp-validation-for="GradID" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-3">
-                        <label>Izberite spol</label>
-                        <select name="spol" asp-for="Spol" class="form-control">
-                            <option value="" selected disabled>Spol</option>
-                            <option value="Muško">Muško</option>
-                            <option value="Žensko">Žensko</option>
-                        </select>
-                        <span asp-validation-for="Spol" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="date-error-message">Izaberite datum zaposlenja</label>
-                        <input type="text" name="datumZaposlenja" asp-for="DatumZaposlenja" value="@Model.DatumZaposlenja" class="form-control"
-                               onfocus="(this.type = 'date')" onblur="(this.type = 'text')" placeholder="Datum zaposlenja">
-                        <span asp-validation-for="DatumZaposlenja" class="text-danger"></span>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="form-row">
-                    <div class="col-md-3">
-                        <label>Izaberite titulu</label>
-                        <select asp-for="TitulaID" asp-items="@Model.Titule" class="form-control">
-                            <option value="" selected disabled>Titula</option>
-                        </select>
-                        <span asp-validation-for="TitulaID" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="brojziroracuna">Broj žiro računa</label>
-                        <input class="form-control" id="brojziroracuna" aria-describedby="nameHelp" placeholder="Unesite broj žiro računa" type="text" name="brojziroracuna" asp-for="BrojZiroRacuna">
-                        <span asp-validation-for="BrojZiroRacuna" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-4">
-                        <label for="opisposla">Opis posla</label>
-                        <input class="form-control" id="opisposla" aria-describedby="nameHelp" placeholder="Unesite opis posla" type="text" name="opisposla" asp-for="OpisPosla">
-                        <span asp-validation-for="OpisPosla" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-2">
-                        <label for="aktivan">Aktivan</label>
-                        <input type="checkbox" name="aktivan" id="aktivan" asp-for="Aktivan">
-                    </div>
+<div class="container-fluid">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a asp-controller="Profil" asp-action="Pocetna">Početna</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a asp-controller="Korisnik" asp-action="uredi-osoblje">Pregled uposlenika</a>
+        </li>
+        <li class="breadcrumb-item active">Dodavanje uposlenika</li>
+    </ol>
 
+    @if (successMessage != null)
+    {
+        <div class="alert alert-info alert-prijavljen" data-alert="alert">
+            <a class="close" style="cursor: pointer !important" data-dismiss="alert">&times;</a>
+            <p class="text-center text-info">@successMessage</p>
+        </div>
+    }
+    @if (errorMessage != null)
+    {
+        <div class="alert alert-danger alert-prijava" data-alert="alert">
+            <a class="close" data-dismiss="alert" style="cursor: pointer">&times;</a>
+            <p class="text-center text-danger">@errorMessage</p>
+        </div>
+    }
+
+    <div class="card mx-auto mt-3">
+        <div class="card-body">
+            <form name="formadodajosoblje" id="registracija" asp-controller="Korisnik" asp-action="dodaj-osoblje" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <div class="form-row">
+                        <div class="col-md-4">
+                            <label for="ime">Ime</label>
+                            <input class="form-control" id="ime" type="text" name="ime" asp-for="Ime" aria-describedby="nameHelp" placeholder="Unesite ime">
+                            <span asp-validation-for="Ime" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="prezime">Prezime</label>
+                            <input class="form-control" id="prezime" type="text" name="prezime" asp-for="Prezime" aria-describedby="nameHelp" placeholder="Unesite prezime">
+                            <span asp-validation-for="Prezime" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="jmbg">JMBG</label>
+                            <input class="form-control" id="jmbg" aria-describedby="nameHelp" placeholder="Unesite JMBG" type="text" name="jmbg" asp-for="JMBG">
+                            <span asp-validation-for="JMBG" class="text-danger"></span>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label for="emailadresa">Email adresa</label>
-                <input class="form-control" id="emailadresa" type="email" name="email" asp-for="Email" aria-describedby="emailHelp" placeholder="Unesite email" required>
-            </div>
-            
-            <input class="btn btn-primary btn-block" type="submit" value="Snimi novog pacijenta" style="cursor: pointer;">
-        </form>
+                <div class="form-group">
+                    <div class="form-row">
+                        <div class="col-md-4">
+                            <label for="mobitel">Broj mobitela</label>
+                            <input class="form-control" id="mobitel" aria-describedby="nameHelp" placeholder="Unesite broj mobitela" type="text" name="mobitel" asp-for="Mobitel">
+                            <span asp-validation-for="Mobitel" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="adresa">Adresa</label>
+                            <input class="form-control" id="adresa" aria-describedby="nameHelp" placeholder="Unesite adresu" type="text" name="adresa" asp-for="Adresa">
+                            <span asp-validation-for="Adresa" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="date-error-message">Izaberite datum rođenja</label>
+                            <input type="text" name="datumRodjenja" asp-for="DatumRodjenja" value="@Model.DatumRodjenja" class="form-control"
+                                   onfocus="(this.type = 'date')" onblur="(this.type = 'text')" placeholder="Datum rođenja">
+                            <span asp-validation-for="DatumRodjenja" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-row">
+                        <div class="col-md-3">
+                            <label for="imgInp">Dodaj sliku</label>
+                            <input type="file" name="slika" id="imgInp" asp-for="Slika" class="form-control">
+                        </div>
+                        <div class="col-md-3">
+                            <label>Izaberite grad</label>
+                            <select asp-for="GradID" name="gradid" asp-items="@Model.Gradovi" class="form-control">
+                                <option value="" selected disabled>Grad</option>
+                            </select>
+                            <span asp-validation-for="GradID" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Izberite spol</label>
+                            <select name="spol" asp-for="Spol" class="form-control">
+                                <option value="" selected disabled>Spol</option>
+                                <option value="Muško">Muško</option>
+                                <option value="Žensko">Žensko</option>
+                            </select>
+                            <span asp-validation-for="Spol" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="date-error-message">Izaberite datum zaposlenja</label>
+                            <input type="text" name="datumZaposlenja" asp-for="DatumZaposlenja" value="@Model.DatumZaposlenja" class="form-control"
+                                   onfocus="(this.type = 'date')" onblur="(this.type = 'text')" placeholder="Datum zaposlenja">
+                            <span asp-validation-for="DatumZaposlenja" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-row">
+                        <div class="col-md-3">
+                            <label>Izaberite titulu</label>
+                            <select asp-for="TitulaID" name="titulaid" asp-items="@Model.Titule" class="form-control">
+                                <option value="" selected disabled>Titula</option>
+                            </select>
+                            <span asp-validation-for="TitulaID" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="brojziroracuna">Broj žiro računa</label>
+                            <input class="form-control" id="brojziroracuna" aria-describedby="nameHelp" placeholder="Unesite broj žiro računa" type="text" name="brojziroracuna" asp-for="BrojZiroRacuna">
+                            <span asp-validation-for="BrojZiroRacuna" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="opisposla">Opis posla</label>
+                            <input class="form-control" id="opisposla" aria-describedby="nameHelp" placeholder="Unesite opis posla" type="text" name="opisposla" asp-for="OpisPosla">
+                            <span asp-validation-for="OpisPosla" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="aktivan">Aktivan</label>
+                            <input type="checkbox" name="aktivan" id="aktivan" asp-for="Aktivan">
+                        </div>
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="emailadresa">Email adresa</label>
+                    <input class="form-control" id="emailadresa" type="email" name="email" asp-for="Email" aria-describedby="emailHelp" placeholder="Unesite email">
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <input class="btn btn-primary btn-block" type="submit" value="Snimi novog uposlenika" style="cursor: pointer;">
+            </form>
+        </div>
     </div>
 </div>
+
+<script src="~/template/js/validacijadodajosoblje.js"></script>

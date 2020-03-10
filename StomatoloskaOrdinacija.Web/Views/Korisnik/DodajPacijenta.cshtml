@@ -11,6 +11,17 @@
     <link href="~/template/css/PregledProfila.css" rel="stylesheet">
 </head>
 
+<div class="container-fluid">
+<ol class="breadcrumb">
+    <li class="breadcrumb-item">
+        <a asp-controller="Profil" asp-action="Pocetna">Početna</a>
+    </li>
+    <li class="breadcrumb-item">
+        <a asp-controller="Korisnik" asp-action="uredi-pacijent">Pregled pacijenata</a>
+    </li>
+    <li class="breadcrumb-item active">Dodavanje pacijenta</li>
+</ol>
+
 @if (successMessage != null)
 {
     <div class="alert alert-info alert-prijavljen" data-alert="alert">
@@ -27,9 +38,8 @@
 }
 
 <div class="card mx-auto mt-3">
-    <div class="card-header">Dodavanje novog pacijenta</div>
     <div class="card-body">
-        <form id="registracija" asp-controller="Korisnik" asp-action="dodaj-pacijenta" method="POST" enctype="multipart/form-data">
+        <form id="registracija" name="formadodajpacijenta" asp-controller="Korisnik" asp-action="dodaj-pacijenta" method="POST" enctype="multipart/form-data">
             <div class="form-group">
                 <div class="form-row">
                     <div class="col-md-4">
@@ -131,8 +141,9 @@
                 <label for="emailadresa">Email adresa</label>
                 <input class="form-control" id="emailadresa" type="email" name="email" asp-for="Email" aria-describedby="emailHelp" placeholder="Unesite email">
             </div>
-            
+
             <input class="btn btn-primary btn-block" type="submit" value="Snimi novog pacijenta" style="cursor: pointer;">
         </form>
     </div>
+</div>
 </div>

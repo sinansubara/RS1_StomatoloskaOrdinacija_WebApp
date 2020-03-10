@@ -49,9 +49,9 @@
             <div class="card-header text-center">
                 <div class="font-weight-bold">PRIJAVA - STOMATOLOŠKA ORDINACIJA</div>
             </div>
-            
+
             <div class="text-center">
-                <img src="/images/dentallogo.png" style="max-width: 60%; height: auto;"/>
+                <img src="/images/dentallogo.png" style="max-width: 60%; height: auto;" />
             </div>
 
             @if (successMessage != null)
@@ -70,7 +70,7 @@
             }
 
             <div class="card-body">
-                <form id="prijava" asp-controller="Prijava" asp-action="Prijava" method="POST">
+                <form id="prijava" name="formaprijava" asp-controller="Prijava" asp-action="Prijava" method="POST">
                     <div class="form-group">
                         <label for="emailadresa">Email adresa</label>
                         <input class="form-control" id="emailadresa" type="email" name="email" asp-for="Email" aria-describedby="emailHelp" placeholder="Unesite email">
@@ -95,6 +95,9 @@
     <script src="~/template/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- Core plugin JavaScript-->
     <script src="~/template/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/template/js/validacijalogin.js"></script>
 </body>
 
 </html>

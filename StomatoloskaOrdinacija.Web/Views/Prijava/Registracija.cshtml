@@ -55,7 +55,7 @@
                 <div class="font-weight-bold">REGISTRACIJA KORISNIČKOG NALOGA</div>
             </div>
             <div class="card-body">
-                <form id="registracija" asp-controller="Prijava" asp-action="Registracija" method="POST" enctype="multipart/form-data">
+                <form id="registracija" name="formaregistracija" asp-controller="Prijava" asp-action="Registracija" method="POST" enctype="multipart/form-data">
                     <div class="form-group">
                         <div class="form-row">
                             <div class="col-md-6">
@@ -157,7 +157,7 @@
                         <div class="form-row">
                             <div class="col-md-6">
                                 <label>Izaberite grad</label>
-                                <select asp-for="GradID" asp-items="@Model.Gradovi" class="form-control">
+                                <select asp-for="GradID" name="gradid" asp-items="@Model.Gradovi" class="form-control">
                                     <option value="" selected disabled>Grad</option>
                                 </select>
                                 <span asp-validation-for="GradID" class="text-danger"></span>
@@ -206,6 +206,9 @@
     <script src="~/template/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- Core plugin JavaScript-->
     <script src="~/template/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/template/js/validacijaregistracije.js"></script>
 </body>
 
 </html>

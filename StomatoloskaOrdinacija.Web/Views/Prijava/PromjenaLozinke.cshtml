@@ -59,7 +59,7 @@
                     <h4>Promjena lozinke</h4>
                     <p>Nakon unosa nove lozinke i potvrde iste, lozinka će biti promjenjena.</p>
                 </div>
-                <form id="zaboravljena-lozinka" asp-controller="Prijava" asp-action="promjena-lozinke" method="POST">
+                <form name="formapromjenazaboravljenelozinke" id="zaboravljena-lozinka" asp-controller="Prijava" asp-action="promjena-lozinke" method="POST">
                     <input type="hidden" asp-for="GenerisanaVrijednost" value="@Model.GenerisanaVrijednost" />
                     <div class="form-group">
                         <div class="form-row">
@@ -89,6 +89,9 @@
     <script src="~/template/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- Core plugin JavaScript-->
     <script src="~/template/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/template/js/validacijapromjenazaboravljenelozinke.js"></script>
 </body>
 
 </html>

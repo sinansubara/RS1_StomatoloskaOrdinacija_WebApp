@@ -12,10 +12,10 @@ namespace StomatoloskaOrdinacija.Web.ViewModels.Korisnik
     {
         public int KorisnikId { get; set; }
 
-        [StringLength(100), MinLength(2)]
+        [StringLength(100)]
         public string Ime { get; set; }
 
-        [StringLength(100),MinLength(3)]
+        [StringLength(100)]
         public string Prezime { get; set; }
 
         
@@ -29,14 +29,17 @@ namespace StomatoloskaOrdinacija.Web.ViewModels.Korisnik
         public DateTime DatumRodjenja { get; set; }
         public string DatumRodjenjaString { get; set; }
 
+        [Required]
         [StringLength(30)]
         public string Mobitel { get; set; }
 
+        [Required]
         [StringLength(200)]
         public string Adresa { get; set; }
 
         public List<SelectListItem> Gradovi { get; set; }
 
+        [Required]
         public int GradID { get; set; }
         public string Grad { get; set; }
         
@@ -59,8 +62,10 @@ namespace StomatoloskaOrdinacija.Web.ViewModels.Korisnik
         public DateTime DatumZaposlenja { get; set; }
         public string DatumZaposlenjaString { get; set; }
 
+        [StringLength(200)]
         public string OpisPosla { get; set; }
 
+        [StringLength(20)]
         [Display(Name = "Broj žiro računa")]
         public string BrojZiroRacuna { get; set; }
 

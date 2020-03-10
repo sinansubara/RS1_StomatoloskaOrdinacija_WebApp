@@ -29,6 +29,14 @@
     <link href="~/template/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="~/template/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="~/template/css/sb-admin.css" rel="stylesheet">
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="~/template/vendor/jquery/jquery.min.js"></script>
+    <script src="~/template/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Core plugin JavaScript-->
+    <script src="~/template/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <!-- Custom scripts for all pages-->
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
 </head>
 <body class="fixed-nav sticky-footer bg-dark" id="page-top">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
@@ -213,24 +221,20 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close" style="cursor: pointer;">
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
                     <div class="modal-body">Da li ste sigurni da se želite odjaviti?</div>
                     <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Poništi</button>
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal" style="cursor: pointer;">Poništi</button>
                         <a asp-controller="Profil" asp-action="Odjava" class="btn btn-primary">Odjava</a>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Bootstrap core JavaScript-->
-        <script src="~/template/vendor/jquery/jquery.min.js"></script>
-        <script src="~/template/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <!-- Core plugin JavaScript-->
-        <script src="~/template/vendor/jquery-easing/jquery.easing.min.js"></script>
-        <!-- Custom scripts for all pages-->
+
+
         <script src="~/template/js/sb-admin.min.js"></script>
         <script src="~/template/vendor/jquery/js.cookie.min.js"></script>
         <script>

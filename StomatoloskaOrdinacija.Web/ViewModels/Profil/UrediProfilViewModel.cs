@@ -11,31 +11,32 @@ namespace StomatoloskaOrdinacija.Web.ViewModels.Profil
 {
     public class UrediProfilViewModel
     {
-        [StringLength(100), MinLength(2)]
+        [Required]
         public string Ime { get; set; }
 
-        [StringLength(100),MinLength(3)]
+        [Required]
         public string Prezime { get; set; }
 
         
         public string Email { get; set; }
 
-       
+        
         public string JMBG { get; set; }
 
         public string VrstaAcc { get; set; }
-        
+
         public DateTime DatumRodjenja { get; set; }
         public string DatumRodjenjaString { get; set; }
 
-        [StringLength(30)]
+        [Required]
         public string Mobitel { get; set; }
 
-        [StringLength(200)]
+        [Required]
         public string Adresa { get; set; }
 
         public List<SelectListItem> Gradovi { get; set; }
 
+        [Required]
         public int GradID { get; set; }
         public string Grad { get; set; }
         
@@ -58,13 +59,16 @@ namespace StomatoloskaOrdinacija.Web.ViewModels.Profil
         public DateTime DatumZaposlenja { get; set; }
         public string DatumZaposlenjaString { get; set; }
 
+        [StringLength(200)]
         public string OpisPosla { get; set; }
 
+        [StringLength(20)]
         [Display(Name = "Broj žiro računa")]
         public string BrojZiroRacuna { get; set; }
 
         public bool Aktivan { get; set; }
 
+        
         public int TitulaID { get; set; }
         public string Titula { get; set; }
         public List<SelectListItem> Titule { get; set; }

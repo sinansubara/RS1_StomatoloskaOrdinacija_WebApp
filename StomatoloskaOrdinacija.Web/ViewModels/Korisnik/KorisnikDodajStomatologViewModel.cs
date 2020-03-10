@@ -41,6 +41,7 @@ namespace StomatoloskaOrdinacija.Web.ViewModels.Korisnik
         public List<SelectListItem> Gradovi { get; set; }
 
         [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "Molimo vas da odaberete grad")]
         public int GradID { get; set; }
 
         [Required]
@@ -58,11 +59,13 @@ namespace StomatoloskaOrdinacija.Web.ViewModels.Korisnik
         public bool Aktivan { get; set; }
 
         [Required]
+        [StringLength(20)]
         public string BrojZiroRacuna { get; set; }
 
         public List<SelectListItem> Titule { get; set; }
 
         [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "Molimo vas da odaberete titulu")]
         public int TitulaID { get; set; }
 
         

@@ -1,132 +1,142 @@
 ﻿
 @{
-    //Layout = "_Administrator";
     Layout = (string)TempData["Layout"];
     ViewBag.Title = "Stomatološka ordinacija | Pregled pacijenata";
     string successMessage = (string)TempData["successMessage"];
 }
-@if (successMessage != null)
-{
-    <div class="alert alert-info alert-prijavljen" data-alert="alert">
-        <a class="close" style="cursor: pointer !important" data-dismiss="alert">&times;</a>
-        <p class="text-center text-info">@successMessage</p>
-    </div>
-}
 
-<div class="container-fluid">
-    <!-- Breadcrumbs-->
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item">
-            <a asp-controller="Profil" asp-action="Pocetna">Početna</a>
-        </li>
-        <li class="breadcrumb-item active">Pregled pacijenata</li>
-    </ol>
-    <table id="dataTable" class="table table-striped table-bordered">
-        <thead>
-            <tr>
-                <th>Ime</th>
-                <th>Prezime</th>
-                <th>Grad</th>
-                <th>Adresa</th>
-                <th>Spol</th>
-                <th>DatumRodjenja</th>
-                <th>Funkcije</th>
-            </tr>
-        </thead>
-        <tfoot>
-            <tr>
-                <th>Ime</th>
-                <th>Prezime</th>
-                <th>Grad</th>
-                <th>Adresa</th>
-                <th>Spol</th>
-                <th>DatumRodjenja</th>
-                <th>Funkcije</th>
-            </tr>
-        </tfoot>
-    </table>
-    <a class="btn btn-primary" asp-controller="Korisnik" asp-action="dodaj-pacijenta">Dodaj novog pacijenta</a>
 
-    <script>
-    $(document).ready(function () {
-        $.fn.dataTable.moment('DD/MM/YYYY HH:mm:ss');
+    <div class="container-fluid">
+        <!-- Breadcrumbs-->
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-controller="Profil" asp-action="Pocetna">Početna</a>
+            </li>
+            <li class="breadcrumb-item active">Pregled pacijenata</li>
+        </ol>
+        @if (successMessage != null)
+        {
+            <div class="alert alert-info alert-prijavljen" data-alert="alert">
+                <a class="close" style="cursor: pointer !important" data-dismiss="alert">&times;</a>
+                <p class="text-center text-info">@successMessage</p>
+            </div>
+        }
+        <table id="dataTable" class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Ime</th>
+                    <th>Prezime</th>
+                    <th>Grad</th>
+                    <th>Adresa</th>
+                    <th>Spol</th>
+                    <th>DatumRodjenja</th>
+                    <th>Funkcije</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>Ime</th>
+                    <th>Prezime</th>
+                    <th>Grad</th>
+                    <th>Adresa</th>
+                    <th>Spol</th>
+                    <th>DatumRodjenja</th>
+                    <th>Funkcije</th>
+                </tr>
+            </tfoot>
+        </table>
+        <a class="btn btn-primary" asp-controller="Korisnik" asp-action="dodaj-pacijenta">Dodaj novog pacijenta</a>
 
-        $("#dataTable").DataTable({
-            dom: 'lfrtipB',
-            "ajax": {
-                "url": "/Korisnik/ListaPacijenata",
-                "type": "GET",
-                "datatype": "json"
-            },
-            "columns": [
-                { "data": "ime" },
-                { "data": "prezime" },
-                { "data": "grad" },
-                { "data": "adresa" },
-                { "data": "spol" },
-                {
-                    "data": "datumRodjenja",
-                    "render": function(data, type) {
-                        return type === 'sort' ? data : moment(data).format('DD.MM.YYYY');
-                    }
-                },
-                { "data": "pacijentId" }
-            ],
-            columnDefs: [
-                {
-                    "targets": 6,
-                    "render": function(data, type, full, meta) {
-                        return '<span class="d-flex justify-content-center"><a class="mr-1" href="/Korisnik/uredi-pacijent/' +
-                            data +
-                            '">Uredi</a> | <a class="ml-1 izbrisi" href="/Korisnik/izbrisi-pacijenta/' +
-                            data +
-                            '">Izbrisi</a></span>';
-                    }
-                }
-            ],
-            select: true,
-            colReorder: true,
-            buttons: [
-                {
-                    extend: 'collection',
-                    text: 'Export',
+        <script>
+            $(document).ready(function () {
+                $.fn.dataTable.moment('DD/MM/YYYY HH:mm:ss');
+
+                $("#dataTable").DataTable({
+                    dom: 'lfrtipB',
+                    "ajax": {
+                        "url": "/Korisnik/ListaPacijenata",
+                        "type": "GET",
+                        "datatype": "json"
+                    },
+                    "columns": [
+                        { "data": "ime" },
+                        { "data": "prezime" },
+                        { "data": "grad" },
+                        { "data": "adresa" },
+                        { "data": "spol" },
+                        {
+                            "data": "datumRodjenja",
+                            "render": function (data, type) {
+                                return type === 'sort' ? data : moment(data).format('DD.MM.YYYY');
+                            }
+                        },
+                        { "data": "pacijentId" }
+                    ],
+                    columnDefs: [
+                        {
+                            "targets": 6,
+                            "render": function (data, type, full, meta) {
+                                return '<span class="d-flex justify-content-center"><a class="mr-1" href="/Korisnik/uredi-pacijent/' +
+                                    data +
+                                    '">Uredi</a> | <a class="ml-1 izbrisi" href="/Korisnik/izbrisi-pacijenta/' +
+                                    data +
+                                    '">Izbrisi</a></span>';
+                            }
+                        }
+                    ],
+                    select: true,
+                    colReorder: true,
                     buttons: [
                         {
-                            extend: 'copy',
-                            exportOptions: {
-                                columns: [0, 1, 2, 3, 4, 5]}
-                        },
-                        {extend:'excel',
-                            exportOptions: {
-                                columns: [0, 1, 2, 3, 4, 5]}
-                        },
-                        {extend:'csv',
-                            exportOptions: {
-                                columns: [0, 1, 2, 3, 4, 5]}
-                        },
-                        {extend:'pdf',
-                            exportOptions: {
-                                columns: [0, 1, 2, 3, 4, 5]}
-                        },
-                        {extend:'print',
-                            exportOptions: {
-                                columns: [0, 1, 2, 3, 4, 5]}
+                            extend: 'collection',
+                            text: 'Export',
+                            buttons: [
+                                {
+                                    extend: 'copy',
+                                    exportOptions: {
+                                        columns: [0, 1, 2, 3, 4, 5]
+                                    }
+                                },
+                                {
+                                    extend: 'excel',
+                                    exportOptions: {
+                                        columns: [0, 1, 2, 3, 4, 5]
+                                    }
+                                },
+                                {
+                                    extend: 'csv',
+                                    exportOptions: {
+                                        columns: [0, 1, 2, 3, 4, 5]
+                                    }
+                                },
+                                {
+                                    extend: 'pdf',
+                                    exportOptions: {
+                                        columns: [0, 1, 2, 3, 4, 5]
+                                    }
+                                },
+                                {
+                                    extend: 'print',
+                                    exportOptions: {
+                                        columns: [0, 1, 2, 3, 4, 5]
+                                    }
+                                }
+                            ]
                         }
                     ]
-                }
-            ]
-        });
-        
+                });
 
-        $.ajax({
-            url: "/Korisnik/IsOsobljeOrStomatolog", 
-            success: function(result){
-                if (result == true) 
-                     $(".izbrisi").attr("href", "#");
-            }});
-        
-        
-    });
-    </script>
 
-</div>
+                $.ajax({
+                    url: "/Korisnik/IsOsobljeOrStomatolog",
+                    success: function (result) {
+                        if (result == true)
+                            $(".izbrisi").attr("href", "#");
+                    }
+                });
+
+
+            });
+        </script>
+
+    </div>

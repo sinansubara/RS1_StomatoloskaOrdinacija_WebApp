@@ -42,10 +42,8 @@ namespace StomatoloskaOrdinacija.Web.Controllers
                 TempData["Layout"] = "_MedicinskoOsoblje";
 
             if (logiraniKorisnik.Permisije == 3)
-            {
-                TempData["pacijentId"] = _context.Pacijents.Where(i => i.KorisnickiNalogId == HttpContext.GetLogiraniKorisnik().KorisnickiNalogId).FirstOrDefault().PacijentId;
                 TempData["Layout"] = "_Pacijent";
-            }
+            
 
             var model = new ProfilPocetnaViewModel
             {
@@ -104,69 +102,72 @@ namespace StomatoloskaOrdinacija.Web.Controllers
                     .ThenInclude(i => i.Grad)
                     .SingleOrDefault(i => i.KorisnickiNalog == HttpContext.GetLogiraniKorisnik());
 
-                TempData["pacijentId"] = _context.Pacijents.Where(i => i.KorisnickiNalogId == HttpContext.GetLogiraniKorisnik().KorisnickiNalogId).FirstOrDefault().PacijentId;
                 TempData["Layout"] = "_Pacijent";
             }
 
-            
 
-            var model = new UrediProfilViewModel //za sve usere
+            if (korisnik != null)
             {
-                Ime = korisnik.KorisnickiNalog.Ime,
-                Prezime = korisnik.KorisnickiNalog.Prezime,
-                Email = korisnik.KorisnickiNalog.Email,
-                JMBG = korisnik.KorisnickiNalog.JMBG,
-                DatumRodjenjaString = korisnik.KorisnickiNalog.DatumRodjenja.ToString("dd.MM.yyyy"),
-                Mobitel = korisnik.KorisnickiNalog.Mobitel,
-                Adresa = korisnik.KorisnickiNalog.Adresa,
-                GradID = korisnik.KorisnickiNalog.GradId,
-                Grad = korisnik.KorisnickiNalog.Grad.Naziv,
-                Gradovi = _context.Grads.Select
-                    (i => new SelectListItem { Text = i.Naziv, Value = i.GradId.ToString() }).ToList(),
-                Spol = korisnik.KorisnickiNalog.Spol,
-                Slika = korisnik.KorisnickiNalog.Slika
-            };
-            if (logiraniKorisnik.Permisije == 0)//admin
-            {
-                model.DatumZaposlenjaString = korisnik.DatumZaposlenja.ToString("dd.MM.yyyy");
-                model.BrojZiroRacuna = korisnik.BrojZiroRacuna;
-                model.OpisPosla = korisnik.OpisPosla;
-                model.Aktivan = korisnik.Aktivan;
-                model.VrstaAcc = "Administrator";
+                var model = new UrediProfilViewModel //za sve usere
+                {
+                    Ime = korisnik.KorisnickiNalog.Ime,
+                    Prezime = korisnik.KorisnickiNalog.Prezime,
+                    Email = korisnik.KorisnickiNalog.Email,
+                    JMBG = korisnik.KorisnickiNalog.JMBG,
+                    DatumRodjenjaString = korisnik.KorisnickiNalog.DatumRodjenja.ToString("dd.MM.yyyy"),
+                    Mobitel = korisnik.KorisnickiNalog.Mobitel,
+                    Adresa = korisnik.KorisnickiNalog.Adresa,
+                    GradID = korisnik.KorisnickiNalog.GradId,
+                    Grad = korisnik.KorisnickiNalog.Grad.Naziv,
+                    Gradovi = _context.Grads.Select
+                        (i => new SelectListItem { Text = i.Naziv, Value = i.GradId.ToString() }).ToList(),
+                    Spol = korisnik.KorisnickiNalog.Spol,
+                    Slika = korisnik.KorisnickiNalog.Slika
+                };
+                if (logiraniKorisnik.Permisije == 0)//admin
+                {
+                    model.DatumZaposlenjaString = korisnik.DatumZaposlenja.ToString("dd.MM.yyyy");
+                    model.BrojZiroRacuna = korisnik.BrojZiroRacuna;
+                    model.OpisPosla = korisnik.OpisPosla;
+                    model.Aktivan = korisnik.Aktivan;
+                    model.VrstaAcc = "Administrator";
+                }
+                if (logiraniKorisnik.Permisije == 1)//stomatolog
+                {
+                    model.DatumZaposlenjaString = korisnik.DatumZaposlenja.ToString("dd.MM.yyyy");
+                    model.BrojZiroRacuna = korisnik.BrojZiroRacuna;
+                    model.Aktivan = korisnik.Aktivan;
+                    model.TitulaID = korisnik.TitulaID;
+                    model.Titula = korisnik.Titula.Naziv;
+                    model.VrstaAcc = "Stomatolog";
+                    model.Titule = _context.Titulas.Select
+                        (i => new SelectListItem {Text = i.Naziv, Value = i.TitulaId.ToString()}).ToList();
+                }
+                if (logiraniKorisnik.Permisije == 2)//med.osoblje
+                {
+                    model.DatumZaposlenjaString = korisnik.DatumZaposlenja.ToString("dd.MM.yyyy");
+                    model.BrojZiroRacuna = korisnik.BrojZiroRacuna;
+                    model.OpisPosla = korisnik.OpisPosla;
+                    model.Aktivan = korisnik.Aktivan;
+                    model.TitulaID = korisnik.TitulaID;
+                    model.Titula = korisnik.Titula.Naziv;
+                    model.VrstaAcc = "Medicinsko osoblje";
+                    model.Titule = _context.Titulas.Select
+                        (i => new SelectListItem {Text = i.Naziv, Value = i.TitulaId.ToString()}).ToList();
+                }
+                if (logiraniKorisnik.Permisije == 3)//pacijent
+                {
+                    model.AlergijaNaLijek = korisnik.AlergijaNaLijek;
+                    model.Aparatic = korisnik.Aparatic;
+                    model.Navlake = korisnik.Navlake;
+                    model.Proteza = korisnik.Proteza;
+                    model.Terapija = korisnik.Terapija;
+                    model.VrstaAcc = "Pacijent";
+                }
+                return View("PregledProfila", model);
             }
-            if (logiraniKorisnik.Permisije == 1)//stomatolog
-            {
-                model.DatumZaposlenjaString = korisnik.DatumZaposlenja.ToString("dd.MM.yyyy");
-                model.BrojZiroRacuna = korisnik.BrojZiroRacuna;
-                model.Aktivan = korisnik.Aktivan;
-                model.TitulaID = korisnik.TitulaID;
-                model.Titula = korisnik.Titula.Naziv;
-                model.VrstaAcc = "Stomatolog";
-                model.Titule = _context.Titulas.Select
-                    (i => new SelectListItem {Text = i.Naziv, Value = i.TitulaId.ToString()}).ToList();
-            }
-            if (logiraniKorisnik.Permisije == 2)//med.osoblje
-            {
-                model.DatumZaposlenjaString = korisnik.DatumZaposlenja.ToString("dd.MM.yyyy");
-                model.BrojZiroRacuna = korisnik.BrojZiroRacuna;
-                model.OpisPosla = korisnik.OpisPosla;
-                model.Aktivan = korisnik.Aktivan;
-                model.TitulaID = korisnik.TitulaID;
-                model.Titula = korisnik.Titula.Naziv;
-                model.VrstaAcc = "Medicinsko osoblje";
-                model.Titule = _context.Titulas.Select
-                    (i => new SelectListItem {Text = i.Naziv, Value = i.TitulaId.ToString()}).ToList();
-            }
-            if (logiraniKorisnik.Permisije == 3)//pacijent
-            {
-                model.AlergijaNaLijek = korisnik.AlergijaNaLijek;
-                model.Aparatic = korisnik.Aparatic;
-                model.Navlake = korisnik.Navlake;
-                model.Proteza = korisnik.Proteza;
-                model.Terapija = korisnik.Terapija;
-                model.VrstaAcc = "Pacijent";
-            }
-            return View("PregledProfila", model);
+
+            return RedirectToAction("Pocetna");
         }
 
         [HttpPost]
@@ -195,142 +196,156 @@ namespace StomatoloskaOrdinacija.Web.Controllers
                 korisnik = _context.Pacijents.SingleOrDefault(i => i.KorisnickiNalogId == logiraniKorisnik.KorisnickiNalogId);
             }
 
-            if (korisnik.KorisnickiNalog.Ime != model.Ime)
+            if (korisnik != null)
             {
-                korisnik.KorisnickiNalog.Ime = model.Ime;
-                _context.SaveChanges();
-
-                TempData["successMessage"] = "Ime uspješno promjenuto.";
-            }
-
-            if (korisnik.KorisnickiNalog.Prezime != model.Prezime)
-            {
-                korisnik.KorisnickiNalog.Prezime = model.Prezime;
-                _context.SaveChanges();
-
-                TempData["successMessage"] = "Prezime uspješno promjenuto.";
-            }
-
-            if (korisnik.KorisnickiNalog.Mobitel != model.Mobitel)
-            {
-                korisnik.KorisnickiNalog.Mobitel = model.Mobitel;
-                _context.SaveChanges();
-
-                TempData["successMessage"] = "Broj mobitela uspješno promjenut.";
-            }
-
-            if (korisnik.KorisnickiNalog.Adresa != model.Adresa)
-            {
-                korisnik.KorisnickiNalog.Adresa = model.Adresa;
-                _context.SaveChanges();
-
-                TempData["successMessage"] = "Adresa uspješno promjenuta.";
-            }
-
-            if (korisnik.KorisnickiNalog.GradId != model.GradID)
-            {
-                korisnik.KorisnickiNalog.GradId = model.GradID;
-                _context.SaveChanges();
-
-                TempData["successMessage"] = "Grad uspješno promjenut.";
-            }
-            string uniqueFileName = UploadedFile(model);
-            if (uniqueFileName != null)
-            {
-                string _imageToBeDeleted = Path.Combine(_webHostEnvironment.WebRootPath, "images", korisnik.KorisnickiNalog.Slika);
-
-                if(System.IO.File.Exists(_imageToBeDeleted))
+                if (korisnik.KorisnickiNalog.Ime != model.Ime)
                 {
-                    if (korisnik.KorisnickiNalog.Slika != "blank-profile.jpg")
+                    korisnik.KorisnickiNalog.Ime = model.Ime;
+                    _context.SaveChanges();
+
+                    TempData["successMessage"] = "Ime uspješno promjenuto.";
+                }
+
+                if (korisnik.KorisnickiNalog.Prezime != model.Prezime)
+                {
+                    korisnik.KorisnickiNalog.Prezime = model.Prezime;
+                    _context.SaveChanges();
+
+                    TempData["successMessage"] = "Prezime uspješno promjenuto.";
+                }
+
+                if (korisnik.KorisnickiNalog.Mobitel != model.Mobitel)
+                {
+                    korisnik.KorisnickiNalog.Mobitel = model.Mobitel;
+                    _context.SaveChanges();
+
+                    TempData["successMessage"] = "Broj mobitela uspješno promjenut.";
+                }
+
+                if (korisnik.KorisnickiNalog.Adresa != model.Adresa)
+                {
+                    korisnik.KorisnickiNalog.Adresa = model.Adresa;
+                    _context.SaveChanges();
+
+                    TempData["successMessage"] = "Adresa uspješno promjenuta.";
+                }
+
+                if (korisnik.KorisnickiNalog.GradId != model.GradID)
+                {
+                    korisnik.KorisnickiNalog.GradId = model.GradID;
+                    _context.SaveChanges();
+
+                    TempData["successMessage"] = "Grad uspješno promjenut.";
+                }
+
+                string uniqueFileName = UploadedFile(model);
+                if (uniqueFileName != null)
+                {
+                    string imageToBeDeleted = Path.Combine(_webHostEnvironment.WebRootPath, "images",
+                        korisnik.KorisnickiNalog.Slika);
+
+                    if (System.IO.File.Exists(imageToBeDeleted))
                     {
-                        System.IO.File.Delete(_imageToBeDeleted);
+                        if (korisnik.KorisnickiNalog.Slika != "blank-profile.jpg")
+                        {
+                            System.IO.File.Delete(imageToBeDeleted);
+                        }
                     }
-                }
 
-                korisnik.KorisnickiNalog.Slika = uniqueFileName;
-                _context.SaveChanges();
-
-                TempData["successMessage"] = "Slika uspješno promjenuta.";
-            }
-
-            if (logiraniKorisnik.Permisije == 3)
-            {
-                if (korisnik.AlergijaNaLijek != model.AlergijaNaLijek)
-                {
-                    korisnik.AlergijaNaLijek = model.AlergijaNaLijek;
-                    _context.SaveChanges();
-
-                    TempData["successMessage"] = "Promjena uspješno sačuvana.";
-                }
-                if (korisnik.Proteza != model.Proteza)
-                {
-                    korisnik.Proteza = model.Proteza;
-                    _context.SaveChanges();
-
-                    TempData["successMessage"] = "Promjena uspješno sačuvana.";
-                }
-                if (korisnik.Terapija != model.Terapija)
-                {
-                    korisnik.Terapija = model.Terapija;
+                    korisnik.KorisnickiNalog.Slika = uniqueFileName;
                     _context.SaveChanges();
 
                     TempData["successMessage"] = "Slika uspješno promjenuta.";
                 }
-                if (korisnik.Navlake != model.Navlake)
-                {
-                    korisnik.Navlake = model.Navlake;
-                    _context.SaveChanges();
 
-                    TempData["successMessage"] = "Slika uspješno promjenuta.";
-                }
-                if (korisnik.Aparatic != model.Aparatic)
+                if (logiraniKorisnik.Permisije == 3)
                 {
-                    korisnik.Aparatic = model.Aparatic;
-                    _context.SaveChanges();
-
-                    TempData["successMessage"] = "Slika uspješno promjenuta.";
-                }
-            }
-            else
-            {
-                if (logiraniKorisnik.Permisije == 0 || logiraniKorisnik.Permisije == 2)
-                {
-                    if (korisnik.OpisPosla != model.OpisPosla)
+                    if (korisnik.AlergijaNaLijek != model.AlergijaNaLijek)
                     {
-                        korisnik.OpisPosla = model.OpisPosla;
+                        korisnik.AlergijaNaLijek = model.AlergijaNaLijek;
                         _context.SaveChanges();
 
-                        TempData["successMessage"] = "Opis posla uspješno promjenut.";
+                        TempData["successMessage"] = "Promjena uspješno sačuvana.";
                     }
-                }
-                if (korisnik.BrojZiroRacuna != model.BrojZiroRacuna)
-                {
-                    korisnik.BrojZiroRacuna = model.BrojZiroRacuna;
-                    _context.SaveChanges();
 
-                    TempData["successMessage"] = "Broj žiro računa uspješno promjenut.";
-                }
-                if (korisnik.Aktivan != model.Aktivan)
-                {
-                    korisnik.Aktivan = model.Aktivan;
-                    _context.SaveChanges();
-
-                    TempData["successMessage"] = "Aktivnost korisnika uspješno promjenuta";
-                }
-
-                if (logiraniKorisnik.Permisije == 1 || logiraniKorisnik.Permisije == 2)
-                {
-                    if (korisnik.TitulaID != model.TitulaID)
+                    if (korisnik.Proteza != model.Proteza)
                     {
-                        korisnik.TitulaID = model.TitulaID;
+                        korisnik.Proteza = model.Proteza;
                         _context.SaveChanges();
 
-                        TempData["successMessage"] = "Titula uspješno promjenuta.";
+                        TempData["successMessage"] = "Promjena uspješno sačuvana.";
+                    }
+
+                    if (korisnik.Terapija != model.Terapija)
+                    {
+                        korisnik.Terapija = model.Terapija;
+                        _context.SaveChanges();
+
+                        TempData["successMessage"] = "Slika uspješno promjenuta.";
+                    }
+
+                    if (korisnik.Navlake != model.Navlake)
+                    {
+                        korisnik.Navlake = model.Navlake;
+                        _context.SaveChanges();
+
+                        TempData["successMessage"] = "Slika uspješno promjenuta.";
+                    }
+
+                    if (korisnik.Aparatic != model.Aparatic)
+                    {
+                        korisnik.Aparatic = model.Aparatic;
+                        _context.SaveChanges();
+
+                        TempData["successMessage"] = "Slika uspješno promjenuta.";
                     }
                 }
+                else
+                {
+                    if (logiraniKorisnik.Permisije == 0 || logiraniKorisnik.Permisije == 2)
+                    {
+                        if (korisnik.OpisPosla != model.OpisPosla)
+                        {
+                            korisnik.OpisPosla = model.OpisPosla;
+                            _context.SaveChanges();
 
+                            TempData["successMessage"] = "Opis posla uspješno promjenut.";
+                        }
+                    }
+
+                    if (korisnik.BrojZiroRacuna != model.BrojZiroRacuna)
+                    {
+                        korisnik.BrojZiroRacuna = model.BrojZiroRacuna;
+                        _context.SaveChanges();
+
+                        TempData["successMessage"] = "Broj žiro računa uspješno promjenut.";
+                    }
+
+                    if (korisnik.Aktivan != model.Aktivan)
+                    {
+                        korisnik.Aktivan = model.Aktivan;
+                        _context.SaveChanges();
+
+                        TempData["successMessage"] = "Aktivnost korisnika uspješno promjenuta";
+                    }
+
+                    if (logiraniKorisnik.Permisije == 1 || logiraniKorisnik.Permisije == 2)
+                    {
+                        if (korisnik.TitulaID != model.TitulaID)
+                        {
+                            korisnik.TitulaID = model.TitulaID;
+                            _context.SaveChanges();
+
+                            TempData["successMessage"] = "Titula uspješno promjenuta.";
+                        }
+                    }
+                }
             }
-            
+
+            var imepre = model.Ime + " " + model.Prezime;
+
+            HttpContext.Response.SetCookieJson("imeprezime",imepre);
+
 
             return RedirectToAction("pregled-profila");
         }
@@ -393,13 +408,10 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             {
                 TempData["Layout"] = "_Pacijent";
             }
-            //if (!ModelState.IsValid)
-            //    return View("IzmjenaLozinke", model);
-            if (!TestNoveLozinke(model.NovaLozinka))
-            {
-                TempData["errorMessage"] = "Dužina lozinke je minimalno 8 karaktera. Lozinka se sastoji od malih i velikih slova, brojeva te specijalnih karaktera.";
+
+            if (!ModelState.IsValid)
                 return View("IzmjenaLozinke", model);
-            }
+
 
             if (PasswordSettings.GetHash(model.StaraLozinka, Convert.FromBase64String(logiraniKorisnik.LozinkaSalt))
                 != logiraniKorisnik.LozinkaHash)
@@ -426,11 +438,6 @@ namespace StomatoloskaOrdinacija.Web.Controllers
 
             TempData["successMessage"] = "Uspješno ste promijenili lozinku.";
             return RedirectToAction("pregled-profila");
-        }
-
-        private bool TestNoveLozinke(string temp)
-        {
-            return Regex.IsMatch(temp, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$");
         }
 
         public IActionResult Odjava()

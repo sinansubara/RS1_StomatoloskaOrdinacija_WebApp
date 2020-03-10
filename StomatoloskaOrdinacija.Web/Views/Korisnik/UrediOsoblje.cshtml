@@ -4,51 +4,52 @@
     ViewBag.Title = "Stomatološka ordinacija | Pregled pacijenata";
     string successMessage = (string)TempData["successMessage"];
 }
-@if (successMessage != null)
-{
-    <div class="alert alert-info alert-prijavljen" data-alert="alert">
-        <a class="close" style="cursor: pointer !important" data-dismiss="alert">&times;</a>
-        <p class="text-center text-info">@successMessage</p>
-    </div>
-}
 
-<div class="container-fluid">
-    <!-- Breadcrumbs-->
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item">
-            <a asp-controller="Profil" asp-action="Pocetna">Početna</a>
-        </li>
-        <li class="breadcrumb-item active">Pregled pacijenata</li>
-    </ol>
-    <table id="dataTable" class="table table-striped table-bordered">
-        <thead>
-            <tr>
-                <th>Ime</th>
-                <th>Prezime</th>
-                <th>Grad</th>
-                <th>Adresa</th>
-                <th>Spol</th>
-                <th>DatumZaposlenja</th>
-                <th>Aktivan</th>
-                <th>Funkcije</th>
-            </tr>
-        </thead>
-        <tfoot>
-            <tr>
-                <th>Ime</th>
-                <th>Prezime</th>
-                <th>Grad</th>
-                <th>Adresa</th>
-                <th>Spol</th>
-                <th>DatumZaposlenja</th>
-                <th>Aktivan</th>
-                <th>Funkcije</th>
-            </tr>
-        </tfoot>
-    </table>
-    <a class="btn btn-primary" asp-controller="Korisnik" asp-action="dodaj-osoblje">Dodaj novog uposlenika</a>
 
-    <script>
+    <div class="container-fluid">
+        <!-- Breadcrumbs-->
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-controller="Profil" asp-action="Pocetna">Početna</a>
+            </li>
+            <li class="breadcrumb-item active">Pregled pacijenata</li>
+        </ol>
+        @if (successMessage != null)
+        {
+            <div class="alert alert-info alert-prijavljen" data-alert="alert">
+                <a class="close" style="cursor: pointer !important" data-dismiss="alert">&times;</a>
+                <p class="text-center text-info">@successMessage</p>
+            </div>
+        }
+        <table id="dataTable" class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Ime</th>
+                    <th>Prezime</th>
+                    <th>Grad</th>
+                    <th>Adresa</th>
+                    <th>Spol</th>
+                    <th>DatumZaposlenja</th>
+                    <th>Aktivan</th>
+                    <th>Funkcije</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>Ime</th>
+                    <th>Prezime</th>
+                    <th>Grad</th>
+                    <th>Adresa</th>
+                    <th>Spol</th>
+                    <th>DatumZaposlenja</th>
+                    <th>Aktivan</th>
+                    <th>Funkcije</th>
+                </tr>
+            </tfoot>
+        </table>
+        <a class="btn btn-primary" asp-controller="Korisnik" asp-action="dodaj-osoblje">Dodaj novog uposlenika</a>
+
+        <script>
     $(document).ready(function () {
         $.fn.dataTable.moment('DD/MM/YYYY HH:mm:ss');
 
@@ -120,6 +121,6 @@
         });
 
     });
-    </script>
+        </script>
 
-</div>
+    </div>

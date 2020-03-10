@@ -22,6 +22,7 @@ namespace StomatoloskaOrdinacija.Data.EntityModels
 
         [StringLength(320)]
         [Required]
+        [EmailAddress(ErrorMessage = "Pogrešan unos email adrese!")]
         public string Email { get; set; }
 
         [Required]
@@ -65,9 +66,6 @@ namespace StomatoloskaOrdinacija.Data.EntityModels
         [Required]
         public string Spol { get; set; }
 
-        //[Required]
-        //[Column(TypeName = "VARBINARY(MAX)")]
-        //public byte[] Slika { get; set; }
         [Column(TypeName = "nvarchar(MAX)")]
         [Required]
         public string Slika { get; set; }

@@ -4,122 +4,132 @@
     ViewBag.Title = "Stomatološka ordinacija | Pregled pacijenata";
     string successMessage = (string)TempData["successMessage"];
 }
-@if (successMessage != null)
-{
-    <div class="alert alert-info alert-prijavljen" data-alert="alert">
-        <a class="close" style="cursor: pointer !important" data-dismiss="alert">&times;</a>
-        <p class="text-center text-info">@successMessage</p>
-    </div>
-}
 
-<div class="container-fluid">
-    <!-- Breadcrumbs-->
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item">
-            <a asp-controller="Profil" asp-action="Pocetna">Početna</a>
-        </li>
-        <li class="breadcrumb-item active">Pregled pacijenata</li>
-    </ol>
-    <table id="dataTable" class="table table-striped table-bordered">
-        <thead>
-        <tr>
-            <th>Ime</th>
-            <th>Prezime</th>
-            <th>Grad</th>
-            <th>Adresa</th>
-            <th>Spol</th>
-            <th>DatumZaposlenja</th>
-            <th>Aktivan</th>
-            <th>Funkcije</th>
-        </tr>
-        </thead>
-        <tfoot>
-        <tr>
-            <th>Ime</th>
-            <th>Prezime</th>
-            <th>Grad</th>
-            <th>Adresa</th>
-            <th>Spol</th>
-            <th>DatumZaposlenja</th>
-            <th>Aktivan</th>
-            <th>Funkcije</th>
-        </tr>
-        </tfoot>
-    </table>
-    <a class="btn btn-primary" asp-controller="Korisnik" asp-action="dodaj-stomatolog">Dodaj novog stomatologa</a>
 
-    <script>
-    $(document).ready(function () {
-        $.fn.dataTable.moment('DD/MM/YYYY HH:mm:ss');
+    <div class="container-fluid">
+        <!-- Breadcrumbs-->
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-controller="Profil" asp-action="Pocetna">Početna</a>
+            </li>
+            <li class="breadcrumb-item active">Pregled pacijenata</li>
+        </ol>
+        @if (successMessage != null)
+        {
+            <div class="alert alert-info alert-prijavljen" data-alert="alert">
+                <a class="close" style="cursor: pointer !important" data-dismiss="alert">&times;</a>
+                <p class="text-center text-info">@successMessage</p>
+            </div>
+        }
+        <table id="dataTable" class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Ime</th>
+                    <th>Prezime</th>
+                    <th>Grad</th>
+                    <th>Adresa</th>
+                    <th>Spol</th>
+                    <th>DatumZaposlenja</th>
+                    <th>Aktivan</th>
+                    <th>Funkcije</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>Ime</th>
+                    <th>Prezime</th>
+                    <th>Grad</th>
+                    <th>Adresa</th>
+                    <th>Spol</th>
+                    <th>DatumZaposlenja</th>
+                    <th>Aktivan</th>
+                    <th>Funkcije</th>
+                </tr>
+            </tfoot>
+        </table>
+        <a class="btn btn-primary" asp-controller="Korisnik" asp-action="dodaj-stomatolog">Dodaj novog stomatologa</a>
 
-        $("#dataTable").DataTable({
-            dom: 'lfrtipB',
-            "ajax": {
-                "url": "/Korisnik/ListaStomatologa",
-                "type": "GET",
-                "datatype": "json"
-            },
-            "columns": [
-                { "data": "ime" },
-                { "data": "prezime" },
-                { "data": "grad" },
-                { "data": "adresa" },
-                { "data": "spol" },
-                {
-                    "data": "datumZaposlenja",
-                    "render": function(data, type) {
-                        return type === 'sort' ? data : moment(data).format('DD.MM.YYYY');
-                    }
-                },
-                { "data": "aktivan" },
-                { "data": "stomatologId" }
-            ],
-            columnDefs: [
-                {
-                    "targets": 7,
-                    "render": function(data, type, full, meta) {
-                        return '<span class="d-flex justify-content-center"><a class="mr-1" href="/Korisnik/uredi-stomatolog/' +
-                            data +
-                            '">Uredi</a> | <a id="izbrisi" class="ml-1" href="/Korisnik/izbrisi-stomatolog/' +
-                            data +
-                            '">Izbrisi</a></span>';
-                    }
-                }
-            ],
-            select: true,
-            colReorder: true,
-            buttons: [
-                {
-                    extend: 'collection',
-                    text: 'Export',
+        <script>
+            $(document).ready(function () {
+                $.fn.dataTable.moment('DD/MM/YYYY HH:mm:ss');
+
+                $("#dataTable").DataTable({
+                    dom: 'lfrtipB',
+                    "ajax": {
+                        "url": "/Korisnik/ListaStomatologa",
+                        "type": "GET",
+                        "datatype": "json"
+                    },
+                    "columns": [
+                        { "data": "ime" },
+                        { "data": "prezime" },
+                        { "data": "grad" },
+                        { "data": "adresa" },
+                        { "data": "spol" },
+                        {
+                            "data": "datumZaposlenja",
+                            "render": function (data, type) {
+                                return type === 'sort' ? data : moment(data).format('DD.MM.YYYY');
+                            }
+                        },
+                        { "data": "aktivan" },
+                        { "data": "stomatologId" }
+                    ],
+                    columnDefs: [
+                        {
+                            "targets": 7,
+                            "render": function (data, type, full, meta) {
+                                return '<span class="d-flex justify-content-center"><a class="mr-1" href="/Korisnik/uredi-stomatolog/' +
+                                    data +
+                                    '">Uredi</a> | <a id="izbrisi" class="ml-1" href="/Korisnik/izbrisi-stomatolog/' +
+                                    data +
+                                    '">Izbrisi</a></span>';
+                            }
+                        }
+                    ],
+                    select: true,
+                    colReorder: true,
                     buttons: [
                         {
-                            extend: 'copy',
-                            exportOptions: {
-                                columns: [0, 1, 2, 3, 4, 5, 6]}
-                        },
-                        {extend:'excel',
-                            exportOptions: {
-                                columns: [0, 1, 2, 3, 4, 5, 6]}
-                        },
-                        {extend:'csv',
-                            exportOptions: {
-                                columns: [0, 1, 2, 3, 4, 5, 6]}
-                        },
-                        {extend:'pdf',
-                            exportOptions: {
-                                columns: [0, 1, 2, 3, 4, 5, 6]}
-                        },
-                        {extend:'print',
-                            exportOptions: {
-                                columns: [0, 1, 2, 3, 4, 5, 6]}
+                            extend: 'collection',
+                            text: 'Export',
+                            buttons: [
+                                {
+                                    extend: 'copy',
+                                    exportOptions: {
+                                        columns: [0, 1, 2, 3, 4, 5, 6]
+                                    }
+                                },
+                                {
+                                    extend: 'excel',
+                                    exportOptions: {
+                                        columns: [0, 1, 2, 3, 4, 5, 6]
+                                    }
+                                },
+                                {
+                                    extend: 'csv',
+                                    exportOptions: {
+                                        columns: [0, 1, 2, 3, 4, 5, 6]
+                                    }
+                                },
+                                {
+                                    extend: 'pdf',
+                                    exportOptions: {
+                                        columns: [0, 1, 2, 3, 4, 5, 6]
+                                    }
+                                },
+                                {
+                                    extend: 'print',
+                                    exportOptions: {
+                                        columns: [0, 1, 2, 3, 4, 5, 6]
+                                    }
+                                }
+                            ]
                         }
                     ]
-                }
-            ]
-        });
+                });
 
-    });
-    </script>
+            });
+        </script>
 
-</div>
+    </div>

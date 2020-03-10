@@ -49,13 +49,19 @@ namespace StomatoloskaOrdinacija.Web.Controllers
         {
             if (imetitule != "")
             {
-                var novatitula = new Titula
+                if (imetitule != null)
                 {
-                    Naziv = imetitule
-                };
-                _context.Titulas.Add(novatitula);
-                _context.SaveChanges();
-                TempData["successMessage"] = "Titula uspješno dodana.";
+                    if (imetitule.Length >= 2 && imetitule.Length < 50)
+                    {
+                        var novatitula = new Titula
+                        {
+                            Naziv = imetitule
+                        };
+                        _context.Titulas.Add(novatitula);
+                        _context.SaveChanges();
+                        TempData["successMessage"] = "Titula uspješno dodana.";
+                    }
+                }
             }
             return View("UrediTitulu");
         }
@@ -94,13 +100,19 @@ namespace StomatoloskaOrdinacija.Web.Controllers
         {
             if (imedrzave != "")
             {
-                var novadrzava = new Drzava
+                if (imedrzave != null)
                 {
-                    Naziv = imedrzave
-                };
-                _context.Drzavas.Add(novadrzava);
-                _context.SaveChanges();
-                TempData["successMessage"] = "Država uspješno dodana.";
+                    if (imedrzave.Length >= 2 && imedrzave.Length < 100)
+                    {
+                        var novadrzava = new Drzava
+                        {
+                            Naziv = imedrzave
+                        };
+                        _context.Drzavas.Add(novadrzava);
+                        _context.SaveChanges();
+                        TempData["successMessage"] = "Država uspješno dodana.";
+                    }
+                }
             }
             return View("UrediDrzavu");
         }
@@ -115,9 +127,15 @@ namespace StomatoloskaOrdinacija.Web.Controllers
         public IActionResult IzbrisiDrzavu(int id)
         {
             Drzava drzavazabrisanje = _context.Drzavas.Find(id);
-            _context.Drzavas.Remove(drzavazabrisanje);
-            _context.SaveChanges();
-            TempData["successMessage"] = "Država uspješno izbrisana.";
+            Grad drzavaSeKoristi = _context.Grads.Where(i => i.DrzavaId == id).FirstOrDefault();
+            if (drzavaSeKoristi == null)
+            {
+                _context.Drzavas.Remove(drzavazabrisanje);
+                _context.SaveChanges();
+                TempData["successMessage"] = "Država uspješno izbrisana.";
+                return RedirectToAction("uredi-drzavu");
+            }
+            TempData["errorMessage"] = "Država se koristi.";
             return RedirectToAction("uredi-drzavu");
         }
 
@@ -141,15 +159,21 @@ namespace StomatoloskaOrdinacija.Web.Controllers
         {
             if (imegrada != "")
             {
-                var novigrad = new Grad
+                if (imegrada != null && postanskibroj != null)
                 {
-                    Naziv = imegrada,
-                    DrzavaId = drzavaid,
-                    PostanskiBroj = postanskibroj
-                };
-                _context.Grads.Add(novigrad);
-                _context.SaveChanges();
-                TempData["successMessage"] = "Grad uspješno dodan.";
+                    if (imegrada.Length >= 2 && imegrada.Length<100 && postanskibroj.Length>=2 && postanskibroj.Length<20)
+                    {
+                        var novigrad = new Grad
+                        {
+                            Naziv = imegrada,
+                            DrzavaId = drzavaid,
+                            PostanskiBroj = postanskibroj
+                        };
+                        _context.Grads.Add(novigrad);
+                        _context.SaveChanges();
+                        TempData["successMessage"] = "Grad uspješno dodan.";
+                    }
+                }
             }
             return View("UrediGrad");
         }
@@ -171,7 +195,7 @@ namespace StomatoloskaOrdinacija.Web.Controllers
         [ActionName("izbrisi-grad")]
         public IActionResult IzbrisiGrad(int id)
         {
-            Grad gradzabrisanje = _context.Grads.Find(id);
+            var gradzabrisanje = _context.Grads.Find(id);
             var gradSeKoristi = _context.KorisnickiNalogs.FirstOrDefault(x => x.GradId == id);
             if (gradSeKoristi == null)
             {
@@ -202,13 +226,20 @@ namespace StomatoloskaOrdinacija.Web.Controllers
         {
             if (imeusluge != "")
             {
-                var novausluga = new Usluga
+                if (imeusluge != null)
                 {
-                    Naziv = imeusluge
-                };
-                _context.Uslugas.Add(novausluga);
-                _context.SaveChanges();
-                TempData["successMessage"] = "Usluga uspješno dodana.";
+                    if (imeusluge.Length >= 2 && imeusluge.Length < 150)
+                    {
+                        var novausluga = new Usluga
+                        {
+                            Naziv = imeusluge
+                        };
+                        _context.Uslugas.Add(novausluga);
+                        _context.SaveChanges();
+                        TempData["successMessage"] = "Usluga uspješno dodana.";
+                    }
+                }
+                
             }
             return View("UrediUslugu");
         }

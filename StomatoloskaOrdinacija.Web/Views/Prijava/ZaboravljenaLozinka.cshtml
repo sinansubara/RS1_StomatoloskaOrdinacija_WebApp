@@ -1,5 +1,6 @@
 ﻿@model StomatoloskaOrdinacija.Web.ViewModels.Prijava.ZaboravljenaLozinkaViewModel
 @{
+    string successMessage = (string)TempData["successMessage"];
     string errorMessage = (string)TempData["errorMessage"];
 }
 
@@ -43,22 +44,32 @@
 
 
 <body class="bg-dark">
-@if (errorMessage != null)
+
+@if (successMessage != null)
 {
-    <div class="alert alert-danger alert-prijavljen" data-alert="alert">
-        <a class="close" style="cursor: pointer !important" data-dismiss="alert">&times;</a>
-        <p class="text-center text-danger">@errorMessage</p>
+    <div class="alert alert-info alert-prijava" data-alert="alert">
+        <a class="close" data-dismiss="alert" style="cursor: pointer">&times;</a>
+        <p class="text-center text-info">@successMessage</p>
     </div>
 }
+    @if (errorMessage != null)
+    {
+        <div class="alert alert-danger alert-prijavljen" data-alert="alert">
+            <a class="close" style="cursor: pointer !important" data-dismiss="alert">&times;</a>
+            <p class="text-center text-danger">@errorMessage</p>
+        </div>
+    }
     <div class="container">
         <div class="card card-login mx-auto mt-5">
-            <div class="card-header">Resetiranje lozinke</div>
+            <div class="card-header text-center">
+                <div class="font-weight-bold">ZABORAVLJENA LOZINKA</div>
+            </div>
             <div class="card-body">
                 <div class="text-center mt-4 mb-5">
                     <h4>Zaboravili ste lozinku?</h4>
                     <p>Unesite svoj mail, a mi ćemo vam poslati instrukcije kako da ga resetujete.</p>
                 </div>
-                <form id="zaboravljena-lozinka" asp-controller="Prijava" asp-action="zaboravljena-lozinka">
+                <form name="formazaboravljenalozinka" id="zaboravljena-lozinka" asp-controller="Prijava" asp-action="zaboravljena-lozinka">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="form-group">
                         <input class="form-control" id="exampleInputEmail1" type="email" aria-describedby="emailHelp" asp-for="Email" placeholder="Unesite svoj email">
@@ -78,6 +89,9 @@
     <script src="~/template/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- Core plugin JavaScript-->
     <script src="~/template/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/template/js/validacijazaboravljenalozinka.js"></script>
 </body>
 
 </html>

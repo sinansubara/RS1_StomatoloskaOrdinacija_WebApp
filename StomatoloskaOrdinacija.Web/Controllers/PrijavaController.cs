@@ -150,19 +150,19 @@ namespace StomatoloskaOrdinacija.Web.Controllers
                                         "\n!!!AKO OVO NISTE BILI VI, MOLIMO VAS DA PROMJENITE VAŠU LOZINKU!!!" +
                                         "\nIli nas kontaktirajte na naš mail: stomatoloska.ordinacija24@gmail.com"; //generisanje email poruke
 
-                //var primalacPorukeTelefon = korisnickiNalog.First().Mobitel;
+                var primalacPorukeTelefon = korisnickiNalog.First().Mobitel;
 
-                //var client = new Client(creds: new Nexmo.Api.Request.Credentials
-                //{
-                //    ApiKey = _configuration.GetValue<string>("NexmoSmsGateway:ApiKey"),
-                //    ApiSecret = _configuration.GetValue<string>("NexmoSmsGateway:ApiSecret")
-                //});
-                //var results = client.SMS.Send(request: new SMS.SMSRequest
-                //{
-                //    from = _configuration.GetValue<string>("NexmoSmsGateway:Telefon"),
-                //    to = primalacPorukeTelefon,
-                //    text = prijavaLokacija
-                //});
+                var client = new Client(creds: new Nexmo.Api.Request.Credentials
+                {
+                    ApiKey = _configuration.GetValue<string>("NexmoSmsGateway:ApiKey"),
+                    ApiSecret = _configuration.GetValue<string>("NexmoSmsGateway:ApiSecret")
+                });
+                var results = client.SMS.Send(request: new SMS.SMSRequest
+                {
+                    from = _configuration.GetValue<string>("NexmoSmsGateway:Telefon"),
+                    to = primalacPorukeTelefon,
+                    text = prijavaLokacija
+                });
                 EmailSettings.SendEmail(_configuration, primalacPoruke, primalacEmail, "Nova prijava detektovana", prijavaEmailPoruka);//šalje email
 
                 return RedirectToAction("Pocetna", "Profil");

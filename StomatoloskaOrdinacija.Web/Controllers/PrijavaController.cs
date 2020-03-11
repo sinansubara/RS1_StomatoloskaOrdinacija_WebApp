@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.ExceptionServices;
@@ -13,6 +14,10 @@ using StomatoloskaOrdinacija.Data;
 using StomatoloskaOrdinacija.Data.EntityModels;
 using StomatoloskaOrdinacija.Web.Helper;
 using StomatoloskaOrdinacija.Web.ViewModels.Prijava;
+using IpData;
+using Newtonsoft.Json.Linq;
+using Nexmo.Api;
+using RestSharp;
 
 namespace StomatoloskaOrdinacija.Web.Controllers
 {
@@ -132,7 +137,33 @@ namespace StomatoloskaOrdinacija.Web.Controllers
                      .Where(i => i.KorisnickiNalogId == korisnickiNalog.First().KorisnickiNalogId).First().Aktivan) ||
                 korisnickiNalog.First().Permisije == 3)
             {
-                HttpContext.SetLogiraniKorisnik(korisnickiNalog.First(), true);
+                HttpContext.SetLogiraniKorisnik(korisnickiNalog.First(), true); //setuje logiranog korisnika
+
+                var prijavaLokacija = GetLoginLocation(model.Email); //dobavlja informacije o lokaciji prijave
+                var trenutnoVrijeme = DateTime.Now.ToString(new CultureInfo("de-DE"));//trenutno vrijeme prebacuje na njemacki format datum 19.03.2020 15:35:43
+                var primalacPoruke = korisnickiNalog.First().Ime + " " + korisnickiNalog.First().Prezime; //ime i prezime za email
+                var primalacEmail = korisnickiNalog.First().Email; //primalac email-a
+                var prijavaEmailPoruka ="Poštovani " + primalacPoruke + 
+                                        ",\nDetektovana je prijava na vaš račun" +
+                                        "\n-----------------------------------------------\n\n" + prijavaLokacija + 
+                                        "\nDatum i vrijeme: " + trenutnoVrijeme + 
+                                        "\n!!!AKO OVO NISTE BILI VI, MOLIMO VAS DA PROMJENITE VAŠU LOZINKU!!!" +
+                                        "\nIli nas kontaktirajte na naš mail: stomatoloska.ordinacija24@gmail.com"; //generisanje email poruke
+
+                var primalacPorukeTelefon = korisnickiNalog.First().Mobitel;
+
+                var client = new Client(creds: new Nexmo.Api.Request.Credentials
+                {
+                    ApiKey = _configuration.GetValue<string>("NexmoSmsGateway:ApiKey"),
+                    ApiSecret = _configuration.GetValue<string>("NexmoSmsGateway:ApiSecret")
+                });
+                var results = client.SMS.Send(request: new SMS.SMSRequest
+                {
+                    from = _configuration.GetValue<string>("NexmoSmsGateway:Telefon"),
+                    to = primalacPorukeTelefon,
+                    text = prijavaLokacija
+                });
+                EmailSettings.SendEmail(_configuration, primalacPoruke, primalacEmail, "Nova prijava detektovana", prijavaEmailPoruka);//šalje email
 
                 return RedirectToAction("Pocetna", "Profil");
             }
@@ -354,6 +385,28 @@ namespace StomatoloskaOrdinacija.Web.Controllers
 
             TempData["successMessage"] = "Uspješno ste promijenili lozinku.";
             return RedirectToAction("Prijava");
+        }
+
+        private string GetLoginLocation(string email)
+        {
+            var client = new RestClient("https://api.ipdata.co/?api-key=2d07d672cba0c9d7650f5512f2639784597f7e441cfd992718bee66f");
+            var request = new RestRequest(Method.GET);
+            IRestResponse response = client.Execute(request);
+            var obj = JObject.Parse(response.Content);
+
+            var location = "";
+            if (obj != null)
+            {
+                location = "Prijava: " + email + "\n" +
+                           "IP:" + obj["ip"] + "\n" +
+                           "Grad:" + obj["city"]+"\n" +
+                           "Drzava:"+obj["country_name"]+"\n" +
+                           "Koordinate:"+obj["latitude"]+", "+obj["longitude"]+"\n" +
+                           "ISP:"+obj["asn"]["domain"];
+            }
+            
+
+            return location;
         }
     }
 }

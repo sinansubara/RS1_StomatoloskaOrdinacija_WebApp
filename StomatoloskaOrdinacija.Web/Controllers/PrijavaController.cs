@@ -159,7 +159,7 @@ namespace StomatoloskaOrdinacija.Web.Controllers
                 });
                 var results = client.SMS.Send(request: new SMS.SMSRequest
                 {
-                    from = _configuration.GetValue<string>("NexmoSmsGateway:Telefon"),
+                    from = "Ordinacija",
                     to = primalacPorukeTelefon,
                     text = prijavaLokacija
                 });

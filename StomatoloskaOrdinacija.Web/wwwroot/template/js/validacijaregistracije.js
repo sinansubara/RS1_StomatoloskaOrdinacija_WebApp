@@ -82,7 +82,7 @@ $(function() {
             },
             mobitel: {
                 required: "Molimo vas unesite broj telefona",
-                digits: "Broj telefona mora sadrzavat samo brojeve, primjer: 061222333",
+                digits: "Broj telefona mora sadrzavat samo brojeve, primjer: 38761222333",
                 minlength: "Broj telefona mora imat minimalno 9 brojeva",
                 maxlength: "Broj telefona ne moze biti duzi od 30"
             },

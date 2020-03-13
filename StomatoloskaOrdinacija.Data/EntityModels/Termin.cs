@@ -35,5 +35,9 @@ namespace StomatoloskaOrdinacija.Data.EntityModels
         [Required]
         [Column(TypeName = "BIT")]
         public bool Odobren { get; set; }
+
+        [Required]
+        [Column(TypeName = "BIT")]
+        public bool NaCekanju { get; set; }
     }
 }

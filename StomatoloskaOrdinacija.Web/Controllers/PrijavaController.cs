@@ -65,14 +65,14 @@ namespace StomatoloskaOrdinacija.Web.Controllers
                 {
                     Ime = "Dino",
                     Prezime = "Nanić",
-                    Email = "stomordiadmin@gmail.com",
+                    Email = "stomatoloska.ordinacija24@gmail.com",
                     LozinkaHash = lozinkaHash,
                     LozinkaSalt = Convert.ToBase64String(lozinkaSalt),
                     Permisije = 0,
                     Kreirano = DateTime.Now,
                     JMBG = "0101990150023",
                     DatumRodjenja = new DateTime(1990, 1, 1),
-                    Mobitel = "052213321",
+                    Mobitel = "38762516238",
                     Adresa = "San BB",
                     GradId = 1,
                     Spol = "Muško",
@@ -139,30 +139,39 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             {
                 HttpContext.SetLogiraniKorisnik(korisnickiNalog.First(), true); //setuje logiranog korisnika
 
-                var prijavaLokacija = GetLoginLocation(model.Email); //dobavlja informacije o lokaciji prijave
+                var prijavaLokacijaMail = GetLoginLocation(model.Email, "mail"); //dobavlja informacije o lokaciji prijave
+                var prijavaLokacijaMobitel = GetLoginLocation(model.Email, "mobitel"); //dobavlja informacije o lokaciji prijave
+
                 var trenutnoVrijeme = DateTime.Now.ToString(new CultureInfo("de-DE"));//trenutno vrijeme prebacuje na njemacki format datum 19.03.2020 15:35:43
                 var primalacPoruke = korisnickiNalog.First().Ime + " " + korisnickiNalog.First().Prezime; //ime i prezime za email
                 var primalacEmail = korisnickiNalog.First().Email; //primalac email-a
                 var prijavaEmailPoruka ="Poštovani " + primalacPoruke + 
                                         ",\nDetektovana je prijava na vaš račun" +
-                                        "\n-----------------------------------------------\n\n" + prijavaLokacija + 
+                                        "\n-----------------------------------------------\n\n" + prijavaLokacijaMail + 
                                         "\nDatum i vrijeme: " + trenutnoVrijeme + 
                                         "\n!!!AKO OVO NISTE BILI VI, MOLIMO VAS DA PROMJENITE VAŠU LOZINKU!!!" +
                                         "\nIli nas kontaktirajte na naš mail: stomatoloska.ordinacija24@gmail.com"; //generisanje email poruke
 
                 var primalacPorukeTelefon = korisnickiNalog.First().Mobitel;
 
-                var client = new Client(creds: new Nexmo.Api.Request.Credentials
-                {
-                    ApiKey = _configuration.GetValue<string>("NexmoSmsGateway:ApiKey"),
-                    ApiSecret = _configuration.GetValue<string>("NexmoSmsGateway:ApiSecret")
-                });
-                var results = client.SMS.Send(request: new SMS.SMSRequest
-                {
-                    from = "Ordinacija",
-                    to = primalacPorukeTelefon,
-                    text = prijavaLokacija
-                });
+
+
+
+                //VAZNO!!! UKLONI KOMENTARE DA BI PRORADILO SLANJE PORUKA
+
+                //var client = new Client(creds: new Nexmo.Api.Request.Credentials
+                //{
+                //    ApiKey = _configuration.GetValue<string>("NexmoSmsGateway:ApiKey"),
+                //    ApiSecret = _configuration.GetValue<string>("NexmoSmsGateway:ApiSecret")
+                //});
+                //var results = client.SMS.Send(request: new SMS.SMSRequest
+                //{
+                //    from = "Ordinacija",
+                //    to = primalacPorukeTelefon,
+                //    text = prijavaLokacijaMobitel
+                //});
+
+
                 EmailSettings.SendEmail(_configuration, primalacPoruke, primalacEmail, "Nova prijava detektovana", prijavaEmailPoruka);//šalje email
 
                 return RedirectToAction("Pocetna", "Profil");
@@ -209,7 +218,7 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             byte[] lozinkaSalt = PasswordSettings.GetSalt();
             string lozinkaHash = PasswordSettings.GetHash(model.Lozinka, lozinkaSalt);
 
-
+            //implementiraj izmjenu lozinke ako je 0 na pocetku, prebaci u 387
             string uniqueFileName = UploadedFile(model); 
 
             KorisnickiNalog korisnickiNalog = new KorisnickiNalog
@@ -387,22 +396,42 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             return RedirectToAction("Prijava");
         }
 
-        private string GetLoginLocation(string email)
+        private string GetLoginLocation(string email, string vrsta)
         {
             var client = new RestClient("https://api.ipdata.co/?api-key=2d07d672cba0c9d7650f5512f2639784597f7e441cfd992718bee66f");
             var request = new RestRequest(Method.GET);
             IRestResponse response = client.Execute(request);
             var obj = JObject.Parse(response.Content);
 
-            var location = "";
+            var location = "Objekat ipdata je prazan!";
             if (obj != null)
             {
-                location = "Prijava: " + email + "\n" +
-                           "IP:" + obj["ip"] + "\n" +
-                           "Grad:" + obj["city"]+"\n" +
-                           "Drzava:"+obj["country_name"]+"\n" +
-                           "Koordinate:"+obj["latitude"]+", "+obj["longitude"]+"\n" +
-                           "ISP:"+obj["asn"]["domain"];
+                location = "Pogresno oznacena vrsta slanja poruke!";
+                if (vrsta == "mail")
+                {
+                    location = "Korisnicki nalog: " + email + "\n" +
+                               "IP: " + obj["ip"] + "\n" +
+                               "Grad: " + obj["city"] + "\n" +
+                               "Regija: " + obj["region"] + "\n" +
+                               "Drzava: " + obj["country_name"] + " [" +
+                               obj["region_code"] + "/" + obj["country_code"] + "]\n" +
+                               "Kontinent: " + obj["continent_name"] + " [" + obj["continent_code"] + "]\n" +
+                               "Koordinate: " + obj["latitude"] + ", " + obj["longitude"] + "\n" +
+                               "***ASN***" + "\n" +
+                               "\tASN Broj: " + obj["asn"]["asn"] + "\n" +
+                               "\tIme: " + obj["asn"]["name"] + "\n" +
+                               "\tDomena: " + obj["asn"]["domain"] + "\n" +
+                               "\tTip: " + obj["asn"]["type"] + "\n";
+                }
+                if (vrsta == "mobitel")
+                {
+                    location = "Prijava: " + email + "\n"
+                               + obj["ip"] + "\n"
+                               + obj["city"] + ", " + obj["region_code"]
+                               + "\n[" + obj["latitude"] + ", " + obj["longitude"] + "\n"
+                               + obj["asn"]["domain"];
+                }
+                
             }
             
 

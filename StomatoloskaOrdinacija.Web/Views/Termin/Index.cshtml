@@ -89,15 +89,12 @@
         }
         .dotGreen {
             background-color: #93f393cc !important;
-            cursor: pointer;
         }
         .dotYellow {
             background-color: #ffff7ecc !important;
-            cursor: pointer;
         }
         .dotRed {
             background-color: #ff6c6c !important;
-            cursor: pointer;
         }
     </style>
     <script>
@@ -178,7 +175,9 @@
                  {
                      "targets": 7,
                      "render": function (data, type, full, meta) {
-                         return '<a class="izbrisi" class="ml-1" href="/Termin/izbrisi-termin/' +
+                         return '<a class="izmjeni" class="ml-1" href="/Termin/izmjeni-termin/' +
+                             data +
+                             '">Izmjeni</a></span>'+ " | " + '<a class="izbrisi" class="ml-1" href="/Termin/izbrisi-termin/' +
                              data +
                              '">Izbrisi</a></span>';
                      }
@@ -226,16 +225,6 @@
             $("div.toolbar").html('<span class="dotRed mr-2"></span>Odbijen<span class="dotGreen ml-5 mr-2"></span>Odobren<span class="dotYellow ml-5 mr-2"></span>Na čekanju');
             $("div.toolbar").addClass('ml-5');
 
-
-            $(".dotRed").on('click', function () {
-                alert("TEST");
-            });
-            $(".dotGreen").on('click', function () {
-                alert("TEST");
-            });
-            $(".dotYellow").on('click', function () {
-                alert("TEST");
-            });
         });
 
         function format(d){

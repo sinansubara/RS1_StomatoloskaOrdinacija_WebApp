@@ -1,0 +1,101 @@
+﻿@model StomatoloskaOrdinacija.Web.ViewModels.Termin.TerminDodajUrediViewModel
+
+@{
+    Layout = (string)TempData["Layout"];
+    ViewBag.Title = "Stomatološka ordinacija | Dodavanje novog termina";
+    string successMessage = (string)TempData["successMessage"];
+    string errorMessage = (string)TempData["errorMessage"];
+}
+
+<head>
+    <link href="~/template/css/PregledProfila.css" rel="stylesheet">
+</head>
+
+<div class="container-fluid">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a asp-controller="Profil" asp-action="Pocetna">Početna</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a asp-controller="Termin" asp-action="Index">Pregled termina</a>
+        </li>
+        <li class="breadcrumb-item active">Dodavanje termina</li>
+    </ol>
+
+    @if (successMessage != null)
+    {
+        <div class="alert alert-info alert-prijavljen" data-alert="alert">
+            <a class="close" style="cursor: pointer !important" data-dismiss="alert">&times;</a>
+            <p class="text-center text-info">@successMessage</p>
+        </div>
+    }
+    @if (errorMessage != null)
+    {
+        <div class="alert alert-danger alert-prijava" data-alert="alert">
+            <a class="close" data-dismiss="alert" style="cursor: pointer">&times;</a>
+            <p class="text-center text-danger">@errorMessage</p>
+        </div>
+    }
+
+    <div class="card mx-auto mt-3">
+        <div class="card-body">
+            <form id="formaterminid" name="formadodajureditermin" asp-controller="Termin" asp-action="snimi-termin" method="POST">
+                <div class="form-group">
+                    <div class="form-row">
+                        <div class="col-md-12">
+                            <input type="hidden" asp-for="PacijentId" value="@Model.PacijentId"/>
+                            <label for="razlog">Razlog</label>
+                            <textarea class="form-control" id="razlog" type="text" name="razlog" asp-for="Razlog" aria-describedby="nameHelp" placeholder="Unesite razlog"></textarea>
+                            <span asp-validation-for="Razlog" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-row">
+                        <div class="col-md-2">
+                            <label for="Datum">Datum termina</label>
+                            <input type="text" id="Datum" name="Datum" asp-for="Datum" value="@Model.datumstring" class="form-control text-center"
+                                   onfocus="(this.type = 'date')" onblur="(this.type = 'text')" placeholder="Datum termina">
+                        </div>
+                        <div class="col-md-1">
+                            <label>Vrijeme</label>
+                            <input class="timepicker text-center form-control" asp-for="Vrijeme">
+                        </div>
+                        <div class="col-md-2">
+                            <label for="hitan">Hitan</label>
+                            <input type="checkbox" name="hitan" id="hitan" asp-for="Hitan">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-row">
+                        <div class="col-md-2">
+                            <input class="btn btn-primary btn-block" type="submit" value="Snimi termin" style="cursor: pointer;">
+                        </div>
+                        <div class="col-md-2">
+                            <input class="btn btn-danger btn-block" type="reset" value="Poništi" style="cursor: pointer;">
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+
+
+        $('.timepicker').timepicker({
+            timeFormat: 'HH:mm',
+            interval: 30,
+            minTime: '08:00',
+            maxTime: '19:30',
+            defaultTime: '00:00',
+            startTime: '00:00',
+            dynamic: false,
+            dropdown: true,
+            scrollbar: true
+        });
+    });
+</script>

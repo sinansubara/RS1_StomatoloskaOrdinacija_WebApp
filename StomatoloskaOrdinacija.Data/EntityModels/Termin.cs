@@ -15,14 +15,8 @@ namespace StomatoloskaOrdinacija.Data.EntityModels
         public Pacijent Pacijent { get; set; }
 
         [Required]
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd.mm.yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime Datum { get; set; }
-
-        [Required]
-        [DataType(DataType.Time)]
-        [DisplayFormat(DataFormatString = "{0:HH:mm}", ApplyFormatInEditMode = true)]
-        public DateTime Vrijeme { get; set; }
+        [DataType(DataType.DateTime)]
+        public DateTime DatumVrijeme { get; set; }
 
         [Required]
         [StringLength(200)]

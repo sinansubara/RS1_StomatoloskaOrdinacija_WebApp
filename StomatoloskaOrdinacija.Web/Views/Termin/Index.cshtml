@@ -143,8 +143,8 @@
                      }
                  },
                  { "data": "hitan" },
-                 { "data": "odobren" },
                  { "data": "naCekanju" },
+                 { "data": "odobren" },
                  { "data": "terminId" }
              ],
              "columnDefs": [
@@ -175,9 +175,7 @@
                  {
                      "targets": 7,
                      "render": function (data, type, full, meta) {
-                         return '<a class="izmjeni" class="ml-1" href="/Termin/izmjeni-termin/' +
-                             data +
-                             '">Izmjeni</a></span>'+ " | " + '<a class="izbrisi" class="ml-1" href="/Termin/izbrisi-termin/' +
+                         return '<a class="izbrisi" class="ml-1" href="/Termin/izbrisi-termin/' +
                              data +
                              '">Izbrisi</a></span>';
                      }

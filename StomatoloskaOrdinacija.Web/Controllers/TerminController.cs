@@ -140,10 +140,22 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             if (logiraniKorisnik.Permisije == 3)
                 TempData["Layout"] = "_Pacijent";
 
+            var trenutnoVrijeme = DateTime.Now;
+            var temp = new DateTime(trenutnoVrijeme.Year, trenutnoVrijeme.Month, trenutnoVrijeme.Day, trenutnoVrijeme.Hour, trenutnoVrijeme.Minute, trenutnoVrijeme.Second);
+            var zaokruziminute = ":00";
+
+            if (temp.Minute >= 0 && temp.Minute <= 25)
+                zaokruziminute = ":30";
+            else if (temp.Minute > 25)
+                temp = new DateTime(trenutnoVrijeme.Year, trenutnoVrijeme.Month, trenutnoVrijeme.Day, trenutnoVrijeme.Hour + 1, trenutnoVrijeme.Minute, trenutnoVrijeme.Second);
+
+            
+
             var model = new TerminDodajUrediViewModel
             {
                 PacijentId = _context.Pacijents.Where(i=>i.KorisnickiNalogId == logiraniKorisnik.KorisnickiNalogId).Select(i=>i.PacijentId).FirstOrDefault(),
-                datumstring = DateTime.Now.ToString("dd.MM.yyyy")
+                datumstring = trenutnoVrijeme.ToString("dd.MM.yyyy"),
+                Vrijeme = temp.ToString("HH") + zaokruziminute
             };
 
 

@@ -59,7 +59,7 @@
                         </div>
                         <div class="col-md-1">
                             <label>Vrijeme</label>
-                            <input class="timepicker text-center form-control" asp-for="Vrijeme">
+                            <input class="timepicker text-center form-control" value="@Model.Vrijeme" name="Vrijeme" asp-for="Vrijeme">
                         </div>
                         <div class="col-md-2">
                             <label for="hitan">Hitan</label>
@@ -99,3 +99,5 @@
         });
     });
 </script>
+
+<script src="~/template/js/validacijaunosatermina.js"></script>

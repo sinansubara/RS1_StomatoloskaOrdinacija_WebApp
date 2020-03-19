@@ -783,6 +783,11 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             {
                 var korisnikId = pacijent.KorisnickiNalogId;
                 var nalogzabrisanje = _context.KorisnickiNalogs.FirstOrDefault(i => i.KorisnickiNalogId == korisnikId);
+                var listaTermina = _context.Termins.Where(i => i.PacijentId == id).ToList();
+                foreach (var termin in listaTermina)
+                {
+                    _context.Termins.Remove(termin);
+                }
                 _context.Remove(pacijent);
                 _context.Remove(nalogzabrisanje);
                 _context.SaveChanges();

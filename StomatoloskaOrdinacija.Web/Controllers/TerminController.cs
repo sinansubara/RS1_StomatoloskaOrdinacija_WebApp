@@ -41,61 +41,16 @@ namespace StomatoloskaOrdinacija.Web.Controllers
                 }).ToList();
             return Json(new { data = lista });
         }
+        [Autorizacija(false,false,false,true)]
+        public IActionResult ListaSvihTerminaChart(int id)
+        {
+            var countOdobrenih = _context.Termins.Count(i => i.Odobren && i.PacijentId == id);
+            var countOdbijenih = _context.Termins.Count(i => !i.Odobren && !i.NaCekanju && i.PacijentId == id);
+            var countNaCekanju = _context.Termins.Count(i => i.NaCekanju && i.PacijentId == id);
 
-        //[Autorizacija(false,false,false,true)]
-        //public IActionResult ListaOdobrenih(int id)
-        //{
-        //    var lista = _context.Termins.Where(i=>i.Odobren && i.PacijentId == id)
-        //        .Select(i => new TerminPregledViewModel
-        //    {
-        //        TerminId = i.TerminId,
-        //        PacijentId = i.PacijentId,
-        //        Pacijent = i.Pacijent.KorisnickiNalog.Ime+ " "+i.Pacijent.KorisnickiNalog.Prezime,
-        //        Datum = i.DatumVrijeme,
-        //        Vrijeme = i.DatumVrijeme,
-        //        Hitan = i.Hitan?"Da":"Ne",
-        //        NaCekanju = i.NaCekanju?"Da":"Ne",
-        //        Odobren = i.Odobren?"Da":"Ne",
-        //        Razlog = i.Razlog
-        //    }).ToList();
-        //    return Json(new { data = lista });
-        //}
-        //[Autorizacija(false,false,false,true)]
-        //public IActionResult ListaOdbijenih(int id)
-        //{
-        //    var lista = _context.Termins.Where(i=>!i.Odobren && !i.NaCekanju && i.PacijentId == id)
-        //        .Select(i => new TerminPregledViewModel
-        //    {
-        //        TerminId = i.TerminId,
-        //        PacijentId = i.PacijentId,
-        //        Pacijent = i.Pacijent.KorisnickiNalog.Ime+ " "+i.Pacijent.KorisnickiNalog.Prezime,
-        //        Datum = i.DatumVrijeme,
-        //        Vrijeme = i.DatumVrijeme,
-        //        Hitan = i.Hitan?"Da":"Ne",
-        //        NaCekanju = i.NaCekanju?"Da":"Ne",
-        //        Odobren = i.Odobren?"Da":"Ne",
-        //        Razlog = i.Razlog
-        //    }).ToList();
-        //    return Json(new { data = lista });
-        //}
-        //[Autorizacija(false,false,false,true)]
-        //public IActionResult ListaNaCekanju(int id)
-        //{
-        //    var lista = _context.Termins.Where(i=>i.NaCekanju && i.PacijentId == id)
-        //        .Select(i => new TerminPregledViewModel
-        //    {
-        //        TerminId = i.TerminId,
-        //        PacijentId = i.PacijentId,
-        //        Pacijent = i.Pacijent.KorisnickiNalog.Ime+ " "+i.Pacijent.KorisnickiNalog.Prezime,
-        //        Datum = i.DatumVrijeme,
-        //        Vrijeme = i.DatumVrijeme,
-        //        Hitan = i.Hitan?"Da":"Ne",
-        //        NaCekanju = i.NaCekanju?"Da":"Ne",
-        //        Odobren = i.Odobren?"Da":"Ne",
-        //        Razlog = i.Razlog
-        //    }).ToList();
-        //    return Json(new { data = lista });
-        //}
+            var lista=new List<int>{countOdobrenih, countOdbijenih, countNaCekanju};
+            return Json(new { data = lista });
+        }
 
         [Autorizacija(false,false,false,true)]
         public IActionResult Index()
@@ -197,10 +152,88 @@ namespace StomatoloskaOrdinacija.Web.Controllers
                 _context.SaveChanges();
             }
 
-
-
             TempData["successMessage"] = "Termin uspješno izbrisan.";
             return RedirectToAction("Index");
+        }
+        [Autorizacija(false,false,true,false)]
+        [ActionName("pregled-termina")]
+        public IActionResult PregledTermina()
+        {
+            return View("PregledTermina");
+        }
+
+        [Autorizacija(false,false,true,false)]
+        [ActionName("procesirani-termini")]
+        public IActionResult ProcesiraniTermini()
+        {
+            return View("ProcesiraniTermini");
+        }
+        [Autorizacija(false,false,true,false)]
+        [ActionName("funkcija-termin")]
+        public IActionResult FunkcijaTermin(int id, string funkcija)
+        {
+            var terminDelete = _context.Termins.Find(id);
+            if (terminDelete != null)
+            {
+                if (funkcija == "odbij")
+                {
+                    terminDelete.NaCekanju = false;
+                    terminDelete.Odobren = false;
+                    TempData["successMessage"] = "Termin odbijen.";
+                }
+                if (funkcija == "odobri")
+                {
+                    terminDelete.NaCekanju = false;
+                    terminDelete.Odobren = true;
+                    TempData["successMessage"] = "Termin odobren.";
+                }
+
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("pregled-termina");
+        }
+
+        [Autorizacija(false,false,true,false)]
+        public IActionResult ListaZahtjeva()
+        {
+            var lista = _context.Termins.Where(i=>i.NaCekanju)
+                .Select(i => new TerminZahtjeviViewModel
+                {
+                    TerminId = i.TerminId,
+                    PacijentId = i.PacijentId,
+                    Pacijent = i.Pacijent.KorisnickiNalog.Ime+ " "+i.Pacijent.KorisnickiNalog.Prezime,
+                    Datum = i.DatumVrijeme,
+                    Vrijeme = i.DatumVrijeme,
+                    Hitan = i.Hitan?"Da":"Ne",
+                    Razlog = i.Razlog,
+                    Adresa = i.Pacijent.KorisnickiNalog.Adresa+", "+i.Pacijent.KorisnickiNalog.Grad.Naziv+", "+i.Pacijent.KorisnickiNalog.Grad.Drzava.Naziv,
+                    JMBG = i.Pacijent.KorisnickiNalog.JMBG,
+                    Mobitel = i.Pacijent.KorisnickiNalog.Mobitel,
+                    Odobren = i.Odobren?"Da":"Ne"
+                }).ToList();
+            return Json(new { data = lista });
+        }
+
+        [Autorizacija(false,false,true,false)]
+        public IActionResult ListaProcesiranihZahtjeva()
+        {
+            var lista = _context.Termins.Where(i=>!i.NaCekanju)
+                .Select(i => new TerminZahtjeviViewModel
+                {
+                    TerminId = i.TerminId,
+                    PacijentId = i.PacijentId,
+                    Pacijent = i.Pacijent.KorisnickiNalog.Ime+ " "+i.Pacijent.KorisnickiNalog.Prezime,
+                    Datum = i.DatumVrijeme,
+                    Vrijeme = i.DatumVrijeme,
+                    Hitan = i.Hitan?"Da":"Ne",
+                    Razlog = i.Razlog,
+                    Adresa = i.Pacijent.KorisnickiNalog.Adresa+", "+i.Pacijent.KorisnickiNalog.Grad.Naziv+", "+i.Pacijent.KorisnickiNalog.Grad.Drzava.Naziv,
+                    JMBG = i.Pacijent.KorisnickiNalog.JMBG,
+                    Mobitel = i.Pacijent.KorisnickiNalog.Mobitel,
+                    Odobren = i.Odobren?"Da":"Ne"
+                }).ToList();
+            return Json(new { data = lista });
         }
     }
 }

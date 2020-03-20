@@ -9,5 +9,6 @@ namespace StomatoloskaOrdinacija.Web.ViewModels.Profil
     {
         public string Ime { get; set; }
         public string Prezime { get; set; }
+        public string BrojOnline { get; set; }
     }
 }

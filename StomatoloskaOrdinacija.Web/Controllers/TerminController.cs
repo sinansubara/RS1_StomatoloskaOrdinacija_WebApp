@@ -253,5 +253,35 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             var lista=new List<int>{countOdobrenih, countOdbijenih};
             return Json(new { data = lista });
         }
+        [Autorizacija(true,true,true,true)]
+        public IActionResult BrojOnlineKorisnikaChart()
+        {
+            var onlineKorisnici = _context.Tokens.Select(i => i.KorisnickiNalogId).ToList();
+            var brojAdmin = 0;
+            var brojStomatolog = 0;
+            var brojOsoblje = 0;
+            var brojPacijent = 0;
+            foreach (var online in onlineKorisnici)
+            {
+                var korisnik = _context.KorisnickiNalogs.Find(online);
+
+                if (korisnik != null)
+                {
+                    if (korisnik.Permisije == 0)
+                        brojAdmin++;
+                    if (korisnik.Permisije == 1)
+                        brojStomatolog++;
+                    if (korisnik.Permisije == 2)
+                        brojOsoblje++;
+                    if (korisnik.Permisije == 3)
+                        brojPacijent++;
+                    
+                }
+            }
+
+
+            var lista=new List<int>{brojAdmin, brojStomatolog, brojOsoblje, brojPacijent};
+            return Json(new { data = lista });
+        }
     }
 }

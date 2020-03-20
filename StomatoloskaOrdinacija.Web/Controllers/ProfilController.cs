@@ -48,7 +48,8 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             var model = new ProfilPocetnaViewModel
             {
                 Ime = logiraniKorisnik.Ime,
-                Prezime = logiraniKorisnik.Prezime
+                Prezime = logiraniKorisnik.Prezime,
+                BrojOnline = _context.Tokens.Count().ToString()
             };
             var imepre = model.Ime + " " + model.Prezime;
 

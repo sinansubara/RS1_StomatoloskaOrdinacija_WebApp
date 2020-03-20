@@ -235,5 +235,23 @@ namespace StomatoloskaOrdinacija.Web.Controllers
                 }).ToList();
             return Json(new { data = lista });
         }
+        [Autorizacija(false,false,true,false)]
+        public IActionResult ListaHitnihChart()
+        {
+            var countTermina = _context.Termins.Count(i=>!i.NaCekanju);
+            var countHitnih = _context.Termins.Count(i => i.Hitan && !i.NaCekanju);
+
+            var lista=new List<int>{countTermina-countHitnih, countHitnih};
+            return Json(new { data = lista });
+        }
+        [Autorizacija(false,false,true,false)]
+        public IActionResult ListaStatusChart()
+        {
+            var countOdobrenih = _context.Termins.Count(i => i.Odobren && !i.NaCekanju);
+            var countOdbijenih = _context.Termins.Count(i => !i.Odobren && !i.NaCekanju);
+
+            var lista=new List<int>{countOdobrenih, countOdbijenih};
+            return Json(new { data = lista });
+        }
     }
 }

@@ -6,30 +6,30 @@
     string errorMessage = (string)TempData["errorMessage"];
 }
 
-<div class="container-fluid">
-    <!-- Breadcrumbs-->
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item">
-            <a asp-controller="Profil" asp-action="Pocetna">Početna</a>
-        </li>
-        <li class="breadcrumb-item active">Pregled procesiranih termina</li>
-    </ol>
-    @if (successMessage != null)
-    {
-        <div class="alert alert-info alert-prijavljen" data-alert="alert">
-            <a class="close" style="cursor: pointer !important" data-dismiss="alert">&times;</a>
-            <p class="text-center text-info">@successMessage</p>
-        </div>
-    }
-    @if (errorMessage != null)
-    {
-        <div class="alert alert-danger alert-prijavljen" data-alert="alert">
-            <a class="close" style="cursor: pointer !important" data-dismiss="alert">&times;</a>
-            <p class="text-center text-danger">@errorMessage</p>
-        </div>
-    }
-    <table id="dataTable" class="table table-bordered text-center">
-        <thead>
+    <div class="container-fluid">
+        <!-- Breadcrumbs-->
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-controller="Profil" asp-action="Pocetna">Početna</a>
+            </li>
+            <li class="breadcrumb-item active">Pregled procesiranih termina</li>
+        </ol>
+        @if (successMessage != null)
+        {
+            <div class="alert alert-info alert-prijavljen" data-alert="alert">
+                <a class="close" style="cursor: pointer !important" data-dismiss="alert">&times;</a>
+                <p class="text-center text-info">@successMessage</p>
+            </div>
+        }
+        @if (errorMessage != null)
+        {
+            <div class="alert alert-danger alert-prijavljen" data-alert="alert">
+                <a class="close" style="cursor: pointer !important" data-dismiss="alert">&times;</a>
+                <p class="text-center text-danger">@errorMessage</p>
+            </div>
+        }
+        <table id="dataTable" class="table table-bordered text-center">
+            <thead>
             <tr>
                 <th></th>
                 <th>Razlog</th>
@@ -39,8 +39,8 @@
                 <th>Pacijent</th>
                 <th>Odobren</th>
             </tr>
-        </thead>
-        <tfoot>
+            </thead>
+            <tfoot>
             <tr>
                 <th></th>
                 <th>Razlog</th>
@@ -50,201 +50,258 @@
                 <th>Pacijent</th>
                 <th>Odobren</th>
             </tr>
-        </tfoot>
-    </table>
-    <style>
-        td.details-control {
-            text-align: center;
-            color: forestgreen;
-            cursor: pointer;
-        }
+            </tfoot>
+        </table>
+        <div class="mt-5" style="display: flex;">
+            <div class="col-lg-4 mojChart">
+                <!-- Example Pie Chart Card-->
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <i class="fa fa-pie-chart"></i> Hitni termini
+                    </div>
+                    <div class="card-body">
+                        <canvas id="myPieChart1" width="100%" height="100"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 mojChart">
+                <!-- Example Pie Chart Card-->
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <i class="fa fa-pie-chart"></i> Status termina
+                    </div>
+                    <div class="card-body">
+                        <canvas id="myPieChart2" width="100%" height="100"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <style>
+            td.details-control {
+                text-align: center;
+                color: forestgreen;
+                cursor: pointer;
+            }
 
-        tr.shown td.details-control {
-            text-align: center;
-            color: red;
-        }
+            tr.shown td.details-control {
+                text-align: center;
+                color: red;
+            }
 
-        .dataTables_filter {
-            float: right !important;
-        }
+            .dataTables_filter {
+                float: right !important;
+            }
 
-        .lightGreen {
-            background-color: #93f393cc !important;
-        }
+            .lightGreen {
+                background-color: #93f393cc !important;
+            }
 
-        .lightYellow {
-            background-color: #ffff7ecc !important;
-        }
+            .lightYellow {
+                background-color: #ffff7ecc !important;
+            }
 
-        .lightRed {
-            background-color: #ff6c6c;
-        }
+            .lightRed {
+                background-color: #ff6c6c;
+            }
 
-        tbody tr.even, tbody tr.odd {
-            background-color: #ff6c6c;
-        }
+            tbody tr.even, tbody tr.odd {
+                background-color: #ff6c6c;
+            }
 
-        #dataTable_length, .toolbar {
-            display: inline;
-        }
+            #dataTable_length, .toolbar {
+                display: inline;
+            }
 
-        .dotGreen, .dotRed, .dotYellow {
-            height: 25px;
-            width: 25px;
-            border-radius: 50%;
-            display: inline-block;
-            vertical-align: text-top;
-        }
+            .dotGreen, .dotRed, .dotYellow {
+                height: 25px;
+                width: 25px;
+                border-radius: 50%;
+                display: inline-block;
+                vertical-align: text-top;
+            }
 
-        .dotGreen {
-            background-color: #93f393cc !important;
-        }
+            .dotGreen {
+                background-color: #93f393cc !important;
+            }
 
-        .dotYellow {
-            background-color: #ffff7ecc !important;
-        }
+            .dotYellow {
+                background-color: #ffff7ecc !important;
+            }
 
-        .dotRed {
-            background-color: #ff6c6c !important;
-        }
+            .dotRed {
+                background-color: #ff6c6c !important;
+            }
 
-        .mojChart {
-            margin: 0 auto;
-        }
-    </style>
-    <script>
-        $(document).ready(function () {
-            $.fn.dataTable.moment('DD/MM/YYYY HH:mm:ss');
+            .mojChart {
+                margin: 0 auto;
+            }
+        </style>
+        <script>
+            $(document).ready(function () {
+                $.fn.dataTable.moment('DD/MM/YYYY HH:mm:ss');
 
-         var table = $('#dataTable').DataTable({
-             "sDom": 'l<"toolbar">frtip',
-             "ajax": {
-                 "url": "/Termin/ListaProcesiranihZahtjeva/",
-                 "type": "GET",
-                 "datatype": "json"
-             },
-             "paging": true,
-             "autoWidth": true,
-             "columns": [
-                 {
-                     "className": 'details-control',
-                     "orderable": false,
-                     "data": null,
-                     "defaultContent": '',
-                     "render": function () {
-                         return '<i class="fa fa-plus-square" aria-hidden="true"></i>';
-                     },
-                     width:"15px"
-                 },
-                 {
-                     "data": "razlog",
-                     "render": function (data, type, full, meta) {
-                         if (data.length < 30)
-                             return data;
-                         else
-                            return data.substring(0,28)+"..";
-                     }
-                 },
-                 {
-                     "data": "datum",
-                     "render": function (data, type) {
-                         return type === 'sort' ? data : moment(data).format('DD.MM.YYYY');
-                     }
-                 },
-                 {
-                     "data": "vrijeme",
-                     "render": function (data, type) {
-                         return type === 'sort' ? data : moment(data).format('HH:mm');
-                     }
-                 },
-                 { "data": "hitan" },
-                 { "data": "pacijent" },
-                 { "data": "odobren" }
-             ],
-             "columnDefs": [
-                 {
-                     "targets": 6,
-                     render: function(data, type, full, meta) {
-                         if (type === 'display' && data == 'Da') {
-                             var rowIndex = meta.row+1;
-                             $('#dataTable tbody tr:nth-child('+rowIndex+')').addClass('lightGreen');
-                             return data;
-                         } else {
-                             return data;
-                         }
-                     }
-                 }]
+                var table = $('#dataTable').DataTable({
+                    "sDom": 'l<"toolbar">frtip',
+                    "ajax": {
+                        "url": "/Termin/ListaProcesiranihZahtjeva/",
+                        "type": "GET",
+                        "datatype": "json"
+                    },
+                    "paging": true,
+                    "autoWidth": true,
+                    "columns": [
+                        {
+                            "className": 'details-control',
+                            "orderable": false,
+                            "data": null,
+                            "defaultContent": '',
+                            "render": function () {
+                                return '<i class="fa fa-plus-square" aria-hidden="true"></i>';
+                            },
+                            width: "15px"
+                        },
+                        {
+                            "data": "razlog",
+                            "render": function (data, type, full, meta) {
+                                if (data.length < 30)
+                                    return data;
+                                else
+                                    return data.substring(0, 28) + "..";
+                            }
+                        },
+                        {
+                            "data": "datum",
+                            "render": function (data, type) {
+                                return type === 'sort' ? data : moment(data).format('DD.MM.YYYY');
+                            }
+                        },
+                        {
+                            "data": "vrijeme",
+                            "render": function (data, type) {
+                                return type === 'sort' ? data : moment(data).format('HH:mm');
+                            }
+                        },
+                        { "data": "hitan" },
+                        { "data": "pacijent" },
+                        { "data": "odobren" }
+                    ],
+                    "columnDefs": [
+                        {
+                            "targets": 6,
+                            render: function (data, type, full, meta) {
+                                if (type === 'display' && data == 'Da') {
+                                    var rowIndex = meta.row + 1;
+                                    $('#dataTable tbody tr:nth-child(' + rowIndex + ')').addClass('lightGreen');
+                                    return data;
+                                } else {
+                                    return data;
+                                }
+                            }
+                        }]
 
-         });
+                });
 
-         // Event za otvaranje i zatvaranja detalja
-         $('#dataTable tbody').on('click', 'td.details-control', function () {
-             var tr = $(this).closest('tr');
-             var tdi = tr.find("i.fa");
-             var row = table.row(tr);
+                // Event za otvaranje i zatvaranja detalja
+                $('#dataTable tbody').on('click', 'td.details-control', function () {
+                    var tr = $(this).closest('tr');
+                    var tdi = tr.find("i.fa");
+                    var row = table.row(tr);
 
-             if (row.child.isShown()) {
-                 // Detalji otvoreni - zatvori
-                 row.child.hide();
-                 tr.removeClass('shown');
-                 tdi.first().removeClass('fa-minus-square');
-                 tdi.first().addClass('fa-plus-square');
-             }
-             else {
-                 // Otvara detalje
-                 row.child(format(row.data())).show();
-                 tr.addClass('shown');
-                 tdi.first().removeClass('fa-plus-square');
-                 tdi.first().addClass('fa-minus-square');
-             }
-         });
-
-
-
-
-         table.on("user-select", function (e, dt, type, cell, originalEvent) {
-             if ($(cell.node()).hasClass("details-control")) {
-                 e.preventDefault();
-             }
-         });
-            $("div.toolbar").html('<span class="dotRed mr-2"></span>Odbijen' +
-                '<span class="dotGreen ml-5 mr-2"></span>Odobren');
-            $("div.toolbar").addClass('ml-5');
-
-        });
-
-        function format(d){
-
-            // `d` orginalni podaci za red
-            return '<table class="table-bordered" id="detaljitable" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
-                '<tr>' +
-                '<td>Ime i prezime:</td>' +
-                '<td>' + d.pacijent + '</td>' +
-                '</tr>' +
-                '<tr>' +
-                '<td>Datum:</td>' +
-                '<td>' + moment(d.datum).format('DD.MM.YYYY') + " " + moment(d.vrijeme).format('HH:mm') + '</td>' +
-                '</tr>' +
-                '<tr>' +
-                '<td>Razlog:</td>' +
-                '<td>' + d.razlog + '</td>' +
-                '</tr>' +
-                '<tr>' +
-                '<td>Adresa:</td>' +
-                '<td>' + d.adresa + '</td>' +
-                '</tr>' +
-                '<tr>' +
-                '<td>Mobitel:</td>' +
-                '<td>' + d.mobitel + '</td>' +
-                '</tr>' +
-                '<tr>' +
-                '<td>JMBG:</td>' +
-                '<td>' + d.jmbg + '</td>' +
-                '</tr>' +
-                '</table>';
-        }
+                    if (row.child.isShown()) {
+                        // Detalji otvoreni - zatvori
+                        row.child.hide();
+                        tr.removeClass('shown');
+                        tdi.first().removeClass('fa-minus-square');
+                        tdi.first().addClass('fa-plus-square');
+                    }
+                    else {
+                        // Otvara detalje
+                        row.child(format(row.data())).show();
+                        tr.addClass('shown');
+                        tdi.first().removeClass('fa-plus-square');
+                        tdi.first().addClass('fa-minus-square');
+                    }
+                });
 
 
-    </script>
 
-</div>
+
+                table.on("user-select", function (e, dt, type, cell, originalEvent) {
+                    if ($(cell.node()).hasClass("details-control")) {
+                        e.preventDefault();
+                    }
+                });
+                $("div.toolbar").html('<span class="dotRed mr-2"></span>Odbijen' +
+                    '<span class="dotGreen ml-5 mr-2"></span>Odobren');
+                $("div.toolbar").addClass('ml-5');
+
+
+                $.ajax({
+                    url: "/Termin/ListaHitnihChart",
+                    success: function (result) {
+                        var ctx = document.getElementById("myPieChart1").getContext("2d");
+                        var myPieChart = new Chart(ctx, {
+                            type: 'pie',
+                            data: {
+                                labels: ["Nije hitan", "Hitan"],
+                                datasets: [{
+                                    data: result.data,
+                                    backgroundColor: ['#93f393cc', '#ff6c6c']
+                                }]
+                            }
+                        });
+                    }
+                });
+                $.ajax({
+                    url: "/Termin/ListaStatusChart",
+                    success: function (result) {
+                        var ctx = document.getElementById("myPieChart2").getContext("2d");
+                        var myPieChart = new Chart(ctx, {
+                            type: 'pie',
+                            data: {
+                                labels: ["Odobreni", "Odbijeni"],
+                                datasets: [{
+                                    data: result.data,
+                                    backgroundColor: ['#93f393cc', '#ff6c6c']
+                                }]
+                            }
+                        });
+                    }
+                });
+            });
+
+            function format(d) {
+
+                // `d` orginalni podaci za red
+                return '<table class="table-bordered" id="detaljitable" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
+                    '<tr>' +
+                    '<td>Ime i prezime:</td>' +
+                    '<td>' + d.pacijent + '</td>' +
+                    '</tr>' +
+                    '<tr>' +
+                    '<td>Datum:</td>' +
+                    '<td>' + moment(d.datum).format('DD.MM.YYYY') + " " + moment(d.vrijeme).format('HH:mm') + '</td>' +
+                    '</tr>' +
+                    '<tr>' +
+                    '<td>Razlog:</td>' +
+                    '<td>' + d.razlog + '</td>' +
+                    '</tr>' +
+                    '<tr>' +
+                    '<td>Adresa:</td>' +
+                    '<td>' + d.adresa + '</td>' +
+                    '</tr>' +
+                    '<tr>' +
+                    '<td>Mobitel:</td>' +
+                    '<td>' + d.mobitel + '</td>' +
+                    '</tr>' +
+                    '<tr>' +
+                    '<td>JMBG:</td>' +
+                    '<td>' + d.jmbg + '</td>' +
+                    '</tr>' +
+                    '</table>';
+            }
+
+
+        </script>
+
+    </div>

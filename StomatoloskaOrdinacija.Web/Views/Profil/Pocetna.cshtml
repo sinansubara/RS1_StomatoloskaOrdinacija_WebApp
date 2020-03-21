@@ -19,7 +19,7 @@
     <!-- Area Chart Example-->
     <div class="card mb-3 mt-3">
         <div class="card-header">
-            <i class="fa fa-area-chart"></i> Area Chart Example
+            <i class="fa fa-pie-chart"></i> Area Chart Example
         </div>
         <div class="card-body">
             <canvas id="myAreaChart" width="100%" height="30"></canvas>
@@ -41,10 +41,10 @@
             <!-- Example Pie Chart Card-->
             <div class="card mb-3">
                 <div class="card-header">
-                    <i class="fa fa-pie-chart"></i> Pie Chart Example
+                    <i class="fa fa-pie-chart"></i> TOP 5 gradova sa najviše pacijenata
                 </div>
                 <div class="card-body">
-                    <canvas id="myPieChart" width="100%" height="100"></canvas>
+                    <canvas id="myPolarChart"></canvas>
                 </div>
             </div>
         </div>
@@ -53,7 +53,7 @@
 
 <script>
     $.ajax({
-        url: "/Termin/BrojOnlineKorisnikaChart",
+        url: "/Profil/BrojOnlineKorisnikaChart",
         success: function (result) {
             var ctx = document.getElementById("myBarChart1").getContext("2d");
 
@@ -90,8 +90,58 @@
                     }
                 }
             });
+        }
+    });
+    $.ajax({
+        url: "/Profil/BrojRegistrovanihPacijenataPoGradu",
+        success: function (result) {
+            var ctx = document.getElementById("myPolarChart").getContext("2d");
 
+            var nazivi = result.data.map(function(e) {
+                return e.grad;
+            });
+            var podaci = result.data.map(function(e) {
+                return e.ukupno;
+            });;
 
+            var myPolarChart = new Chart(ctx, {
+                type: "polarArea",
+                data: {
+                    datasets: [{
+                        data: podaci,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.6)',
+                            'rgba(54, 162, 235, 0.6)',
+                            'rgba(255, 206, 86, 0.6)',
+                            'rgba(75, 192, 192, 0.6)',
+                            'rgba(153, 102, 255, 0.6)'
+                        ],
+                        label: 'Moji podaci' // for legend
+                    }],
+                    labels: nazivi
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    legend: {
+                        position: 'left'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Gradovi sa najvise pacijenata'
+                    },
+                    scale: {
+                        ticks: {
+                            beginAtZero: true
+                        },
+                        reverse: false
+                    },
+                    animation: {
+                        animateRotate: false,
+                        animateScale: true
+                    }
+                }
+            });
         }
     });
 </script>

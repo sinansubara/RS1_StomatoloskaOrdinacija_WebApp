@@ -522,6 +522,17 @@ namespace StomatoloskaOrdinacija.Web.Controllers
 
             return Json(new { data = lista });
         }
+        [Autorizacija(true,true,true,true)]
+        public IActionResult StatusSvihTerminaChart()
+        {
+            var countOdobrenih = _context.Termins.Count(i => i.Odobren);
+            var countOdbijenih = _context.Termins.Count(i => !i.Odobren && !i.NaCekanju);
+            var countNaCekanju = _context.Termins.Count(i => i.NaCekanju);
+            var countTermina = _context.Termins.Count();
+            var countHitnih = _context.Termins.Count(i => i.Hitan && !i.NaCekanju);
 
+            var lista=new List<int>{countOdobrenih, countOdbijenih, countNaCekanju, countHitnih, countTermina-countHitnih};
+            return Json(new { data = lista });
+        }
     }
 }

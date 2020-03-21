@@ -5,96 +5,108 @@
 }
 
 
-<div class="container-fluid">
-    <!-- Breadcrumbs-->
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item active">Početna</li>
-    </ol>
-    <div class="row">
-        <div class="col-12">
-            <h2>Dobro došli @Model.Ime @Model.Prezime</h2>
+    <div class="container-fluid">
+        <!-- Breadcrumbs-->
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active">Početna</li>
+        </ol>
+        <div class="row">
+            <div class="col-12">
+                <h2>Dobro došli @Model.Ime @Model.Prezime</h2>
+            </div>
         </div>
-    </div>
 
-    <!-- Area Chart Example-->
-    <div class="card mb-3 mt-3">
-        <div class="card-header">
-            <i class="fa fa-pie-chart"></i> Area Chart Example
+
+
+        <!-- Example Bar Chart Card-->
+        <div class="card mb-3 mt-3">
+            <div class="card-header">
+                <i class="fa fa-bar-chart"></i> Broj online korisnika: @Model.BrojOnline
+            </div>
+            <div class="card-body">
+                <canvas id="myBarChart1" width="100%" height="20"></canvas>
+            </div>
         </div>
-        <div class="card-body">
-            <canvas id="myAreaChart" width="100%" height="30"></canvas>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-6">
-            <!-- Example Bar Chart Card-->
-            <div class="card mb-3">
-                <div class="card-header">
-                    <i class="fa fa-bar-chart"></i> Broj online korisnika: @Model.BrojOnline
+
+        <div class="row">
+        <!-- Area Chart Example-->
+            <div class="col-lg-6">
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <i class="fa fa-pie-chart"></i> Status termina
+                    </div>
+                    <div class="card-body">
+                        <canvas id="myRadarChart" width="100" height="50"></canvas>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <canvas id="myBarChart1" width="100" height="50"></canvas>
+            </div>
+                <div class="col-lg-6">
+                    <!-- Example Pie Chart Card-->
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <i class="fa fa-pie-chart"></i> TOP 5 gradova sa najviše pacijenata
+                        </div>
+                        <div class="card-body">
+                            <canvas id="myPolarChart"></canvas>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-lg-6">
-            <!-- Example Pie Chart Card-->
-            <div class="card mb-3">
-                <div class="card-header">
-                    <i class="fa fa-pie-chart"></i> TOP 5 gradova sa najviše pacijenata
-                </div>
-                <div class="card-body">
-                    <canvas id="myPolarChart"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 <script>
     $.ajax({
         url: "/Profil/BrojOnlineKorisnikaChart",
-        success: function (result) {
+        success: function(result) {
             var ctx = document.getElementById("myBarChart1").getContext("2d");
 
-            var myBarChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ["Administrator", "Stomatolog", "Medicinsko osoblje", "Pacijent"],
-                    datasets: [{
-                        label: "Online",
-                        backgroundColor: "rgba(2,117,216,1)",
-                        borderColor: "rgba(2,117,216,1)",
-                        data: result.data
-                    }]
-                },
-                options: {
-                    scales: {
-                        xAxes: [{
-                            gridLines: {
-                                display: false
+            var myBarChart = new Chart(ctx,
+                {
+                    type: 'bar',
+                    data: {
+                        labels: ["Administrator", "Stomatolog", "Medicinsko osoblje", "Pacijent"],
+                        datasets: [
+                            {
+                                label: "Online",
+                                backgroundColor: "rgba(2,117,216,1)",
+                                borderColor: "rgba(2,117,216,1)",
+                                data: result.data
+
                             }
-                        }],
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                                maxTicksLimit: 3
-                            },
-                            gridLines: {
-                                display: true
-                            }
-                        }]
+                        ]
                     },
-                    legend: {
-                        display: false
+                    options: {
+                        maintainAspectRatio: true,
+                        scales: {
+                            xAxes: [
+                                {
+                                    gridLines: {
+                                        display: false
+                                    }
+                                }
+                            ],
+                            yAxes: [
+                                {
+                                    ticks: {
+                                        min: 0,
+                                        maxTicksLimit: 5
+                                    },
+                                    gridLines: {
+                                        display: true
+                                    }
+                                }
+                            ]
+                        },
+                        legend: {
+                            display: false
+                        }
                     }
-                }
-            });
+                });
         }
     });
     $.ajax({
         url: "/Profil/BrojRegistrovanihPacijenataPoGradu",
-        success: function (result) {
+        success: function(result) {
             var ctx = document.getElementById("myPolarChart").getContext("2d");
 
             var nazivi = result.data.map(function(e) {
@@ -104,44 +116,86 @@
                 return e.ukupno;
             });;
 
-            var myPolarChart = new Chart(ctx, {
-                type: "polarArea",
-                data: {
-                    datasets: [{
-                        data: podaci,
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.6)',
-                            'rgba(54, 162, 235, 0.6)',
-                            'rgba(255, 206, 86, 0.6)',
-                            'rgba(75, 192, 192, 0.6)',
-                            'rgba(153, 102, 255, 0.6)'
+            var myPolarChart = new Chart(ctx,
+                {
+                    type: "polarArea",
+                    data: {
+                        datasets: [
+                            {
+                                data: podaci,
+                                backgroundColor: [
+                                    'rgba(255, 99, 132, 0.6)',
+                                    'rgba(54, 162, 235, 0.6)',
+                                    'rgba(255, 206, 86, 0.6)',
+                                    'rgba(75, 192, 192, 0.6)',
+                                    'rgba(153, 102, 255, 0.6)'
+                                ],
+                                label: 'Moji podaci' // for legend
+                            }
                         ],
-                        label: 'Moji podaci' // for legend
-                    }],
-                    labels: nazivi
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    legend: {
-                        position: 'left'
+                        labels: nazivi
                     },
-                    title: {
-                        display: true,
-                        text: 'Gradovi sa najvise pacijenata'
-                    },
-                    scale: {
-                        ticks: {
-                            beginAtZero: true
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        legend: {
+                            position: 'left'
                         },
-                        reverse: false
-                    },
-                    animation: {
-                        animateRotate: false,
-                        animateScale: true
+                        title: {
+                            display: true,
+                            text: 'Gradovi sa najvise pacijenata'
+                        },
+                        scale: {
+                            ticks: {
+                                beginAtZero: true
+                            },
+                            reverse: false
+                        },
+                        animation: {
+                            animateRotate: false,
+                            animateScale: true
+                        }
                     }
-                }
-            });
+                });
         }
     });
+
+    $.ajax({
+        url: "/Profil/StatusSvihTerminaChart",
+        success: function(result) {
+            var ctx = document.getElementById("myRadarChart").getContext("2d");
+
+            var myPolarChart = new Chart(ctx,
+                {
+                    type: "radar",
+                    data: {
+                        datasets: [
+                            {
+                                data: result.data,
+                                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                pointBackgroundColor: 'rgba(54, 162, 235, 1)',
+                                label: 'Podaci o statusu svih termina' // for legend
+                            }
+                        ],
+                        labels: ["Odobreni", "Odbijeni", "Na cekanju", "Hitni", "Nisu hitni"]
+                    },
+                    options: {
+                        legend: {
+                            position: 'top'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Status termina'
+                        },
+                        scale: {
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+        }
+    });
+
 </script>

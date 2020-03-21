@@ -159,17 +159,17 @@ namespace StomatoloskaOrdinacija.Web.Controllers
 
                 //VAZNO!!! UKLONI KOMENTARE DA BI PRORADILO SLANJE PORUKA
 
-                //var client = new Client(creds: new Nexmo.Api.Request.Credentials
-                //{
-                //    ApiKey = _configuration.GetValue<string>("NexmoSmsGateway:ApiKey"),
-                //    ApiSecret = _configuration.GetValue<string>("NexmoSmsGateway:ApiSecret")
-                //});
-                //var results = client.SMS.Send(request: new SMS.SMSRequest
-                //{
-                //    from = "Ordinacija",
-                //    to = primalacPorukeTelefon,
-                //    text = prijavaLokacijaMobitel
-                //});
+                var client = new Client(creds: new Nexmo.Api.Request.Credentials
+                {
+                    ApiKey = _configuration.GetValue<string>("NexmoSmsGateway:ApiKey"),
+                    ApiSecret = _configuration.GetValue<string>("NexmoSmsGateway:ApiSecret")
+                });
+                var results = client.SMS.Send(request: new SMS.SMSRequest
+                {
+                    from = "Ordinacija",
+                    to = primalacPorukeTelefon,
+                    text = prijavaLokacijaMobitel
+                });
 
 
                 EmailSettings.SendEmail(_configuration, primalacPoruke, primalacEmail, "Nova prijava detektovana", prijavaEmailPoruka);//šalje email

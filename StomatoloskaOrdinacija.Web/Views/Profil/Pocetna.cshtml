@@ -5,31 +5,54 @@
 }
 
 
-    <div class="container-fluid">
-        <!-- Breadcrumbs-->
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item active">Početna</li>
-        </ol>
+<div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item active">Početna</li>
+    </ol>
+    <div class="row">
+        <div class="col-12">
+            <h2>Dobro došli @Model.Ime @Model.Prezime</h2>
+            <a class="btn btn-primary mt-5" href="#" id="downloadPdf">Preuzmi pdf sa grafovima</a>
+        </div>
+    </div>
+
+    
+    <div id="reportPage">
         <div class="row">
-            <div class="col-12">
-                <h2>Dobro došli @Model.Ime @Model.Prezime</h2>
+            <div class="col-lg-6">
+                <div class="card mb-3 mt-3">
+                    <div class="card-header">
+                        <i class="fa fa-bar-chart"></i> Broj online korisnika: @Model.BrojOnline
+                    </div>
+                    <div class="card-body">
+                        <canvas id="myBarChart1"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card mb-3 mt-3">
+                    <div class="card-header">
+                        <i class="fa fa-bar-chart"></i> Registrovani po mjesecu
+                    </div>
+                    <div class="card-body">
+                        <canvas id="myLineChart"></canvas>
+                    </div>
+                </div>
             </div>
         </div>
 
-
-
-        <!-- Example Bar Chart Card-->
-        <div class="card mb-3 mt-3">
-            <div class="card-header">
-                <i class="fa fa-bar-chart"></i> Broj online korisnika: @Model.BrojOnline
-            </div>
-            <div class="card-body">
-                <canvas id="myBarChart1" width="100%" height="20"></canvas>
-            </div>
-        </div>
-
         <div class="row">
-        <!-- Area Chart Example-->
+            <div class="col-lg-6">
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <i class="fa fa-pie-chart"></i> TOP 5 gradova sa najviše pacijenata
+                    </div>
+                    <div class="card-body">
+                        <canvas id="myPolarChart"></canvas>
+                    </div>
+                </div>
+            </div>
             <div class="col-lg-6">
                 <div class="card mb-3">
                     <div class="card-header">
@@ -40,19 +63,10 @@
                     </div>
                 </div>
             </div>
-                <div class="col-lg-6">
-                    <!-- Example Pie Chart Card-->
-                    <div class="card mb-3">
-                        <div class="card-header">
-                            <i class="fa fa-pie-chart"></i> TOP 5 gradova sa najviše pacijenata
-                        </div>
-                        <div class="card-body">
-                            <canvas id="myPolarChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
+    </div>
+</div>
+
 
 <script>
     $.ajax({
@@ -82,6 +96,10 @@
                                 {
                                     gridLines: {
                                         display: false
+                                    },
+                                    scaleLabel: {
+                                        display: true,
+                                        labelString: 'Uloga na sistemu'
                                     }
                                 }
                             ],
@@ -93,6 +111,10 @@
                                     },
                                     gridLines: {
                                         display: true
+                                    },
+                                    scaleLabel: {
+                                        display: true,
+                                        labelString: 'Ukupno online'
                                     }
                                 }
                             ]
@@ -196,6 +218,108 @@
                     }
                 });
         }
+    });
+
+    $.ajax({
+        url: "/Profil/BrojRegistrovanihPacijenataPoMjesecu",
+        success: function(result) {
+            var ctx = document.getElementById("myLineChart").getContext("2d");
+
+            var nazivi = result.data.map(function(e) {
+                return e.mjesec;
+            });
+            var podaci = result.data.map(function(e) {
+                return e.ukupno;
+            });;
+
+            var myLineChart = new Chart(ctx,
+                {
+                    type: "line",
+                    data: {
+                        datasets: [
+                            {
+                                data: podaci,
+                                backgroundColor: 'rgba(2,117,216,0.2)',
+                                borderColor: 'rgba(54, 162, 235, 0.5)',
+                                pointBackgroundColor: 'rgba(54, 162, 235, 1)',
+                                fill: false
+                            }
+                        ],
+                        labels: nazivi
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        legend: false,
+                        title: {
+                            display: true,
+                            text: 'Broj registrovanih pacijenata po mjesecu'
+                        },
+                        scales: {
+                            xAxes: [{
+                                display: true,
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Mjesec'
+                                }
+                            }],
+                            yAxes: [{
+                                display: true,
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Ukupno registrovanih'
+                                },
+                                ticks: {
+                                    min: 0,
+                                    maxTicksLimit: 5
+                                }
+                            }]
+                        },
+                        animation: {
+                            animateRotate: false,
+                            animateScale: true
+                        }
+                    }
+                });
+        }
+    });
+
+    $('#downloadPdf').click(function(event) {
+        // get size of report page
+        var reportPageHeight = $('#reportPage').innerHeight();
+        var reportPageWidth = $('#reportPage').innerWidth();
+
+        // create a new canvas object that we will populate with all other canvas objects
+        var pdfCanvas = $('<canvas />').attr({
+            id: "canvaspdf",
+            width: reportPageWidth,
+            height: reportPageHeight
+        });
+        // keep track canvas position
+        var pdfctx = $(pdfCanvas)[0].getContext('2d');
+        var pdfctxX = 0;
+        var pdfctxY = 0;
+        var buffer = 100;
+        // for each chart.js chart
+        $("canvas").each(function(index) {
+            // get the chart height/width
+            var canvasHeight = $(this).innerHeight();
+            var canvasWidth = $(this).innerWidth();
+            // draw the chart into the new canvas
+            pdfctx.drawImage($(this)[0], pdfctxX, pdfctxY, canvasWidth, canvasHeight);
+            pdfctxX += canvasWidth + buffer;
+            // our report page is in a grid pattern so replicate that in the new canvas
+            if (index % 2 === 1) {
+                pdfctxX = 0;
+                pdfctxY += canvasHeight + buffer;
+            }
+        });
+  
+        // create new pdf and add our new canvas as an image
+        var pdf = new jsPDF('l', 'pt', [reportPageWidth, reportPageHeight]);
+        pdf.addImage($(pdfCanvas)[0], 'PNG', 0, 0);
+        // download the pdf
+        pdf.save('Charts.pdf');
     });
 
 </script>

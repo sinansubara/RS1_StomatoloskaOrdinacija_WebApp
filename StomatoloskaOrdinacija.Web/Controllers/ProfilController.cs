@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Math.EC.Rfc7748;
 using StomatoloskaOrdinacija.Data;
 using StomatoloskaOrdinacija.Data.EntityModels;
 using StomatoloskaOrdinacija.Web.Helper;
@@ -48,7 +49,8 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             var model = new ProfilPocetnaViewModel
             {
                 Ime = logiraniKorisnik.Ime,
-                Prezime = logiraniKorisnik.Prezime
+                Prezime = logiraniKorisnik.Prezime,
+                BrojOnline = _context.Tokens.Count().ToString()
             };
             var imepre = model.Ime + " " + model.Prezime;
 
@@ -470,5 +472,67 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             return RedirectToAction("Prijava", "Prijava");
         }
 
+        [Autorizacija(true,true,true,true)]
+        public IActionResult BrojOnlineKorisnikaChart()
+        {
+            var onlineKorisnici = _context.Tokens.Select(i => i.KorisnickiNalogId).ToList();
+            var brojAdmin = 0;
+            var brojStomatolog = 0;
+            var brojOsoblje = 0;
+            var brojPacijent = 0;
+            foreach (var online in onlineKorisnici)
+            {
+                var korisnik = _context.KorisnickiNalogs.Find(online);
+
+                if (korisnik != null)
+                {
+                    if (korisnik.Permisije == 0)
+                        brojAdmin++;
+                    if (korisnik.Permisije == 1)
+                        brojStomatolog++;
+                    if (korisnik.Permisije == 2)
+                        brojOsoblje++;
+                    if (korisnik.Permisije == 3)
+                        brojPacijent++;
+                    
+                }
+            }
+
+
+            var lista=new List<int>{brojAdmin, brojStomatolog, brojOsoblje, brojPacijent};
+            return Json(new { data = lista });
+        }
+
+
+        [Autorizacija(true,true,true,true)]
+        public IActionResult BrojRegistrovanihPacijenataPoGradu()
+        {
+            var grupeGradova = _context.KorisnickiNalogs
+                .Where(i=>i.Permisije == 3)
+                .GroupBy(i => i.GradId)
+                .Select(g => new { GradId=g.Key, Broj = g.Count() })
+                .OrderByDescending(x=>x.Broj).Take(5).ToList();
+
+            var lista = grupeGradova
+                .Select(i => new BrojRegistrovanihGradViewModel
+                {
+                    Grad = _context.Grads.Where(j=>j.GradId == i.GradId).Select(j=>j.Naziv).FirstOrDefault(),
+                    Ukupno = i.Broj
+                }).ToList();
+
+            return Json(new { data = lista });
+        }
+        [Autorizacija(true,true,true,true)]
+        public IActionResult StatusSvihTerminaChart()
+        {
+            var countOdobrenih = _context.Termins.Count(i => i.Odobren);
+            var countOdbijenih = _context.Termins.Count(i => !i.Odobren && !i.NaCekanju);
+            var countNaCekanju = _context.Termins.Count(i => i.NaCekanju);
+            var countTermina = _context.Termins.Count();
+            var countHitnih = _context.Termins.Count(i => i.Hitan && !i.NaCekanju);
+
+            var lista=new List<int>{countOdobrenih, countOdbijenih, countNaCekanju, countHitnih, countTermina-countHitnih};
+            return Json(new { data = lista });
+        }
     }
 }

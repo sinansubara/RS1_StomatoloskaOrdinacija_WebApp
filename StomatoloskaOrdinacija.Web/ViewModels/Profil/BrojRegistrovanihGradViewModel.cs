@@ -5,10 +5,9 @@ using System.Threading.Tasks;
 
 namespace StomatoloskaOrdinacija.Web.ViewModels.Profil
 {
-    public class ProfilPocetnaViewModel
+    public class BrojRegistrovanihGradViewModel
     {
-        public string Ime { get; set; }
-        public string Prezime { get; set; }
-        public string BrojOnline { get; set; }
+        public string Grad { get; set; }
+        public int Ukupno { get; set; }
     }
 }

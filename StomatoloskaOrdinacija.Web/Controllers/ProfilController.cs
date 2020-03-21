@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -532,6 +533,25 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             var countHitnih = _context.Termins.Count(i => i.Hitan && !i.NaCekanju);
 
             var lista=new List<int>{countOdobrenih, countOdbijenih, countNaCekanju, countHitnih, countTermina-countHitnih};
+            return Json(new { data = lista });
+        }
+        [Autorizacija(true, true, true, true)]
+        public IActionResult BrojRegistrovanihPacijenataPoMjesecu()
+        {
+            var mjeseci = _context.KorisnickiNalogs
+                .GroupBy(i => i.Kreirano.Month)
+                .Select(g => new { Mjesec = g.Key, Broj = g.Count() })
+                .OrderBy(x => x.Mjesec).ToList();
+
+
+            var lista = mjeseci
+                .Select(i => new BrojPacijenataPoDatumuViewModel
+                {
+                    Mjesec = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(i.Mjesec),
+                    Ukupno = i.Broj
+                }).ToList();
+
+
             return Json(new { data = lista });
         }
     }

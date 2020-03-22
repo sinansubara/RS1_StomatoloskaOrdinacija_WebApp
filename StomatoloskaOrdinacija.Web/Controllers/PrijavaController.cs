@@ -145,10 +145,10 @@ namespace StomatoloskaOrdinacija.Web.Controllers
                 var trenutnoVrijeme = DateTime.Now.ToString(new CultureInfo("de-DE"));//trenutno vrijeme prebacuje na njemacki format datum 19.03.2020 15:35:43
                 var primalacPoruke = korisnickiNalog.First().Ime + " " + korisnickiNalog.First().Prezime; //ime i prezime za email
                 var primalacEmail = korisnickiNalog.First().Email; //primalac email-a
-                var prijavaEmailPoruka ="Poštovani " + primalacPoruke + 
+                var prijavaEmailPoruka = "Poštovani " + primalacPoruke +
                                         ",\nDetektovana je prijava na vaš račun" +
-                                        "\n-----------------------------------------------\n\n" + prijavaLokacijaMail + 
-                                        "\nDatum i vrijeme: " + trenutnoVrijeme + 
+                                        "\n-----------------------------------------------\n\n" + prijavaLokacijaMail +
+                                        "\nDatum i vrijeme: " + trenutnoVrijeme +
                                         "\n!!!AKO OVO NISTE BILI VI, MOLIMO VAS DA PROMJENITE VAŠU LOZINKU!!!" +
                                         "\nIli nas kontaktirajte na naš mail: stomatoloska.ordinacija24@gmail.com"; //generisanje email poruke
 

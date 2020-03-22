@@ -182,7 +182,11 @@
                              data + '&funkcija=odobri">Odobri</a> | <a class="ml-1" ' +
                              'href="/Termin/funkcija-termin?id=' + data + '&funkcija=odbij">Odbij</a></span>';
                      }
-                 }]
+                 }],
+             "initComplete": function(settings, json) {
+                 $("div.toolbar").html('<span class="dotRed mr-2"></span>Hitan termin');
+                 $("div.toolbar").addClass('ml-5');
+             }
 
          });
 
@@ -216,8 +220,7 @@
                  e.preventDefault();
              }
          });
-            $("div.toolbar").html('<span class="dotRed mr-2"></span>Hitan termin');
-            $("div.toolbar").addClass('ml-5');
+
 
         });
 

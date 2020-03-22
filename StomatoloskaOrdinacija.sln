@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StomatoloskaOrdinacija.Web"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StomatoloskaOrdinacija.Data", "StomatoloskaOrdinacija.Data\StomatoloskaOrdinacija.Data.csproj", "{0F7E8F55-AEA7-4947-B187-AF41BD418311}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{6A083F55-57EF-468F-9D60-E436EA008D55}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StomatoloskaOrdinacija.UnitTests", "UnitTests\StomatoloskaOrdinacija.UnitTests.csproj", "{6A083F55-57EF-468F-9D60-E436EA008D55}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

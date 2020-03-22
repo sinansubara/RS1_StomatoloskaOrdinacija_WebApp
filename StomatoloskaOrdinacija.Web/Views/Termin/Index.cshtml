@@ -50,7 +50,7 @@
                     <th>Hitan</th>
                     <th>Na cekanju</th>
                     <th>Odobren</th>
-                <th>Funkcije</th>
+                    <th>Funkcije</th>
             </tr>
             </tfoot>
         </table>
@@ -116,10 +116,10 @@
             .dotRed {
                 background-color: #ff6c6c !important;
             }
+
             .mojChart {
                 margin: 0 auto;
             }
-
         </style>
         <script>
         $(document).ready(function () {
@@ -213,6 +213,11 @@
                          $(this).find('td').last().empty();
                      }
                  });
+                 $("div.toolbar").html('<span class="dotRed mr-2"></span>Odbijen' +
+                     '<span class="dotGreen ml-5 mr-2"></span>Odobren' +
+                     '<span class="dotYellow ml-5 mr-2"></span>Na čekanju' +
+                     '<a href="/Termin/dodaj-termin" class="btn btn-primary ml-5">Dodaj novi termin</a>');
+                 $("div.toolbar").addClass('ml-5');
              }
 
          });
@@ -247,11 +252,7 @@
                  e.preventDefault();
              }
          });
-            $("div.toolbar").html('<span class="dotRed mr-2"></span>Odbijen' +
-                '<span class="dotGreen ml-5 mr-2"></span>Odobren' +
-                '<span class="dotYellow ml-5 mr-2"></span>Na čekanju' +
-                '<a href="/Termin/dodaj-termin" class="btn btn-primary ml-5">Dodaj novi termin</a>');
-            $("div.toolbar").addClass('ml-5');
+
 
 
             $.ajax({

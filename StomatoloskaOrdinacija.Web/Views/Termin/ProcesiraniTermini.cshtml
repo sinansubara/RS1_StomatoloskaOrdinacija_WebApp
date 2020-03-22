@@ -200,7 +200,12 @@
                                     return data;
                                 }
                             }
-                        }]
+                        }],
+                    "initComplete": function(settings, json) {
+                        $("div.toolbar").html('<span class="dotRed mr-2"></span>Odbijen' +
+                            '<span class="dotGreen ml-5 mr-2"></span>Odobren');
+                        $("div.toolbar").addClass('ml-5');
+                    }
 
                 });
 
@@ -234,9 +239,7 @@
                         e.preventDefault();
                     }
                 });
-                $("div.toolbar").html('<span class="dotRed mr-2"></span>Odbijen' +
-                    '<span class="dotGreen ml-5 mr-2"></span>Odobren');
-                $("div.toolbar").addClass('ml-5');
+
 
 
                 $.ajax({

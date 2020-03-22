@@ -253,5 +253,49 @@ namespace StomatoloskaOrdinacija.Web.Controllers
             var lista=new List<int>{countOdobrenih, countOdbijenih};
             return Json(new { data = lista });
         }
+
+        [Autorizacija(true, true, true, true)]
+        public List<Termin> ListaSvihTerminaPacijenta(int id)
+        {
+            var lista = _context.Termins.Where(i=>i.PacijentId == id).ToList();
+            return lista;
+        }
+        [ActionName("promjeni-stanje-termina")]
+        public IActionResult PromjeniStanjeTermina(int id, string funkcija)
+        {
+            var terminDelete = _context.Termins.Find(id);
+            if (terminDelete != null)
+            {
+                if (funkcija == "odbij")
+                {
+                    terminDelete.NaCekanju = false;
+                    terminDelete.Odobren = false;
+                }
+                if (funkcija == "odobri")
+                {
+                    terminDelete.NaCekanju = false;
+                    terminDelete.Odobren = true;
+                }
+
+                _context.SaveChanges();
+            }
+
+            var modeltest = new TerminPregledViewModel
+            {
+                TerminId = terminDelete.TerminId,
+                PacijentId = terminDelete.PacijentId,
+                Pacijent = terminDelete.Pacijent.KorisnickiNalog.Ime + " " + terminDelete.Pacijent.KorisnickiNalog.Prezime,
+                Datum = terminDelete.DatumVrijeme,
+                Vrijeme = terminDelete.DatumVrijeme,
+                Hitan = terminDelete.Hitan ? "Da" : "Ne",
+                NaCekanju = terminDelete.NaCekanju ? "Da" : "Ne",
+                Odobren = terminDelete.Odobren ? "Da" : "Ne",
+                Razlog = terminDelete.Razlog
+            };
+
+
+            return View("PregledTermina", modeltest);
+        }
+
     }
 }

@@ -284,7 +284,7 @@ namespace StomatoloskaOrdinacija.Web.Controllers
                         korisnik.Terapija = model.Terapija;
                         _context.SaveChanges();
 
-                        TempData["successMessage"] = "Slika uspješno promjenuta.";
+                        TempData["successMessage"] = "Promjena uspješno sačuvana.";
                     }
 
                     if (korisnik.Navlake != model.Navlake)
@@ -292,7 +292,7 @@ namespace StomatoloskaOrdinacija.Web.Controllers
                         korisnik.Navlake = model.Navlake;
                         _context.SaveChanges();
 
-                        TempData["successMessage"] = "Slika uspješno promjenuta.";
+                        TempData["successMessage"] = "Promjena uspješno sačuvana.";
                     }
 
                     if (korisnik.Aparatic != model.Aparatic)
@@ -300,7 +300,7 @@ namespace StomatoloskaOrdinacija.Web.Controllers
                         korisnik.Aparatic = model.Aparatic;
                         _context.SaveChanges();
 
-                        TempData["successMessage"] = "Slika uspješno promjenuta.";
+                        TempData["successMessage"] = "Promjena uspješno sačuvana.";
                     }
                 }
                 else

@@ -53,7 +53,7 @@ steps:
     serverUrl: 'ftp://p1807.app.fit.ba'
     username: 'p1807'
     password: 'W3BKRS!'
-    rootDirectory: '$(build.artifactstagingdirectory)/KC-KinoCentar.Web'
+    rootDirectory: '$(build.artifactstagingdirectory)/StomatoloskaOrdinacija.Web'
     filePatterns: '**'
     remoteDirectory: '/httpdocs/'
     clean: false

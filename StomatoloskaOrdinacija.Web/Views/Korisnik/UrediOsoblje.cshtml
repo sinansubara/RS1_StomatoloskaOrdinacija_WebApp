@@ -21,109 +21,231 @@
                 <p class="text-center text-info">@successMessage</p>
             </div>
         }
-        <table id="dataTable" class="table table-striped table-bordered">
+        <table id="dataTable" class="table table-bordered">
             <thead>
                 <tr>
+                    <th></th>
                     <th>Ime</th>
                     <th>Prezime</th>
                     <th>Grad</th>
                     <th>Adresa</th>
                     <th>Spol</th>
-                    <th>DatumZaposlenja</th>
+                    <th>Datum zaposlenja</th>
                     <th>Aktivan</th>
                     <th>Funkcije</th>
                 </tr>
             </thead>
             <tfoot>
                 <tr>
+                    <th></th>
                     <th>Ime</th>
                     <th>Prezime</th>
                     <th>Grad</th>
                     <th>Adresa</th>
                     <th>Spol</th>
-                    <th>DatumZaposlenja</th>
+                    <th>Datum zaposlenja</th>
                     <th>Aktivan</th>
                     <th>Funkcije</th>
                 </tr>
             </tfoot>
         </table>
-        <a class="btn btn-primary" asp-controller="Korisnik" asp-action="dodaj-osoblje">Dodaj novog uposlenika</a>
+        <style>
+            td.details-control {
+                text-align: center;
+                color: forestgreen;
+                cursor: pointer;
+            }
 
+            tr.shown td.details-control {
+                text-align: center;
+                color: red;
+            }
+
+            .dataTables_filter {
+                float: right !important;
+            }
+
+
+            #dataTable_length, .toolbar, .dt-buttons, .dataTables_info, .dataTables_paginate {
+                display: inline;
+            }
+            .dataTables_paginate {
+                float: right !important;
+            }
+            .dt-buttons {
+                float: none !important;
+                margin-left: 3rem !important;
+            }
+            .dotGreen, .dotRed, .dotYellow {
+                height: 25px;
+                width: 25px;
+                border-radius: 50%;
+                display: inline-block;
+                vertical-align: text-top;
+            }
+            .lightRed {
+                background-color: #ff6c6c;
+            }
+            .dotRed {
+                background-color: #ff6c6c !important;
+            }
+        </style>
         <script>
-    $(document).ready(function () {
-        $.fn.dataTable.moment('DD/MM/YYYY HH:mm:ss');
-
-        $("#dataTable").DataTable({
-            dom: 'lfrtipB',
-            "ajax": {
-                "url": "/Korisnik/ListaOsoblja",
-                "type": "GET",
-                "datatype": "json"
-            },
-            "oLanguage": {
-                "sUrl": "../template/vendor/datatables/BosanskiPrevod.json"
-            },
-            "columns": [
-                { "data": "ime" },
-                { "data": "prezime" },
-                { "data": "grad" },
-                { "data": "adresa" },
-                { "data": "spol" },
-                {
-                    "data": "datumZaposlenja",//mozda greska
-                    "render": function(data, type) {
-                        return type === 'sort' ? data : moment(data).format('DD.MM.YYYY');
-                    }
-                },
-                { "data": "aktivan" },
-                { "data": "medicinskoOsobljeId" }//mozda greska
-            ],
-            columnDefs: [
-                {
-                    "targets": 7,
-                    "render": function(data, type, full, meta) {
-                        return '<span class="d-flex justify-content-center"><a class="mr-1" href="/Korisnik/uredi-osoblje/' +
-                            data +
-                            '">Uredi</a> | <a id="izbrisi" class="ml-1" href="/Korisnik/izbrisi-osoblje/' +
-                            data +
-                            '">Izbrisi</a></span>';
-                    }
-                }
-            ],
-            select: true,
-            colReorder: true,
-            buttons: [
-                {
-                    extend: 'collection',
-                    text: 'Export',
+            $(document).ready(function () {
+                $.fn.dataTable.moment('DD/MM/YYYY HH:mm:ss');
+                $.fn.DataTable.ext.pager.numbers_length = 5;
+                var table = $("#dataTable").DataTable({
+                    dom: 'lB<"toolbar">frtip',
+                    "pageLength": 999,
+                    "ajax": {
+                        "url": "/Korisnik/ListaOsoblja",
+                        "type": "GET",
+                        "datatype": "json"
+                    },
+                    "oLanguage": {
+                        "sUrl": "../template/vendor/datatables/BosanskiPrevod.json"
+                    },
+                    "columns": [
+                        {
+                            "className": 'details-control',
+                            "orderable": false,
+                            "data": null,
+                            "defaultContent": '',
+                            "render": function () {
+                                return '<i class="fa fa-plus-square" aria-hidden="true"></i>';
+                            },
+                            width:"15px"
+                        },
+                        { "data": "ime" },
+                        { "data": "prezime" },
+                        { "data": "grad" },
+                        { "data": "adresa" },
+                        { "data": "spol" },
+                        {
+                            "data": "datumZaposlenja",//mozda greska
+                            "render": function (data, type) {
+                                return type === 'sort' ? data : moment(data).format('DD.MM.YYYY');
+                            }
+                        },
+                        { "data": "aktivan" },
+                        { "data": "medicinskoOsobljeId" }//mozda greska
+                    ],
+                    columnDefs: [
+                        {
+                            "targets": 7,
+                            render: function (data, type, full, meta) {
+                                if (type === 'display' && data === 'Ne') {
+                                    var rowIndex = meta.row + 1;
+                                    $('#dataTable tbody tr:nth-child(' + rowIndex + ')').addClass('lightRed');
+                                    return data;
+                                } else {
+                                    return data;
+                                }
+                            }
+                        },
+                        {
+                            "targets": 8,
+                            "render": function (data, type, full, meta) {
+                                return '<span class="d-flex justify-content-center"><a class="mr-1" href="/Korisnik/uredi-osoblje/' +
+                                    data +
+                                    '">Uredi</a> | <a id="izbrisi" class="ml-1" href="/Korisnik/izbrisi-osoblje/' +
+                                    data +
+                                    '">Izbrisi</a></span>';
+                            }
+                        }
+                    ],
+                    "initComplete": function(settings, json) {
+                        $("div.toolbar").html('<span class="dotRed mr-2"></span>Nije aktivan' +
+                            '<a href="/Korisnik/dodaj-osoblje" class="btn btn-primary ml-5">Dodaj novog uposlenika</a>');
+                        $("div.toolbar").addClass('ml-5');
+                    },
+                    select: true,
+                    colReorder: true,
                     buttons: [
                         {
-                            extend: 'copy',
-                            exportOptions: {
-                                columns: [0, 1, 2, 3, 4, 5, 6]}
-                        },
-                        {extend:'excel',
-                            exportOptions: {
-                                columns: [0, 1, 2, 3, 4, 5, 6]}
-                        },
-                        {extend:'csv',
-                            exportOptions: {
-                                columns: [0, 1, 2, 3, 4, 5, 6]}
-                        },
-                        {extend:'pdf',
-                            exportOptions: {
-                                columns: [0, 1, 2, 3, 4, 5, 6]}
-                        },
-                        {extend:'print',
-                            exportOptions: {
-                                columns: [0, 1, 2, 3, 4, 5, 6]}
+                            extend: 'collection',
+                            text: 'Export',
+                            buttons: [
+                                {
+                                    extend: 'copy',
+                                    exportOptions: {
+                                        columns: [1, 2, 3, 4, 5, 6, 7]
+                                    }
+                                },
+                                {
+                                    extend: 'excel',
+                                    exportOptions: {
+                                        columns: [1, 2, 3, 4, 5, 6, 7]
+                                    }
+                                },
+                                {
+                                    extend: 'csv',
+                                    exportOptions: {
+                                        columns: [1, 2, 3, 4, 5, 6, 7]
+                                    }
+                                },
+                                {
+                                    extend: 'pdf',
+                                    exportOptions: {
+                                        columns: [1, 2, 3, 4, 5, 6, 7]
+                                    }
+                                },
+                                {
+                                    extend: 'print',
+                                    exportOptions: {
+                                        columns: [1, 2, 3, 4, 5, 6, 7]
+                                    }
+                                }
+                            ]
                         }
                     ]
-                }
-            ]
-        });
+                });
+                // Event za otvaranje i zatvaranja detalja
+                $('#dataTable tbody').on('click', 'td.details-control', function () {
+                    var tr = $(this).closest('tr');
+                    var tdi = tr.find("i.fa");
+                    var row = table.row(tr);
 
-    });
+                    if (row.child.isShown()) {
+                        // Detalji otvoreni - zatvori
+                        row.child.hide();
+                        tr.removeClass('shown');
+                        tdi.first().removeClass('fa-minus-square');
+                        tdi.first().addClass('fa-plus-square');
+                    }
+                    else {
+                        // Otvara detalje
+                        row.child(format(row.data())).show();
+                        tr.addClass('shown');
+                        tdi.first().removeClass('fa-plus-square');
+                        tdi.first().addClass('fa-minus-square');
+                    }
+                });
+
+                table.on("user-select", function (e, dt, type, cell, originalEvent) {
+                    if ($(cell.node()).hasClass("details-control")) {
+                        e.preventDefault();
+                    }
+                });
+            });
+            function format(d){
+
+                // `d` orginalni podaci za red
+                return '<table class="table-bordered" id="detaljitable" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
+                    '<tr>' +
+                    '<td>Kontakt:</td>' +
+                    '<td>' + d.kontakt + '</td>' +
+                    '</tr>' +
+                    '<tr>' +
+                    '<td>JMBG:</td>' +
+                    '<td>' + d.jmbg + '</td>' +
+                    '</tr>' +
+                    '<tr>' +
+                    '<td>Lokacija:</td>' +
+                    '<td>' + d.lokacija + '</td>' +
+                    '</tr>' +
+                    '</table>';
+            }
         </script>
 
     </div>

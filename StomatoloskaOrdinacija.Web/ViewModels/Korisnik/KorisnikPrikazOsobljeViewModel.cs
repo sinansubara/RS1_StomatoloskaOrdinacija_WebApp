@@ -15,5 +15,8 @@ namespace StomatoloskaOrdinacija.Web.ViewModels.Korisnik
         public DateTime DatumZaposlenja { get; set; }
         public string Grad { get; set; }
         public string Aktivan { get; set; }
+        public string Kontakt { get; set; }
+        public string Jmbg { get; set; }
+        public string Lokacija { get; set; }
     }
 }

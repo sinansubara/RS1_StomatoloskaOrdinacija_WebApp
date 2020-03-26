@@ -93,11 +93,11 @@
             }
 
             .lightGreen {
-                background-color: #93f393cc !important;
+                background-color: #93f393 !important;
             }
 
             .lightYellow {
-                background-color: #ffff7ecc !important;
+                background-color: #ffff7e !important;
             }
 
             .lightRed {
@@ -108,8 +108,16 @@
                 background-color: #ff6c6c;
             }
 
-            #dataTable_length, .toolbar {
+            #dataTable_length, .toolbar, .dt-buttons, .dataTables_info {
                 display: inline;
+            }
+            .dataTables_paginate {
+                float: right !important;
+            }
+
+            .dt-buttons {
+                float: none !important;
+                margin-left: 1rem !important;
             }
 
             .dotGreen, .dotRed, .dotYellow {
@@ -121,11 +129,11 @@
             }
 
             .dotGreen {
-                background-color: #93f393cc !important;
+                background-color: #93f393 !important;
             }
 
             .dotYellow {
-                background-color: #ffff7ecc !important;
+                background-color: #ffff7e !important;
             }
 
             .dotRed {
@@ -141,7 +149,8 @@
                 $.fn.dataTable.moment('DD/MM/YYYY HH:mm:ss');
 
                 var table = $('#dataTable').DataTable({
-                    "sDom": 'l<"toolbar">frtip',
+                    "sDom": 'l<"toolbar">frtiBp',
+                    "pageLength": 999,
                     "ajax": {
                         "url": "/Termin/ListaProcesiranihZahtjeva/",
                         "type": "GET",
@@ -205,7 +214,47 @@
                         $("div.toolbar").html('<span class="dotRed mr-2"></span>Odbijen' +
                             '<span class="dotGreen ml-5 mr-2"></span>Odobren');
                         $("div.toolbar").addClass('ml-5');
-                    }
+                    },
+                    select: true,
+                    colReorder: true,
+                    buttons: [
+                        {
+                            extend: 'collection',
+                            text: 'Export',
+                            buttons: [
+                                {
+                                    extend: 'copy',
+                                    exportOptions: {
+                                        columns: [1, 2, 3, 4, 5]
+                                    }
+                                },
+                                {
+                                    extend: 'excel',
+                                    exportOptions: {
+                                        columns: [1, 2, 3, 4, 5]
+                                    }
+                                },
+                                {
+                                    extend: 'csv',
+                                    exportOptions: {
+                                        columns: [1, 2, 3, 4, 5]
+                                    }
+                                },
+                                {
+                                    extend: 'pdf',
+                                    exportOptions: {
+                                        columns: [1, 2, 3, 4, 5]
+                                    }
+                                },
+                                {
+                                    extend: 'print',
+                                    exportOptions: {
+                                        columns: [1, 2, 3, 4, 5]
+                                    }
+                                }
+                            ]
+                        }
+                    ]
 
                 });
 

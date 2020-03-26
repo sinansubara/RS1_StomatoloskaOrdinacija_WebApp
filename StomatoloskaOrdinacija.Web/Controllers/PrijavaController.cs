@@ -398,12 +398,23 @@ namespace StomatoloskaOrdinacija.Web.Controllers
 
         private string GetLoginLocation(string email, string vrsta)
         {
-            var client = new RestClient("https://api.ipdata.co/?api-key=2d07d672cba0c9d7650f5512f2639784597f7e441cfd992718bee66f");
+            var clientip = HttpContext.Connection.RemoteIpAddress.ToString();
+            var IP = "https://api.ipdata.co/" + 
+                     clientip + 
+                "?api-key=2d07d672cba0c9d7650f5512f2639784597f7e441cfd992718bee66f";
+                     
+
+            var client = new RestClient(IP);
             var request = new RestRequest(Method.GET);
             IRestResponse response = client.Execute(request);
             var obj = JObject.Parse(response.Content);
 
             var location = "Objekat ipdata je prazan!";
+            if (obj["ip"] == null)
+            {
+                location = "Prijavili ste se sa privatne IP adrese!";
+                return location;
+            }
             if (obj != null)
             {
                 location = "Pogresno oznacena vrsta slanja poruke!";

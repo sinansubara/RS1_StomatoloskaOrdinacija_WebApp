@@ -23,36 +23,79 @@
         }
         <table id="dataTable" class="table table-striped table-bordered">
             <thead>
-                <tr>
-                    <th>Ime</th>
-                    <th>Prezime</th>
-                    <th>Grad</th>
-                    <th>Adresa</th>
-                    <th>Spol</th>
-                    <th>DatumRodjenja</th>
-                    <th>Funkcije</th>
-                </tr>
+            <tr>
+                <th></th>
+                <th>Ime</th>
+                <th>Prezime</th>
+                <th>Grad</th>
+                <th>Adresa</th>
+                <th>Spol</th>
+                <th>Datum rođenja</th>
+                <th>Funkcije</th>
+            </tr>
             </thead>
             <tfoot>
                 <tr>
+                    <th></th>
                     <th>Ime</th>
                     <th>Prezime</th>
                     <th>Grad</th>
                     <th>Adresa</th>
                     <th>Spol</th>
-                    <th>DatumRodjenja</th>
+                    <th>Datum rođenja</th>
                     <th>Funkcije</th>
                 </tr>
             </tfoot>
         </table>
-        <a class="btn btn-primary" asp-controller="Korisnik" asp-action="dodaj-pacijenta">Dodaj novog pacijenta</a>
+        <style>
+            td.details-control {
+                text-align: center;
+                color: forestgreen;
+                cursor: pointer;
+            }
 
+            tr.shown td.details-control {
+                text-align: center;
+                color: red;
+            }
+
+            .dataTables_filter {
+                float: right !important;
+            }
+
+            #dataTable_length, .toolbar, .dt-buttons, .dataTables_info {
+                display: inline;
+            }
+            .dataTables_paginate {
+                float: right !important;
+            }
+            .dt-buttons {
+                float: none !important;
+                margin-left: 3rem !important;
+            }
+
+            .dotGreen, .dotRed, .dotYellow {
+                height: 25px;
+                width: 25px;
+                border-radius: 50%;
+                display: inline-block;
+                vertical-align: text-top;
+            }
+            .lightRed {
+                background-color: #ff6c6c;
+            }
+            .dotRed {
+                background-color: #ff6c6c !important;
+            }
+
+        </style>
         <script>
             $(document).ready(function () {
                 $.fn.dataTable.moment('DD/MM/YYYY HH:mm:ss');
-
-                $("#dataTable").DataTable({
-                    dom: 'lfrtipB',
+                $.fn.DataTable.ext.pager.numbers_length = 5;
+                var table = $("#dataTable").DataTable({
+                    dom: 'lB<"toolbar">frtip',
+                    "pageLength": 999,
                     "ajax": {
                         "url": "/Korisnik/ListaPacijenata",
                         "type": "GET",
@@ -62,6 +105,16 @@
                         "sUrl": "../template/vendor/datatables/BosanskiPrevod.json"
                     },
                     "columns": [
+                        {
+                            "className": 'details-control',
+                            "orderable": false,
+                            "data": null,
+                            "defaultContent": '',
+                            "render": function () {
+                                return '<i class="fa fa-plus-square" aria-hidden="true"></i>';
+                            },
+                            width:"15px"
+                        },
                         { "data": "ime" },
                         { "data": "prezime" },
                         { "data": "grad" },
@@ -77,7 +130,7 @@
                     ],
                     columnDefs: [
                         {
-                            "targets": 6,
+                            "targets": 7,
                             "render": function (data, type, full, meta) {
                                 return '<span class="d-flex justify-content-center"><a class="mr-1" href="/Korisnik/uredi-pacijent/' +
                                     data +
@@ -87,6 +140,10 @@
                             }
                         }
                     ],
+                    "initComplete": function (settings, json) {
+                        $("div.toolbar").html('<a href="/Korisnik/dodaj-pacijenta" class="btn btn-primary">Dodaj novog pacijenta</a>');
+                        $("div.toolbar").addClass('ml-5');
+                    },
                     select: true,
                     colReorder: true,
                     buttons: [
@@ -97,38 +154,64 @@
                                 {
                                     extend: 'copy',
                                     exportOptions: {
-                                        columns: [0, 1, 2, 3, 4, 5]
+                                        columns: [1, 2, 3, 4, 5, 6]
                                     }
                                 },
                                 {
                                     extend: 'excel',
                                     exportOptions: {
-                                        columns: [0, 1, 2, 3, 4, 5]
+                                        columns: [1, 2, 3, 4, 5, 6]
                                     }
                                 },
                                 {
                                     extend: 'csv',
                                     exportOptions: {
-                                        columns: [0, 1, 2, 3, 4, 5]
+                                        columns: [1, 2, 3, 4, 5, 6]
                                     }
                                 },
                                 {
                                     extend: 'pdf',
                                     exportOptions: {
-                                        columns: [0, 1, 2, 3, 4, 5]
+                                        columns: [1, 2, 3, 4, 5, 6]
                                     }
                                 },
                                 {
                                     extend: 'print',
                                     exportOptions: {
-                                        columns: [0, 1, 2, 3, 4, 5]
+                                        columns: [1, 2, 3, 4, 5, 6]
                                     }
                                 }
                             ]
                         }
                     ]
                 });
+                // Event za otvaranje i zatvaranja detalja
+                $('#dataTable tbody').on('click', 'td.details-control', function () {
+                    var tr = $(this).closest('tr');
+                    var tdi = tr.find("i.fa");
+                    var row = table.row(tr);
 
+                    if (row.child.isShown()) {
+                        // Detalji otvoreni - zatvori
+                        row.child.hide();
+                        tr.removeClass('shown');
+                        tdi.first().removeClass('fa-minus-square');
+                        tdi.first().addClass('fa-plus-square');
+                    }
+                    else {
+                        // Otvara detalje
+                        row.child(format(row.data())).show();
+                        tr.addClass('shown');
+                        tdi.first().removeClass('fa-plus-square');
+                        tdi.first().addClass('fa-minus-square');
+                    }
+                });
+
+                table.on("user-select", function (e, dt, type, cell, originalEvent) {
+                    if ($(cell.node()).hasClass("details-control")) {
+                        e.preventDefault();
+                    }
+                });
 
                 $.ajax({
                     url: "/Korisnik/IsOsobljeOrStomatolog",
@@ -140,6 +223,25 @@
 
 
             });
+
+            function format(d){
+
+                // `d` orginalni podaci za red
+                return '<table class="table-bordered" id="detaljitable" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
+                    '<tr>' +
+                    '<td>Kontakt:</td>' +
+                    '<td>' + d.kontakt + '</td>' +
+                    '</tr>' +
+                    '<tr>' +
+                    '<td>JMBG:</td>' +
+                    '<td>' + d.jmbg + '</td>' +
+                    '</tr>' +
+                    '<tr>' +
+                    '<td>Lokacija:</td>' +
+                    '<td>' + d.lokacija + '</td>' +
+                    '</tr>' +
+                    '</table>';
+            }
         </script>
 
     </div>

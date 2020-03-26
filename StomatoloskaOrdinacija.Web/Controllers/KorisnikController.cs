@@ -37,58 +37,70 @@ namespace StomatoloskaOrdinacija.Web.Controllers
         {
             return RedirectToAction("uredi-pacijent");
         }
-        
         [Autorizacija(true,true,true,false)]
         public IActionResult ListaPacijenata()
         {
             var lista = _context.Pacijents.Select(i => new KorisnikPrikazPacijentiViewModel
             {
                 PacijentId = i.PacijentId,
-                Ime = _context.KorisnickiNalogs.Where(x=>x.KorisnickiNalogId == i.KorisnickiNalogId).Select(x=>x.Ime).FirstOrDefault(),
-                Prezime = _context.KorisnickiNalogs.Where(x=>x.KorisnickiNalogId == i.KorisnickiNalogId).Select(x=>x.Prezime).FirstOrDefault(),
-                Adresa = _context.KorisnickiNalogs.Where(x=>x.KorisnickiNalogId == i.KorisnickiNalogId).Select(x=>x.Adresa).FirstOrDefault(),
-                Spol = _context.KorisnickiNalogs.Where(x=>x.KorisnickiNalogId == i.KorisnickiNalogId).Select(x=>x.Spol).FirstOrDefault(),
-                DatumRodjenja = _context.KorisnickiNalogs.Where(x=>x.KorisnickiNalogId == i.KorisnickiNalogId).Select(x=>x.DatumRodjenja).FirstOrDefault(),
-                Grad = _context.Grads.Where(x=>x.GradId == _context.KorisnickiNalogs.Where(y=>y.KorisnickiNalogId == i.KorisnickiNalogId).Select(y=>y.GradId).FirstOrDefault()).Select(x=>x.Naziv).FirstOrDefault()
+                Ime = i.KorisnickiNalog.Ime,
+                Prezime = i.KorisnickiNalog.Prezime,
+                Adresa = i.KorisnickiNalog.Adresa,
+                Spol = i.KorisnickiNalog.Spol,
+                DatumRodjenja = i.KorisnickiNalog.DatumRodjenja,
+                Grad = i.KorisnickiNalog.Grad.Naziv,
+                Kontakt = i.KorisnickiNalog.Email + " / " + i.KorisnickiNalog.Mobitel,
+                Jmbg = i.KorisnickiNalog.JMBG,
+                Lokacija = i.KorisnickiNalog.Adresa+", "+i.KorisnickiNalog.Grad.Naziv+", "+i.KorisnickiNalog.Grad.Drzava.Naziv
             }).ToList();
 
             return Json(new {data = lista});
         }
+
+        
         [Autorizacija(true,false,false,false)]
         public IActionResult ListaOsoblja()
         {
             var lista = _context.MedicinskoOsobljes.Select(i => new KorisnikPrikazOsobljeViewModel
             {
                 MedicinskoOsobljeId = i.MedicinskoOsoboljeId,
-                Ime = _context.KorisnickiNalogs.Where(x=>x.KorisnickiNalogId == i.KorisnickiNalogId).Select(x=>x.Ime).FirstOrDefault(),
-                Prezime = _context.KorisnickiNalogs.Where(x=>x.KorisnickiNalogId == i.KorisnickiNalogId).Select(x=>x.Prezime).FirstOrDefault(),
-                Adresa = _context.KorisnickiNalogs.Where(x=>x.KorisnickiNalogId == i.KorisnickiNalogId).Select(x=>x.Adresa).FirstOrDefault(),
-                Spol = _context.KorisnickiNalogs.Where(x=>x.KorisnickiNalogId == i.KorisnickiNalogId).Select(x=>x.Spol).FirstOrDefault(),
-                DatumZaposlenja = _context.MedicinskoOsobljes.Where(x=>x.KorisnickiNalogId == i.KorisnickiNalogId).Select(x=>x.DatumZaposlenja).FirstOrDefault(),
-                Aktivan = _context.MedicinskoOsobljes.Where(x=>x.KorisnickiNalogId == i.KorisnickiNalogId).Select(x=>x.Aktivan).FirstOrDefault()?"Da":"Ne",
-                Grad = _context.Grads.Where(x=>x.GradId == _context.KorisnickiNalogs.Where(y=>y.KorisnickiNalogId == i.KorisnickiNalogId).Select(y=>y.GradId).FirstOrDefault()).Select(x=>x.Naziv).FirstOrDefault()
+                Ime = i.KorisnickiNalog.Ime,
+                Prezime = i.KorisnickiNalog.Prezime,
+                Adresa = i.KorisnickiNalog.Adresa,
+                Spol = i.KorisnickiNalog.Spol,
+                Grad = i.KorisnickiNalog.Grad.Naziv,
+                Kontakt = i.KorisnickiNalog.Email + " / " + i.KorisnickiNalog.Mobitel,
+                Jmbg = i.KorisnickiNalog.JMBG,
+                Lokacija = i.KorisnickiNalog.Adresa+", "+i.KorisnickiNalog.Grad.Naziv+", "+i.KorisnickiNalog.Grad.Drzava.Naziv,
+                Aktivan = i.Aktivan?"Da":"Ne",
+                DatumZaposlenja = i.DatumZaposlenja
             }).ToList();
 
             return Json(new {data = lista});
         }
+
         [Autorizacija(true,false,false,false)]
         public IActionResult ListaStomatologa()
         {
             var lista = _context.Stomatologs.Select(i => new KorisnikPrikazStomatologaViewModel
             {
                 StomatologId = i.StomatologId,
-                Ime = _context.KorisnickiNalogs.Where(x=>x.KorisnickiNalogId == i.KorisnickiNalogId).Select(x=>x.Ime).FirstOrDefault(),
-                Prezime = _context.KorisnickiNalogs.Where(x=>x.KorisnickiNalogId == i.KorisnickiNalogId).Select(x=>x.Prezime).FirstOrDefault(),
-                Adresa = _context.KorisnickiNalogs.Where(x=>x.KorisnickiNalogId == i.KorisnickiNalogId).Select(x=>x.Adresa).FirstOrDefault(),
-                Spol = _context.KorisnickiNalogs.Where(x=>x.KorisnickiNalogId == i.KorisnickiNalogId).Select(x=>x.Spol).FirstOrDefault(),
-                DatumZaposlenja = _context.Stomatologs.Where(x=>x.KorisnickiNalogId == i.KorisnickiNalogId).Select(x=>x.DatumZaposlenja).FirstOrDefault(),
-                Aktivan = _context.Stomatologs.Where(x=>x.KorisnickiNalogId == i.KorisnickiNalogId).Select(x=>x.Aktivan).FirstOrDefault()?"Da":"Ne",
-                Grad = _context.Grads.Where(x=>x.GradId == _context.KorisnickiNalogs.Where(y=>y.KorisnickiNalogId == i.KorisnickiNalogId).Select(y=>y.GradId).FirstOrDefault()).Select(x=>x.Naziv).FirstOrDefault()
+                Ime = i.KorisnickiNalog.Ime,
+                Prezime = i.KorisnickiNalog.Prezime,
+                Adresa = i.KorisnickiNalog.Adresa,
+                Spol = i.KorisnickiNalog.Spol,
+                Grad = i.KorisnickiNalog.Grad.Naziv,
+                Kontakt = i.KorisnickiNalog.Email + " / " + i.KorisnickiNalog.Mobitel,
+                Jmbg = i.KorisnickiNalog.JMBG,
+                Lokacija = i.KorisnickiNalog.Adresa+", "+i.KorisnickiNalog.Grad.Naziv+", "+i.KorisnickiNalog.Grad.Drzava.Naziv,
+                Aktivan = i.Aktivan?"Da":"Ne",
+                DatumZaposlenja = i.DatumZaposlenja
             }).ToList();
 
             return Json(new {data = lista});
         }
-        
+
+
         [Autorizacija(true,true,true,false)]
         [ActionName("uredi-pacijent")]
         public IActionResult UrediPacijent(int id = -1)
